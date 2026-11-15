@@ -119,19 +119,20 @@ export default function HomePage() {
 
       {/* 2-COLUMN MAIN LAYOUT (Left: Content, Right: Vietnam Coracle Style Sticky Sidebar) */}
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        {/* Section Heading placed above the columns so both sides align at the exact same horizontal level */}
+        <SectionHeading
+          tag="Geographic Regions"
+          title="Explore Vietnam by Region"
+          subtitle="Three distinct worlds of cuisine, climate, and heritage stretching over 1,650 kilometers."
+          viewAllHref="/destinations"
+          viewAllText="View all regions"
+        />
+
         <div className="flex flex-col lg:flex-row gap-8 xl:gap-10 items-start">
           {/* LEFT MAIN AREA */}
           <div className="flex-1 min-w-0 space-y-16">
             {/* 2. THREE REGIONAL CARDS */}
             <section className="w-full">
-              <SectionHeading
-                tag="Geographic Regions"
-                title="Explore Vietnam by Region"
-                subtitle="Three distinct worlds of cuisine, climate, and heritage stretching over 1,650 kilometers."
-                viewAllHref="/destinations"
-                viewAllText="View all regions"
-              />
-
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* North */}
                 <Link
