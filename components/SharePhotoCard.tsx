@@ -42,3 +42,4 @@ export default function SharePhotoCard({ placeNameEn }: SharePhotoCardProps) {
     </section>
   );
 }
+

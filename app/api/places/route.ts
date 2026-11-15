@@ -142,6 +142,7 @@ export async function POST(request: NextRequest) {
           ? `https://www.google.com/maps/search/?api=1&query=${body.lat},${body.lng}`
           : ""),
       published: Boolean(body.published),
+      extra_photos: Array.isArray(body.extra_photos) ? body.extra_photos : [],
     };
 
     allPlaces.unshift(newPlace);
