@@ -41,10 +41,10 @@ export const GUIDES: GuideArticle[] = [
     subtitle: "A practical guide to booking the Reunification Express, scenic coastal routes, and sleeper cabins with international cards.",
     readingTime: "6 min read",
     category: "Transportation",
-    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Da_Nang_Railway_Station_-_panoramio.jpg/1920px-Da_Nang_Railway_Station_-_panoramio.jpg",
-    photoCredit: "Vyacheslav Argenberg",
-    photoLicense: "CC BY 4.0",
-    photoPage: "https://commons.wikimedia.org/wiki/File:Da_Nang_Railway_Station_-_panoramio.jpg",
+    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/Ga_Da_Lat_1327.JPG/1920px-Ga_Da_Lat_1327.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    photoCredit: "Schwede66",
+    photoLicense: "CC BY-SA 3.0",
+    photoPage: "https://commons.wikimedia.org/wiki/File:Ga_Da_Lat_1327.JPG",
     problemStatement:
       "Vietnam's official state railway website (dsvn.vn) is notoriously difficult for international travelers. Portions of the payment gateway remain untranslated, and overseas Visa and Mastercard transactions are frequently declined without explanation. Booking directly at local train station ticket counters can also lead to miscommunications or sold-out sleeper berths during peak travel periods.",
     steps: [
@@ -109,10 +109,10 @@ export const GUIDES: GuideArticle[] = [
     subtitle: "Stay connected from the moment your plane lands in Vietnam without swapping physical SIM cards.",
     readingTime: "5 min read",
     category: "Connectivity",
-    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Hanoi_Noi_Bai_Airport_Terminal_2_Interior.jpg/1920px-Hanoi_Noi_Bai_Airport_Terminal_2_Interior.jpg",
-    photoCredit: "Dickelbers",
-    photoLicense: "CC BY-SA 4.0",
-    photoPage: "https://commons.wikimedia.org/wiki/File:Hanoi_Noi_Bai_Airport_Terminal_2_Interior.jpg",
+    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Da_Nang_Dragon_Bridge.jpg/1920px-Da_Nang_Dragon_Bridge.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    photoCredit: "Person-with-No Name",
+    photoLicense: "CC BY 2.0",
+    photoPage: "https://commons.wikimedia.org/wiki/File:Da_Nang_Dragon_Bridge.jpg",
     problemStatement:
       "Having mobile data the second you land in Vietnam is essential for ordering Grab rides, navigating Google Maps, translating menus, and keeping in touch with accommodation hosts. Buying a physical SIM card at arrival terminals requires waiting in long lines, presenting your passport for registration, handling tiny SIM ejection pins, and risking overpaying at airport kiosks.",
     steps: [
@@ -176,10 +176,10 @@ export const GUIDES: GuideArticle[] = [
     subtitle: "How to successfully apply on the official government portal without paying exorbitant third-party fees.",
     readingTime: "7 min read",
     category: "Visas & Entry",
-    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Hanoi_Train_Street_-_Vietnam.jpg/1920px-Hanoi_Train_Street_-_Vietnam.jpg",
-    photoCredit: "Steffen Schmitz",
-    photoLicense: "CC BY-SA 4.0",
-    photoPage: "https://commons.wikimedia.org/wiki/File:Hanoi_Train_Street_-_Vietnam.jpg",
+    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/Dai_Trung_gate%2C_Temple_of_Literature%2C_Hanoi%2C_Vietnam%2C_20240123_0928_3065.jpg/1920px-Dai_Trung_gate%2C_Temple_of_Literature%2C_Hanoi%2C_Vietnam%2C_20240123_0928_3065.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    photoCredit: "Jakub Hałun",
+    photoLicense: "CC BY 4.0",
+    photoPage: "https://commons.wikimedia.org/wiki/File:Dai_Trung_gate,_Temple_of_Literature,_Hanoi,_Vietnam,_20240123_0928_3065.jpg",
     problemStatement:
       "A simple web search for 'Vietnam visa' returns hundreds of commercial agency websites that closely mimic government portals and charge up to three times the legal processing fee. Many tourists also experience delays due to common mistakes such as selecting the wrong entry checkpoint, submitting improper photo crops, or encountering credit card verification errors on the government payment processor.",
     steps: [
@@ -250,10 +250,10 @@ export const GUIDES: GuideArticle[] = [
     subtitle: "Navigate airport arrivals safely, choose between public buses and Grab, and avoid notorious taxi scams.",
     readingTime: "6 min read",
     category: "Arrival & Logistics",
-    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/Tan_Son_Nhat_International_Airport_Terminal_2.jpg/1920px-Tan_Son_Nhat_International_Airport_Terminal_2.jpg",
-    photoCredit: "Lưu Ly",
-    photoLicense: "CC BY-SA 3.0",
-    photoPage: "https://commons.wikimedia.org/wiki/File:Tan_Son_Nhat_International_Airport_Terminal_2.jpg",
+    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/Ben_Thanh_Market_%2836327758224%29.jpg/1920px-Ben_Thanh_Market_%2836327758224%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    photoCredit: "Terrazzo from Vernon Hills, IL, USA",
+    photoLicense: "CC BY 2.0",
+    photoPage: "https://commons.wikimedia.org/wiki/File:Ben_Thanh_Market_(36327758224).jpg",
     problemStatement:
       "Arriving at an unfamiliar Asian airport after a long flight with luggage can feel overwhelming. International arrivals areas at Noi Bai and Tan Son Nhat are notorious for aggressive freelance touts who pose as official taxi dispatchers, run rigged meters, or demand steep airport exit tolls that can cost five times the genuine price.",
     steps: [
