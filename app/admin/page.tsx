@@ -68,6 +68,18 @@ interface Guide {
   problemStatement?: string;
 }
 
+interface CommunityPhotoItem {
+  id: string;
+  place_slug: string;
+  place_name_en: string;
+  place_name: string;
+  city: string;
+  region: "north" | "central" | "south";
+  src: string;
+  credit_name: string;
+  index: number;
+}
+
 const CATEGORIES = [
   "Historic Sites",
   "Nature & Lakes",
@@ -83,7 +95,7 @@ const CATEGORIES = [
 ];
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<"places" | "guides">("places");
+  const [activeTab, setActiveTab] = useState<"places" | "guides" | "photos">("places");
 
   // PLACES STATE
   const [places, setPlaces] = useState<Place[]>([]);
@@ -142,6 +154,58 @@ export default function AdminPage() {
     problemStatement: "",
   });
 
+  // COMMUNITY PHOTOS STATE
+  const [communityPhotos, setCommunityPhotos] = useState<CommunityPhotoItem[]>([]);
+  const [communityLoading, setCommunityLoading] = useState(false);
+  const [photoSearch, setPhotoSearch] = useState("");
+  const [allPlacesList, setAllPlacesList] = useState<{ slug: string; name_en: string; city: string }[]>([]);
+
+  // Community Photo Modal state
+  const [photoModalOpen, setPhotoModalOpen] = useState(false);
+  const [photoModalMode, setPhotoModalMode] = useState<"add" | "edit">("add");
+  const [photoForm, setPhotoForm] = useState({
+    place_slug: "",
+    src: "",
+    credit_name: "",
+    index: 0,
+  });
+  const [photoSaving, setPhotoSaving] = useState(false);
+
+  // Fetch community photos from API
+  const fetchCommunityPhotos = useCallback(async () => {
+    setCommunityLoading(true);
+    try {
+      const res = await fetch("/api/community-photos");
+      const data = await res.json();
+      if (data.success) {
+        setCommunityPhotos(data.photos || []);
+      }
+    } catch (err) {
+      console.error("Failed to load community photos:", err);
+    } finally {
+      setCommunityLoading(false);
+    }
+  }, []);
+
+  // Fetch full list of places for dropdown
+  const fetchAllPlacesList = useCallback(async () => {
+    try {
+      const res = await fetch("/api/places?limit=1000&published=all");
+      const data = await res.json();
+      if (data.places) {
+        setAllPlacesList(
+          data.places.map((p: any) => ({
+            slug: p.slug,
+            name_en: p.name_en || p.name,
+            city: p.city || "Vietnam",
+          }))
+        );
+      }
+    } catch (err) {
+      console.error("Failed to fetch places list:", err);
+    }
+  }, []);
+
   // Fetch places from API
   const fetchPlaces = useCallback(async () => {
     setLoading(true);
@@ -188,6 +252,11 @@ export default function AdminPage() {
   useEffect(() => {
     fetchGuides();
   }, [fetchGuides]);
+
+  useEffect(() => {
+    fetchCommunityPhotos();
+    fetchAllPlacesList();
+  }, [fetchCommunityPhotos, fetchAllPlacesList]);
 
   // Show temporary toast message
   const showToast = (text: string, type: "success" | "error" = "success") => {
@@ -415,6 +484,81 @@ export default function AdminPage() {
     }
   };
 
+  // COMMUNITY PHOTOS HANDLERS
+  const handleOpenAddPhoto = () => {
+    setPhotoModalMode("add");
+    setPhotoForm({
+      place_slug: allPlacesList[0]?.slug || "hoan-kiem-lake",
+      src: "",
+      credit_name: "",
+      index: 0,
+    });
+    setPhotoModalOpen(true);
+  };
+
+  const handleOpenEditPhoto = (photo: CommunityPhotoItem) => {
+    setPhotoModalMode("edit");
+    setPhotoForm({
+      place_slug: photo.place_slug,
+      src: photo.src,
+      credit_name: photo.credit_name,
+      index: photo.index,
+    });
+    setPhotoModalOpen(true);
+  };
+
+  const handleDeleteCommunityPhoto = async (photo: CommunityPhotoItem) => {
+    if (!confirm(`Are you sure you want to remove photo by "${photo.credit_name}" from ${photo.place_name_en}?`)) {
+      return;
+    }
+    try {
+      const res = await fetch(
+        `/api/community-photos?place_slug=${encodeURIComponent(photo.place_slug)}&index=${photo.index}`,
+        { method: "DELETE" }
+      );
+      const data = await res.json();
+      if (data.success) {
+        showToast(`Removed photo by ${photo.credit_name}`);
+        fetchCommunityPhotos();
+        fetchPlaces();
+      } else {
+        showToast(data.error || "Failed to remove photo", "error");
+      }
+    } catch (err) {
+      showToast("Delete request failed", "error");
+    }
+  };
+
+  const handlePhotoFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPhotoSaving(true);
+    try {
+      const method = photoModalMode === "add" ? "POST" : "PUT";
+      const res = await fetch("/api/community-photos", {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(photoForm),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(
+          photoModalMode === "add"
+            ? "Successfully added community photo!"
+            : "Successfully updated community photo!"
+        );
+        setPhotoModalOpen(false);
+        fetchCommunityPhotos();
+        fetchPlaces();
+      } else {
+        showToast(data.error || "Failed to save photo", "error");
+      }
+    } catch (err: any) {
+      showToast(err.message || "Failed to save photo", "error");
+    } finally {
+      setPhotoSaving(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-20">
       {/* 1. TOP HEADER */}
@@ -436,11 +580,12 @@ export default function AdminPage() {
               onClick={() => {
                 fetchPlaces();
                 fetchGuides();
+                fetchCommunityPhotos();
               }}
               className="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5 text-xs font-medium"
               title="Refresh Data"
             >
-              <RefreshCw className={`w-4 h-4 ${loading || guidesLoading ? "animate-spin text-teal-400" : ""}`} />
+              <RefreshCw className={`w-4 h-4 ${loading || guidesLoading || communityLoading ? "animate-spin text-teal-400" : ""}`} />
               <span className="hidden sm:inline">Refresh</span>
             </button>
 
@@ -500,6 +645,19 @@ export default function AdminPage() {
           >
             <BookOpen className="w-4 h-4 text-amber-600" />
             <span>Practical Travel Guides ({guides.length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("photos")}
+            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 ${
+              activeTab === "photos"
+                ? "bg-white text-emerald-800 shadow-md border border-slate-200"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            <Camera className="w-4 h-4 text-emerald-600" />
+            <span>Traveller Photos ({communityPhotos.length})</span>
           </button>
         </div>
 
@@ -658,8 +816,19 @@ export default function AdminPage() {
                         </td>
 
                         <td className="py-3 px-4">
-                          <div className="font-semibold text-slate-900 text-sm">
-                            {place.name_en}
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-slate-900 text-sm">
+                              {place.name_en}
+                            </span>
+                            {place.extra_photos && place.extra_photos.length > 0 && (
+                              <span
+                                className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded text-[10px] font-semibold"
+                                title={`${place.extra_photos.length} community traveller photo(s)`}
+                              >
+                                <Camera className="w-3 h-3 text-emerald-600" />
+                                <span>{place.extra_photos.length}</span>
+                              </span>
+                            )}
                           </div>
                           <div className="text-[11px] text-slate-500">
                             {place.name}
@@ -908,6 +1077,268 @@ export default function AdminPage() {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* ============================================================== */}
+        {/* TAB 3: TRAVELLER PHOTOS MANAGEMENT */}
+        {/* ============================================================== */}
+        {activeTab === "photos" && (
+          <div className="space-y-6">
+            {/* TOP BAR WITH TITLE & QUICK ACTIONS */}
+            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                  <Camera className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="font-serif text-xl font-bold text-slate-900">
+                    Community Traveller Photos
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Review and curate photos submitted by travellers across Vietnam.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2.5">
+                <a
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSedSSyHAN82tmE3R0w49ZtyeIkb1IJX3KE8wucWfYa2tqq0gQ/edit"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3.5 py-2 border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium text-xs rounded-xl shadow-xs transition-colors flex items-center gap-1.5"
+                  title="Open Google Form editor and see submitted photos in Drive"
+                >
+                  <span>Google Form Responses</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+                </a>
+
+                <Link
+                  href="/traveller-photos"
+                  target="_blank"
+                  className="px-3.5 py-2 border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium text-xs rounded-xl shadow-xs transition-colors flex items-center gap-1.5"
+                >
+                  <Eye className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Live Gallery</span>
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={handleOpenAddPhoto}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs rounded-xl shadow-sm transition-colors flex items-center gap-1.5"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Add Traveller Photo</span>
+                </button>
+              </div>
+            </div>
+
+            {/* STATS CARDS */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                    Published Photos
+                  </span>
+                  <span className="font-serif text-3xl font-bold text-slate-900 mt-1 block">
+                    {communityPhotos.length}
+                  </span>
+                  <span className="text-[11px] text-emerald-600 font-medium mt-1 inline-flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Displayed across live atlas
+                  </span>
+                </div>
+                <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
+                  <Camera className="w-6 h-6" />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                    Destinations Featured
+                  </span>
+                  <span className="font-serif text-3xl font-bold text-slate-900 mt-1 block">
+                    {new Set(communityPhotos.map((p) => p.place_slug)).size}
+                  </span>
+                  <span className="text-[11px] text-slate-400 mt-1 block">
+                    Places with community photos
+                  </span>
+                </div>
+                <div className="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-600">
+                  <MapPin className="w-6 h-6" />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                    Submission Form
+                  </span>
+                  <span className="text-base font-bold text-slate-900 mt-1 block">
+                    Google Form Connected
+                  </span>
+                  <a
+                    href="https://forms.gle/z6L8VxdauT9QKJet5"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[11px] text-teal-600 hover:text-teal-700 font-medium mt-1 inline-flex items-center gap-1"
+                  >
+                    <span>forms.gle/z6L8VxdauT9QKJet5</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+                <div className="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600">
+                  <ExternalLink className="w-6 h-6" />
+                </div>
+              </div>
+            </div>
+
+            {/* SEARCH BAR */}
+            <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center gap-3">
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Search by destination name, city, or traveller name..."
+                  value={photoSearch}
+                  onChange={(e) => setPhotoSearch(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
+                />
+              </div>
+              {photoSearch && (
+                <button
+                  type="button"
+                  onClick={() => setPhotoSearch("")}
+                  className="text-xs text-slate-400 hover:text-slate-600 px-2 py-1 font-medium"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+
+            {/* PHOTOS GRID */}
+            {(() => {
+              const q = photoSearch.toLowerCase().trim();
+              const filtered = communityPhotos.filter((p) => {
+                if (!q) return true;
+                return (
+                  p.place_name_en.toLowerCase().includes(q) ||
+                  p.place_name.toLowerCase().includes(q) ||
+                  p.city.toLowerCase().includes(q) ||
+                  p.credit_name.toLowerCase().includes(q)
+                );
+              });
+
+              if (communityLoading) {
+                return (
+                  <div className="bg-white rounded-3xl p-12 text-center border border-slate-200">
+                    <RefreshCw className="w-6 h-6 animate-spin text-emerald-600 mx-auto mb-2" />
+                    <span className="text-xs text-slate-500">Loading community photos...</span>
+                  </div>
+                );
+              }
+
+              if (filtered.length === 0) {
+                return (
+                  <div className="bg-white rounded-3xl p-12 text-center border border-dashed border-slate-200">
+                    <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <Camera className="w-6 h-6" />
+                    </div>
+                    <h3 className="font-serif text-lg font-bold text-slate-900 mb-1">
+                      No traveller photos found
+                    </h3>
+                    <p className="text-xs text-slate-500 max-w-md mx-auto mb-4">
+                      {photoSearch
+                        ? "No results matched your search. Try a different keyword."
+                        : "No traveller photos published yet. Click the button below to add your first photo!"}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handleOpenAddPhoto}
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs rounded-xl shadow-sm transition-colors inline-flex items-center gap-1.5"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>Add First Traveller Photo</span>
+                    </button>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {filtered.map((photo) => (
+                    <div
+                      key={photo.id}
+                      className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-all flex flex-col group"
+                    >
+                      {/* Image Preview */}
+                      <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={photo.src}
+                          alt={photo.place_name_en}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            (e.target as HTMLElement).style.display = "none";
+                          }}
+                        />
+                        <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-white text-[11px] font-medium shadow-sm">
+                          <MapPin className="w-3 h-3 text-emerald-400" />
+                          <span>{photo.place_name_en}</span>
+                        </div>
+                        <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-white/90 backdrop-blur-sm text-slate-700 text-[10px] font-semibold">
+                          {photo.city}
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-4 flex flex-col justify-between flex-1">
+                        <div>
+                          <div className="flex items-center gap-1.5 text-slate-800 font-semibold text-xs">
+                            <Camera className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>Photo: {photo.credit_name}</span>
+                          </div>
+                          <p className="text-[11px] text-slate-400 mt-1 truncate" title={photo.src}>
+                            {photo.src}
+                          </p>
+                        </div>
+
+                        <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                          <Link
+                            href={`/places/${photo.place_slug}`}
+                            target="_blank"
+                            className="text-[11px] text-teal-600 hover:text-teal-700 font-medium inline-flex items-center gap-1"
+                          >
+                            <span>View on Place</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </Link>
+
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEditPhoto(photo)}
+                              className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-medium transition-colors flex items-center gap-1"
+                              title="Edit photo or credit"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                              <span>Edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteCommunityPhoto(photo)}
+                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                              title="Delete photo"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
           </div>
         )}
 
@@ -1457,6 +1888,134 @@ export default function AdminPage() {
                 >
                   {guideSaving ? <RefreshCw className="w-4 h-4 animate-spin" /> : null}
                   <span>{guideModalMode === "add" ? "Create Article" : "Save Changes"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 7. COMMUNITY PHOTO MODAL (ADD / EDIT) */}
+      {photoModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 my-8">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                  <Camera className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-xl font-bold text-slate-900">
+                    {photoModalMode === "add" ? "Add Traveller Photo" : "Edit Traveller Photo"}
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Publish an authentic traveller photo to the atlas.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPhotoModalOpen(false)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handlePhotoFormSubmit} className="space-y-4">
+              {/* Destination selector */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Destination (Địa điểm) *
+                </label>
+                {photoModalMode === "add" ? (
+                  <select
+                    value={photoForm.place_slug}
+                    onChange={(e) => setPhotoForm({ ...photoForm, place_slug: e.target.value })}
+                    required
+                    className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 text-slate-900"
+                  >
+                    {allPlacesList.map((p) => (
+                      <option key={p.slug} value={p.slug}>
+                        {p.name_en} ({p.city})
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="px-3 py-2 text-xs bg-slate-100 border border-slate-200 rounded-xl font-medium text-slate-700">
+                    {allPlacesList.find((p) => p.slug === photoForm.place_slug)?.name_en || photoForm.place_slug}
+                  </div>
+                )}
+              </div>
+
+              {/* Photo URL */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Photo URL *
+                </label>
+                <input
+                  type="url"
+                  value={photoForm.src}
+                  onChange={(e) => setPhotoForm({ ...photoForm, src: e.target.value })}
+                  placeholder="https://... (Google Drive, Unsplash, Imgur, CDN)"
+                  required
+                  className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 text-slate-900"
+                />
+              </div>
+
+              {/* Preview */}
+              {photoForm.src && (
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                  <span className="text-[11px] font-medium text-slate-500 block mb-2">
+                    Photo Preview:
+                  </span>
+                  <div className="relative aspect-video rounded-lg overflow-hidden bg-slate-200">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={photoForm.src}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLElement).style.display = "none";
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Credit name */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Traveller Name (Tác giả) *
+                </label>
+                <input
+                  type="text"
+                  value={photoForm.credit_name}
+                  onChange={(e) => setPhotoForm({ ...photoForm, credit_name: e.target.value })}
+                  placeholder="e.g. Elena Rostova, Marcus Vance..."
+                  required
+                  className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 text-slate-900"
+                />
+                <p className="text-[11px] text-slate-400 mt-1">
+                  Credit format on live site: Photo: <strong>{photoForm.credit_name || "Name"}</strong> — traveller contribution
+                </p>
+              </div>
+
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setPhotoModalOpen(false)}
+                  className="px-4 py-2 border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-xs transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={photoSaving}
+                  className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium text-xs shadow-sm transition-colors flex items-center gap-1.5"
+                >
+                  {photoSaving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : null}
+                  <span>{photoModalMode === "add" ? "Publish to Live Site" : "Save Changes"}</span>
                 </button>
               </div>
             </form>
