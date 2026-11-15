@@ -1,17 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { AFFILIATES } from "@/config/affiliates";
-import { SITE_NAME } from "@/config/site";
 import {
   Hotel,
   Train,
   Bus,
   Ticket,
   Smartphone,
-  Heart,
-  ShieldCheck,
   ChevronRight,
   ExternalLink,
 } from "lucide-react";
@@ -83,47 +79,7 @@ export default function TravelBookingSidebar({
 
   return (
     <aside className={`w-full space-y-6 ${className}`}>
-      {/* 1. AUTHOR / CREATOR PROFILE (Exact match to Vietnam Coracle "I'm Tom" card) */}
-      <div className="bg-[#12161A] text-white rounded-2xl p-6 shadow-2xl border border-white/5 text-center">
-        {/* Circle avatar */}
-        <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-2 border-teal-500/40 p-0.5 shadow-lg bg-slate-800">
-          <div className="w-full h-full rounded-full bg-gradient-to-tr from-teal-700 via-slate-800 to-indigo-800 flex items-center justify-center text-white font-serif font-bold text-2xl tracking-tight">
-            Q
-          </div>
-        </div>
-
-        <h3 className="font-serif text-xl font-bold tracking-tight text-white mb-2">
-          I&apos;m Quy
-        </h3>
-
-        <p className="text-xs text-slate-300 leading-relaxed font-normal mb-5 px-1">
-          I&apos;m the creator of {SITE_NAME}: a free, independent travel directory for Vietnam. There is no sponsored bias. If you enjoy the site, please support it.{" "}
-          <Link href="/about" className="text-teal-400 hover:underline">
-            Read more &rsaquo;
-          </Link>
-        </p>
-
-        {/* Action buttons matching the video's Donate & Patron pills */}
-        <div className="space-y-2.5">
-          <Link
-            href="/about"
-            className="w-full py-2.5 px-4 rounded-xl bg-[#363299] hover:bg-[#433cc7] text-white text-xs font-semibold shadow-md transition-colors flex items-center justify-center gap-2 min-h-[42px]"
-          >
-            <Heart className="w-3.5 h-3.5 text-rose-300 fill-rose-300" />
-            <span>Support this Project</span>
-          </Link>
-
-          <Link
-            href="/affiliate-disclosure"
-            className="w-full py-2.5 px-4 rounded-xl bg-[#21262D] hover:bg-[#2b313a] text-slate-200 text-xs font-medium border border-white/10 transition-colors flex items-center justify-center gap-1.5 min-h-[42px]"
-          >
-            <ShieldCheck className="w-3.5 h-3.5 text-teal-400" />
-            <span>Affiliate Disclosure</span>
-          </Link>
-        </div>
-      </div>
-
-      {/* 2. BOOK YOUR STAY WIDGET (Exact match to Vietnam Coracle's "Book Your Stay" widget) */}
+      {/* BOOK YOUR STAY WIDGET */}
       <div className="bg-[#12161A] text-white rounded-2xl p-6 shadow-2xl border border-white/5">
         <h4 className="font-serif text-2xl font-bold tracking-tight text-center mb-4">
           Book Your <span className="text-[#6366F1]">Stay</span>
