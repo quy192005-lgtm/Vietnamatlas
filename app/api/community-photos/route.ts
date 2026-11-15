@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
 
 const PLACES_FILE_PATH = path.join(process.cwd(), "data", "places.json");
 
@@ -60,6 +61,9 @@ export async function GET() {
 
 // 2. POST: Add a new community photo to a place
 export async function POST(request: NextRequest) {
+  if (!isAdminAuthenticated(request)) {
+    return NextResponse.json({ error: "Unauthorized: Admin access required" }, { status: 401 });
+  }
   try {
     const body = await request.json();
     const { place_slug, src, credit_name } = body;
@@ -105,6 +109,9 @@ export async function POST(request: NextRequest) {
 
 // 3. PUT: Update an existing community photo
 export async function PUT(request: NextRequest) {
+  if (!isAdminAuthenticated(request)) {
+    return NextResponse.json({ error: "Unauthorized: Admin access required" }, { status: 401 });
+  }
   try {
     const body = await request.json();
     const { place_slug, index, src, credit_name } = body;
@@ -145,6 +152,9 @@ export async function PUT(request: NextRequest) {
 
 // 4. DELETE: Remove a community photo
 export async function DELETE(request: NextRequest) {
+  if (!isAdminAuthenticated(request)) {
+    return NextResponse.json({ error: "Unauthorized: Admin access required" }, { status: 401 });
+  }
   try {
     const { searchParams } = new URL(request.url);
     const place_slug = searchParams.get("place_slug");

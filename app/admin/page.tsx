@@ -22,6 +22,11 @@ import {
   Clock,
   Tag,
   Camera,
+  Lock,
+  EyeOff,
+  LogOut,
+  Key,
+  ShieldCheck,
 } from "lucide-react";
 
 const LocationPickerMap = dynamic(() => import("@/components/LocationPickerMap"), {
@@ -95,6 +100,13 @@ const CATEGORIES = [
 ];
 
 export default function AdminPage() {
+  // AUTH STATE
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const [activeTab, setActiveTab] = useState<"places" | "guides" | "photos">("places");
 
   // PLACES STATE
@@ -245,18 +257,78 @@ export default function AdminPage() {
     }
   }, []);
 
-  useEffect(() => {
-    fetchPlaces();
-  }, [fetchPlaces]);
+  // Check session on mount
+  const checkAuth = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/auth");
+      const data = await res.json();
+      setIsAuthenticated(Boolean(data.authenticated));
+    } catch {
+      setIsAuthenticated(false);
+    }
+  }, []);
 
   useEffect(() => {
-    fetchGuides();
-  }, [fetchGuides]);
+    checkAuth();
+  }, [checkAuth]);
 
   useEffect(() => {
-    fetchCommunityPhotos();
-    fetchAllPlacesList();
-  }, [fetchCommunityPhotos, fetchAllPlacesList]);
+    if (isAuthenticated) {
+      fetchPlaces();
+    }
+  }, [isAuthenticated, fetchPlaces]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchGuides();
+    }
+  }, [isAuthenticated, fetchGuides]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchCommunityPhotos();
+      fetchAllPlacesList();
+    }
+  }, [isAuthenticated, fetchCommunityPhotos, fetchAllPlacesList]);
+
+  // Login handler
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError("");
+    setLoginLoading(true);
+
+    try {
+      const res = await fetch("/api/admin/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: loginPassword }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setIsAuthenticated(true);
+        setLoginPassword("");
+        showToast("Welcome back, Webmaster!");
+      } else {
+        setLoginError(data.error || "Incorrect password. Please try again.");
+      }
+    } catch {
+      setLoginError("Failed to authenticate. Please check server connection.");
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  // Logout handler
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/auth", { method: "DELETE" });
+      setIsAuthenticated(false);
+      showToast("Logged out successfully");
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
 
   // Show temporary toast message
   const showToast = (text: string, type: "success" | "error" = "success") => {
@@ -559,6 +631,123 @@ export default function AdminPage() {
     }
   };
 
+  // 1. Loading session check
+  if (isAuthenticated === null) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4">
+        <RefreshCw className="w-8 h-8 animate-spin text-teal-400 mb-3" />
+        <p className="text-sm font-medium text-slate-300">Checking admin session...</p>
+      </div>
+    );
+  }
+
+  // 2. Unauthenticated: Show sleek Login Screen
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white flex flex-col items-center justify-center p-4 relative overflow-hidden">
+        {/* Subtle decorative glow */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-md w-full bg-slate-900/90 backdrop-blur-xl border border-slate-800 rounded-3xl p-7 sm:p-9 shadow-2xl relative z-10">
+          {/* Header */}
+          <div className="text-center mb-7">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-teal-600 to-teal-400 text-white flex items-center justify-center mx-auto mb-4 shadow-lg shadow-teal-500/20 border border-teal-400/30">
+              <Lock className="w-7 h-7" />
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 text-[11px] font-semibold uppercase tracking-wider mb-2">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Restricted Access</span>
+            </div>
+            <h1 className="font-serif text-2xl font-bold text-white tracking-tight">
+              Owner Control Panel
+            </h1>
+            <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
+              Vietnam Atlas editorial administration. Please enter your secret owner password to continue.
+            </p>
+          </div>
+
+          {/* Error Banner */}
+          {loginError && (
+            <div className="mb-5 p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-xl flex items-center gap-2.5 text-xs text-rose-300">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+              <span>{loginError}</span>
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                Owner Password (Mật khẩu chủ web)
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={loginPassword}
+                  onChange={(e) => {
+                    setLoginPassword(e.target.value);
+                    if (loginError) setLoginError("");
+                  }}
+                  placeholder="Enter admin password..."
+                  required
+                  autoFocus
+                  className="w-full pl-4 pr-11 py-3 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all font-mono"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-200 transition-colors"
+                  title={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loginLoading || !loginPassword}
+              className="w-full py-3 px-4 bg-teal-600 hover:bg-teal-500 active:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-sm rounded-xl shadow-lg shadow-teal-600/30 transition-all flex items-center justify-center gap-2"
+            >
+              {loginLoading ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <span>Verifying credentials...</span>
+                </>
+              ) : (
+                <>
+                  <Key className="w-4 h-4" />
+                  <span>Unlock Admin Panel</span>
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Helpful note for owner */}
+          <div className="mt-6 pt-5 border-t border-slate-800/80 text-[11px] text-slate-400 space-y-1.5">
+            <p className="flex items-center gap-1.5 text-slate-300 font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+              <span>Default owner password: <code className="bg-slate-800 px-1.5 py-0.5 rounded text-teal-300 font-mono">vietnamatlas2026</code></span>
+            </p>
+            <p className="text-slate-500">
+              You can change this password anytime in your <code className="text-slate-400">.env.local</code> file (<code className="text-slate-400">ADMIN_PASSWORD=...</code>).
+            </p>
+          </div>
+
+          {/* Back link */}
+          <div className="mt-6 text-center">
+            <Link
+              href="/"
+              className="text-xs text-slate-400 hover:text-teal-400 transition-colors inline-flex items-center gap-1"
+            >
+              <span>← Return to Public Website</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-20">
       {/* 1. TOP HEADER */}
@@ -598,6 +787,16 @@ export default function AdminPage() {
               <span>View Live Website</span>
               <ExternalLink className="w-3 h-3 opacity-60" />
             </Link>
+
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="px-3.5 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 hover:text-white text-xs font-medium rounded-lg border border-rose-500/30 transition-colors flex items-center gap-1.5"
+              title="Sign out of Admin session"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Sign Out</span>
+            </button>
           </div>
         </div>
       </header>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
 
 const PLACES_FILE_PATH = path.join(process.cwd(), "data", "places.json");
 
@@ -98,6 +99,9 @@ export async function GET(request: NextRequest) {
 
 // 2. POST: Add a new place
 export async function POST(request: NextRequest) {
+  if (!isAdminAuthenticated(request)) {
+    return NextResponse.json({ error: "Unauthorized: Admin access required" }, { status: 401 });
+  }
   try {
     const body = await request.json();
     const allPlaces = readPlaces();
@@ -156,6 +160,9 @@ export async function POST(request: NextRequest) {
 
 // 3. PUT: Edit an existing place
 export async function PUT(request: NextRequest) {
+  if (!isAdminAuthenticated(request)) {
+    return NextResponse.json({ error: "Unauthorized: Admin access required" }, { status: 401 });
+  }
   try {
     const body = await request.json();
     const { slug } = body;
@@ -209,6 +216,9 @@ export async function PUT(request: NextRequest) {
 
 // 4. PATCH: Quick toggle publish status
 export async function PATCH(request: NextRequest) {
+  if (!isAdminAuthenticated(request)) {
+    return NextResponse.json({ error: "Unauthorized: Admin access required" }, { status: 401 });
+  }
   try {
     const body = await request.json();
     const { slug, published } = body;
@@ -239,6 +249,9 @@ export async function PATCH(request: NextRequest) {
 
 // 5. DELETE: Delete a place
 export async function DELETE(request: NextRequest) {
+  if (!isAdminAuthenticated(request)) {
+    return NextResponse.json({ error: "Unauthorized: Admin access required" }, { status: 401 });
+  }
   try {
     const { searchParams } = new URL(request.url);
     const slug = searchParams.get("slug");

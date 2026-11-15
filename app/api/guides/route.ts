@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
 
 const GUIDES_FILE_PATH = path.join(process.cwd(), "data", "guides.json");
 
@@ -42,6 +43,9 @@ export async function GET() {
 
 // 2. POST: Add a new guide
 export async function POST(request: NextRequest) {
+  if (!isAdminAuthenticated(request)) {
+    return NextResponse.json({ error: "Unauthorized: Admin access required" }, { status: 401 });
+  }
   try {
     const body = await request.json();
     const guides = readGuides();
@@ -96,6 +100,9 @@ export async function POST(request: NextRequest) {
 
 // 3. PUT: Edit a guide
 export async function PUT(request: NextRequest) {
+  if (!isAdminAuthenticated(request)) {
+    return NextResponse.json({ error: "Unauthorized: Admin access required" }, { status: 401 });
+  }
   try {
     const body = await request.json();
     const { slug } = body;
@@ -129,6 +136,9 @@ export async function PUT(request: NextRequest) {
 
 // 4. DELETE: Delete a guide
 export async function DELETE(request: NextRequest) {
+  if (!isAdminAuthenticated(request)) {
+    return NextResponse.json({ error: "Unauthorized: Admin access required" }, { status: 401 });
+  }
   try {
     const { searchParams } = new URL(request.url);
     const slug = searchParams.get("slug");
