@@ -697,7 +697,7 @@ export default function AdminPage() {
                     setLoginEmail(e.target.value);
                     if (loginError) setLoginError("");
                   }}
-                  placeholder="admin@vietnamatlas.com"
+                  placeholder="Enter your admin email..."
                   required
                   autoFocus
                   className="w-full pl-10 pr-4 py-3 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all font-mono"
@@ -708,7 +708,7 @@ export default function AdminPage() {
             {/* Password Field */}
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                Owner Password (Mật khẩu chủ web)
+                Owner Password (Mật khẩu)
               </label>
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -719,7 +719,7 @@ export default function AdminPage() {
                     setLoginPassword(e.target.value);
                     if (loginError) setLoginError("");
                   }}
-                  placeholder="Enter admin password..."
+                  placeholder="Enter your password..."
                   required
                   className="w-full pl-10 pr-11 py-3 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all font-mono"
                 />
@@ -753,23 +753,8 @@ export default function AdminPage() {
             </button>
           </form>
 
-          {/* Helpful note for owner */}
-          <div className="mt-6 pt-5 border-t border-slate-800/80 text-[11px] text-slate-400 space-y-1.5">
-            <p className="flex items-center gap-1.5 text-slate-300 font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
-              <span>Default Email: <code className="bg-slate-800 px-1.5 py-0.5 rounded text-teal-300 font-mono">admin@vietnamatlas.com</code></span>
-            </p>
-            <p className="flex items-center gap-1.5 text-slate-300 font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
-              <span>Default Password: <code className="bg-slate-800 px-1.5 py-0.5 rounded text-teal-300 font-mono">vietnamatlas2026</code></span>
-            </p>
-            <p className="text-slate-500 pt-1">
-              You can customize your admin email &amp; password in <code className="text-slate-400">.env.local</code> (<code className="text-slate-400">ADMIN_EMAIL=...</code> and <code className="text-slate-400">ADMIN_PASSWORD=...</code>).
-            </p>
-          </div>
-
           {/* Back link */}
-          <div className="mt-6 text-center">
+          <div className="mt-6 pt-5 border-t border-slate-800/80 text-center">
             <Link
               href="/"
               className="text-xs text-slate-400 hover:text-teal-400 transition-colors inline-flex items-center gap-1"
