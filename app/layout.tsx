@@ -54,10 +54,29 @@ export default function RootLayout({
           crossOrigin=""
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-white text-travel-text font-sans antialiased selection:bg-teal-100 selection:text-teal-900">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+      <body className="min-h-screen flex flex-col bg-[#FAF7F2] text-travel-text font-sans antialiased selection:bg-teal-100 selection:text-teal-900 relative">
+        {/* Traditional Dong Son Bronze Drum Embossed Background Watermark */}
+        <div
+          className="fixed inset-0 pointer-events-none z-0 opacity-[0.07] bg-repeat bg-center"
+          style={{
+            backgroundImage: "url('/dong-son-texture.jpg')",
+            backgroundSize: "900px auto",
+            backgroundAttachment: "fixed",
+          }}
+          aria-hidden="true"
+        />
+
+        {/* Soft radial vignette: leaves center clean & emphasizes patterns on sides and corners */}
+        <div
+          className="fixed inset-0 pointer-events-none z-0 bg-[radial-gradient(ellipse_at_center,_transparent_30%,_rgba(250,247,242,0.85)_100%)]"
+          aria-hidden="true"
+        />
+
+        <div className="relative z-10 flex flex-col min-h-screen">
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
       </body>
     </html>
   );
