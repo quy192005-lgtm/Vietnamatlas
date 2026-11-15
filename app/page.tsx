@@ -122,11 +122,6 @@ export default function HomePage() {
         <div className="flex flex-col lg:flex-row gap-8 xl:gap-10 items-start">
           {/* LEFT MAIN AREA */}
           <div className="flex-1 min-w-0 space-y-16">
-            {/* NV-10: AdSlot */}
-            <div>
-              <AdSlot format="horizontal" />
-            </div>
-
             {/* 2. THREE REGIONAL CARDS */}
             <section className="w-full">
               <SectionHeading
