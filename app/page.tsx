@@ -346,25 +346,25 @@ export default function HomePage() {
 
             {/* 6. PLAN YOUR TRIP STRIP (AFFILIATE PARTNERS - LAW 4) */}
             <section className="w-full">
-              <div className="bg-gradient-to-br from-teal-900 to-slate-900 rounded-3xl p-8 sm:p-10 text-white shadow-xl relative overflow-hidden border border-teal-800/40">
-                {/* Traditional Dong Son Bronze Drum Pattern in Tone-sur-tone Teal (30% opacity, transparent background) */}
+              <div className="bg-[#FAF7F2] rounded-3xl p-8 sm:p-10 shadow-xl relative overflow-hidden border border-amber-200/80">
+                {/* Traditional Dong Son Bronze Drum Pattern in authentic warm golden tone (30% opacity) */}
                 <div
                   className="absolute inset-0 pointer-events-none z-0 opacity-30 bg-repeat bg-center"
                   style={{
-                    backgroundImage: "url('/dong-son-teal.png')",
+                    backgroundImage: "url('/dong-son-texture.jpg')",
                     backgroundSize: "750px auto",
                   }}
                   aria-hidden="true"
                 />
 
                 <div className="relative z-10 max-w-3xl mb-8">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-teal-300 mb-2 block">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-amber-800 bg-amber-100/90 border border-amber-300/80 px-2.5 py-1 rounded-full mb-3 inline-block shadow-xs">
                     Trip Preparation
                   </span>
-                  <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-white mb-2">
+                  <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 mb-2">
                     Plan Your Trip Across Vietnam
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
                     We recommend verified services we use ourselves. Book early for holidays and secure high-speed mobile data before boarding your flight.
                   </p>
                 </div>
@@ -375,15 +375,15 @@ export default function HomePage() {
                     href={AFFILIATES.twelveGo}
                     target="_blank"
                     rel="nofollow sponsored noopener"
-                    className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 backdrop-blur-md transition-all group min-h-[44px]"
+                    className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/95 hover:bg-white border border-amber-200/80 shadow-sm hover:shadow-md transition-all group min-h-[44px]"
                   >
                     <div className="w-9 h-9 rounded-xl bg-terracotta-500 text-white flex items-center justify-center shrink-0 shadow-sm">
                       <Train className="w-4 h-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-[11px] text-slate-300 block">Trains &amp; Buses</span>
-                      <span className="font-semibold text-xs text-white group-hover:text-teal-300 transition-colors flex items-center gap-1">
-                        Book on 12Go <ExternalLink className="w-3 h-3 opacity-60" />
+                      <span className="text-[11px] text-slate-500 block font-medium">Trains &amp; Buses</span>
+                      <span className="font-bold text-xs text-slate-900 group-hover:text-amber-700 transition-colors flex items-center gap-1">
+                        Book on 12Go <ExternalLink className="w-3 h-3 opacity-60 text-slate-400 group-hover:text-amber-600" />
                       </span>
                     </div>
                   </a>
@@ -393,15 +393,15 @@ export default function HomePage() {
                     href={AFFILIATES.booking}
                     target="_blank"
                     rel="nofollow sponsored noopener"
-                    className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 backdrop-blur-md transition-all group min-h-[44px]"
+                    className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/95 hover:bg-white border border-amber-200/80 shadow-sm hover:shadow-md transition-all group min-h-[44px]"
                   >
                     <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
                       <Hotel className="w-4 h-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-[11px] text-slate-300 block">Accommodations</span>
-                      <span className="font-semibold text-xs text-white group-hover:text-teal-300 transition-colors flex items-center gap-1">
-                        Booking.com <ExternalLink className="w-3 h-3 opacity-60" />
+                      <span className="text-[11px] text-slate-500 block font-medium">Accommodations</span>
+                      <span className="font-bold text-xs text-slate-900 group-hover:text-blue-700 transition-colors flex items-center gap-1">
+                        Booking.com <ExternalLink className="w-3 h-3 opacity-60 text-slate-400 group-hover:text-blue-600" />
                       </span>
                     </div>
                   </a>
@@ -411,15 +411,15 @@ export default function HomePage() {
                     href={AFFILIATES.klook}
                     target="_blank"
                     rel="nofollow sponsored noopener"
-                    className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 backdrop-blur-md transition-all group min-h-[44px]"
+                    className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/95 hover:bg-white border border-amber-200/80 shadow-sm hover:shadow-md transition-all group min-h-[44px]"
                   >
                     <div className="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-sm">
                       <Ticket className="w-4 h-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-[11px] text-slate-300 block">Tours &amp; Tickets</span>
-                      <span className="font-semibold text-xs text-white group-hover:text-teal-300 transition-colors flex items-center gap-1">
-                        Klook Activities <ExternalLink className="w-3 h-3 opacity-60" />
+                      <span className="text-[11px] text-slate-500 block font-medium">Tours &amp; Tickets</span>
+                      <span className="font-bold text-xs text-slate-900 group-hover:text-amber-700 transition-colors flex items-center gap-1">
+                        Klook Activities <ExternalLink className="w-3 h-3 opacity-60 text-slate-400 group-hover:text-amber-600" />
                       </span>
                     </div>
                   </a>
@@ -429,21 +429,21 @@ export default function HomePage() {
                     href={AFFILIATES.airalo}
                     target="_blank"
                     rel="nofollow sponsored noopener"
-                    className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 backdrop-blur-md transition-all group min-h-[44px]"
+                    className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/95 hover:bg-white border border-amber-200/80 shadow-sm hover:shadow-md transition-all group min-h-[44px]"
                   >
-                    <div className="w-9 h-9 rounded-xl bg-teal-500 text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <div className="w-9 h-9 rounded-xl bg-teal-600 text-white flex items-center justify-center shrink-0 shadow-sm">
                       <Smartphone className="w-4 h-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-[11px] text-slate-300 block">Vietnam eSIM</span>
-                      <span className="font-semibold text-xs text-white group-hover:text-teal-300 transition-colors flex items-center gap-1">
-                        Get Airalo Data <ExternalLink className="w-3 h-3 opacity-60" />
+                      <span className="text-[11px] text-slate-500 block font-medium">Vietnam eSIM</span>
+                      <span className="font-bold text-xs text-slate-900 group-hover:text-teal-700 transition-colors flex items-center gap-1">
+                        Get Airalo Data <ExternalLink className="w-3 h-3 opacity-60 text-slate-400 group-hover:text-teal-600" />
                       </span>
                     </div>
                   </a>
                 </div>
 
-                <p className="mt-5 text-[10px] text-slate-400 relative z-10">
+                <p className="mt-5 text-[10px] text-slate-500 relative z-10 font-medium">
                   * We earn an affiliate commission on qualifying bookings at no extra cost to you.
                 </p>
               </div>
