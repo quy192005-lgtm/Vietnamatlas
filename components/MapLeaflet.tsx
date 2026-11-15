@@ -59,13 +59,12 @@ export default function MapLeaflet({
         zoomControl: true,
       });
 
-      // Add High-Speed CDN Map Tile Layer (CartoDB Voyager - Travel Edition)
+      // High-Speed Global CDN Map Tiles (ESRI World Street Map) - No API Key required, lightning fast, crisp topography & English labels
       L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
         {
           attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          subdomains: "abcd",
+            "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, METI, TomTom",
           maxZoom: 19,
           keepBuffer: 8,
           updateWhenIdle: false,

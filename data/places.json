@@ -85,7 +85,7 @@
     "region": "north",
     "city": "Hanoi",
     "city_slug": "hanoi",
-    "published": false
+    "published": true
   },
   {
     "name": "Phố cổ Hà Nội",
@@ -107,7 +107,7 @@
     "region": "north",
     "city": "Hanoi",
     "city_slug": "hanoi",
-    "published": false
+    "published": true
   },
   {
     "name": "Hồ Tây",
@@ -195,7 +195,7 @@
     "region": "north",
     "city": "Hanoi",
     "city_slug": "hanoi",
-    "published": false
+    "published": true
   },
   {
     "name": "Bảo tàng Dân tộc học Việt Nam",
@@ -217,7 +217,7 @@
     "region": "north",
     "city": "Hanoi",
     "city_slug": "hanoi",
-    "published": false
+    "published": true
   },
   {
     "name": "Làng gốm Bát Tràng",
@@ -239,7 +239,7 @@
     "region": "north",
     "city": "Hanoi",
     "city_slug": "hanoi",
-    "published": false
+    "published": true
   },
   {
     "name": "Làng cổ Đường Lâm",
@@ -261,7 +261,7 @@
     "region": "north",
     "city": "Hanoi",
     "city_slug": "hanoi",
-    "published": false
+    "published": true
   },
   {
     "name": "Chùa Hương",
@@ -283,7 +283,7 @@
     "region": "north",
     "city": "Hanoi",
     "city_slug": "hanoi",
-    "published": false
+    "published": true
   },
   {
     "name": "Vườn quốc gia Ba Vì",
@@ -305,7 +305,7 @@
     "region": "north",
     "city": "Hanoi",
     "city_slug": "hanoi",
-    "published": false
+    "published": true
   },
   {
     "name": "Thành Cổ Loa",
@@ -327,7 +327,7 @@
     "region": "north",
     "city": "Hanoi",
     "city_slug": "hanoi",
-    "published": false
+    "published": true
   },
   {
     "name": "Vịnh Hạ Long",
@@ -371,7 +371,7 @@
     "region": "north",
     "city": "Quang Ninh",
     "city_slug": "quang-ninh",
-    "published": false
+    "published": true
   },
   {
     "name": "Bảo tàng Quảng Ninh",
@@ -393,7 +393,7 @@
     "region": "north",
     "city": "Quang Ninh",
     "city_slug": "quang-ninh",
-    "published": false
+    "published": true
   },
   {
     "name": "Núi Yên Tử",
@@ -415,7 +415,7 @@
     "region": "north",
     "city": "Quang Ninh",
     "city_slug": "quang-ninh",
-    "published": false
+    "published": true
   },
   {
     "name": "Đảo Cô Tô",
@@ -437,7 +437,7 @@
     "region": "north",
     "city": "Quang Ninh",
     "city_slug": "quang-ninh",
-    "published": false
+    "published": true
   },
   {
     "name": "Đảo Quan Lạn",
@@ -459,7 +459,7 @@
     "region": "north",
     "city": "Quang Ninh",
     "city_slug": "quang-ninh",
-    "published": false
+    "published": true
   },
   {
     "name": "Vịnh Bái Tử Long",
@@ -481,7 +481,7 @@
     "region": "north",
     "city": "Quang Ninh",
     "city_slug": "quang-ninh",
-    "published": false
+    "published": true
   },
   {
     "name": "Chùa Ba Vàng",
@@ -503,7 +503,7 @@
     "region": "north",
     "city": "Quang Ninh",
     "city_slug": "quang-ninh",
-    "published": false
+    "published": true
   },
   {
     "name": "Đảo Cát Bà",
@@ -525,7 +525,7 @@
     "region": "north",
     "city": "Hai Phong",
     "city_slug": "hai-phong",
-    "published": false
+    "published": true
   },
   {
     "name": "Vịnh Lan Hạ",
@@ -547,7 +547,7 @@
     "region": "north",
     "city": "Hai Phong",
     "city_slug": "hai-phong",
-    "published": false
+    "published": true
   },
   {
     "name": "Bãi biển Đồ Sơn",
@@ -569,7 +569,7 @@
     "region": "north",
     "city": "Hai Phong",
     "city_slug": "hai-phong",
-    "published": false
+    "published": true
   },
   {
     "name": "Danh thắng Tràng An",
@@ -657,7 +657,7 @@
     "region": "north",
     "city": "Ninh Binh",
     "city_slug": "ninh-binh",
-    "published": false
+    "published": true
   },
   {
     "name": "Vườn quốc gia Cúc Phương",
@@ -679,7 +679,7 @@
     "region": "north",
     "city": "Ninh Binh",
     "city_slug": "ninh-binh",
-    "published": false
+    "published": true
   },
   {
     "name": "Hang Múa",
@@ -723,7 +723,7 @@
     "region": "north",
     "city": "Ninh Binh",
     "city_slug": "ninh-binh",
-    "published": false
+    "published": true
   },
   {
     "name": "Nhà thờ đá Phát Diệm",
@@ -745,7 +745,7 @@
     "region": "north",
     "city": "Ninh Binh",
     "city_slug": "ninh-binh",
-    "published": false
+    "published": true
   },
   {
     "name": "Thị trấn Sa Pa",
@@ -767,7 +767,7 @@
     "region": "north",
     "city": "Lao Cai",
     "city_slug": "lao-cai",
-    "published": false
+    "published": true
   },
   {
     "name": "Đỉnh Fansipan",
@@ -789,7 +789,7 @@
     "region": "north",
     "city": "Lao Cai",
     "city_slug": "lao-cai",
-    "published": false
+    "published": true
   },
   {
     "name": "Nhà thờ đá Sa Pa",
@@ -811,7 +811,7 @@
     "region": "north",
     "city": "Lao Cai",
     "city_slug": "lao-cai",
-    "published": false
+    "published": true
   },
   {
     "name": "Thác Bạc Sa Pa",
@@ -833,7 +833,7 @@
     "region": "north",
     "city": "Lao Cai",
     "city_slug": "lao-cai",
-    "published": false
+    "published": true
   },
   {
     "name": "Bản Cát Cát",
@@ -855,7 +855,7 @@
     "region": "north",
     "city": "Lao Cai",
     "city_slug": "lao-cai",
-    "published": false
+    "published": true
   },
   {
     "name": "Đèo Ô Quy Hồ",
@@ -877,7 +877,7 @@
     "region": "north",
     "city": "Lao Cai",
     "city_slug": "lao-cai",
-    "published": false
+    "published": true
   },
   {
     "name": "Cao nguyên Mộc Châu",
@@ -899,7 +899,7 @@
     "region": "north",
     "city": "Son La",
     "city_slug": "son-la",
-    "published": false
+    "published": true
   },
   {
     "name": "Đồi chè Mộc Châu",
@@ -921,7 +921,7 @@
     "region": "north",
     "city": "Son La",
     "city_slug": "son-la",
-    "published": false
+    "published": true
   },
   {
     "name": "Thác Dải Yếm",
@@ -943,7 +943,7 @@
     "region": "north",
     "city": "Son La",
     "city_slug": "son-la",
-    "published": false
+    "published": true
   },
   {
     "name": "Tà Xùa",
@@ -965,7 +965,7 @@
     "region": "north",
     "city": "Son La",
     "city_slug": "son-la",
-    "published": false
+    "published": true
   },
   {
     "name": "Cột cờ Lũng Cú",
@@ -987,7 +987,7 @@
     "region": "north",
     "city": "Ha Giang",
     "city_slug": "ha-giang",
-    "published": false
+    "published": true
   },
   {
     "name": "Đèo Mã Pí Lèng",
@@ -1009,7 +1009,7 @@
     "region": "north",
     "city": "Ha Giang",
     "city_slug": "ha-giang",
-    "published": false
+    "published": true
   },
   {
     "name": "Sông Nho Quế",
@@ -1031,7 +1031,7 @@
     "region": "north",
     "city": "Ha Giang",
     "city_slug": "ha-giang",
-    "published": false
+    "published": true
   },
   {
     "name": "Cao nguyên đá Đồng Văn",
@@ -1053,7 +1053,7 @@
     "region": "north",
     "city": "Ha Giang",
     "city_slug": "ha-giang",
-    "published": false
+    "published": true
   },
   {
     "name": "Phố cổ Đồng Văn",
@@ -1075,7 +1075,7 @@
     "region": "north",
     "city": "Ha Giang",
     "city_slug": "ha-giang",
-    "published": false
+    "published": true
   },
   {
     "name": "Dinh thự họ Vương",
@@ -1097,7 +1097,7 @@
     "region": "north",
     "city": "Ha Giang",
     "city_slug": "ha-giang",
-    "published": false
+    "published": true
   },
   {
     "name": "Thác Bản Giốc",
@@ -1119,7 +1119,7 @@
     "region": "north",
     "city": "Cao Bang",
     "city_slug": "cao-bang",
-    "published": false
+    "published": true
   },
   {
     "name": "Động Ngườm Ngao",
@@ -1141,7 +1141,7 @@
     "region": "north",
     "city": "Cao Bang",
     "city_slug": "cao-bang",
-    "published": false
+    "published": true
   },
   {
     "name": "Hồ Ba Bể",
@@ -1163,7 +1163,7 @@
     "region": "north",
     "city": "Bac Kan",
     "city_slug": "bac-kan",
-    "published": false
+    "published": true
   },
   {
     "name": "Đền Hùng",
@@ -1185,7 +1185,7 @@
     "region": "north",
     "city": "Phu Tho",
     "city_slug": "phu-tho",
-    "published": false
+    "published": true
   },
   {
     "name": "Thung lũng Mai Châu",
@@ -1207,7 +1207,7 @@
     "region": "north",
     "city": "Hoa Binh",
     "city_slug": "hoa-binh",
-    "published": false
+    "published": true
   },
   {
     "name": "Thung Nai",
@@ -1229,7 +1229,7 @@
     "region": "north",
     "city": "Hoa Binh",
     "city_slug": "hoa-binh",
-    "published": false
+    "published": true
   },
   {
     "name": "Đồi A1 Điện Biên Phủ",
@@ -1251,7 +1251,7 @@
     "region": "north",
     "city": "Dien Bien",
     "city_slug": "dien-bien",
-    "published": false
+    "published": true
   },
   {
     "name": "Bảo tàng Chiến thắng Điện Biên Phủ",
@@ -1273,7 +1273,7 @@
     "region": "north",
     "city": "Dien Bien",
     "city_slug": "dien-bien",
-    "published": false
+    "published": true
   },
   {
     "name": "Đèo Pha Đin",
@@ -1295,7 +1295,7 @@
     "region": "north",
     "city": "Dien Bien",
     "city_slug": "dien-bien",
-    "published": false
+    "published": true
   },
   {
     "name": "Thị trấn Tam Đảo",
@@ -1317,7 +1317,7 @@
     "region": "north",
     "city": "Vinh Phuc",
     "city_slug": "vinh-phuc",
-    "published": false
+    "published": true
   },
   {
     "name": "Chùa Tam Chúc",
@@ -1339,7 +1339,7 @@
     "region": "north",
     "city": "Ha Nam",
     "city_slug": "ha-nam",
-    "published": false
+    "published": true
   },
   {
     "name": "Làng chài Cửa Vạn",
@@ -1361,7 +1361,7 @@
     "region": "north",
     "city": "Quang Ninh",
     "city_slug": "quang-ninh",
-    "published": false
+    "published": true
   },
   {
     "name": "Hang Sửng Sốt",
@@ -1383,7 +1383,7 @@
     "region": "north",
     "city": "Quang Ninh",
     "city_slug": "quang-ninh",
-    "published": false
+    "published": true
   },
   {
     "name": "Đảo Ti Tốp",
@@ -1405,7 +1405,7 @@
     "region": "north",
     "city": "Quang Ninh",
     "city_slug": "quang-ninh",
-    "published": false
+    "published": true
   },
   {
     "name": "Khu bảo tồn Pù Luông",
@@ -1427,7 +1427,7 @@
     "region": "central",
     "city": "Thanh Hoa",
     "city_slug": "thanh-hoa",
-    "published": false
+    "published": true
   },
   {
     "name": "Bãi biển Sầm Sơn",
@@ -1449,7 +1449,7 @@
     "region": "central",
     "city": "Thanh Hoa",
     "city_slug": "thanh-hoa",
-    "published": false
+    "published": true
   },
   {
     "name": "Thành nhà Hồ",
@@ -1471,7 +1471,7 @@
     "region": "central",
     "city": "Thanh Hoa",
     "city_slug": "thanh-hoa",
-    "published": false
+    "published": true
   },
   {
     "name": "Động Phong Nha",
@@ -1493,7 +1493,7 @@
     "region": "central",
     "city": "Quang Binh",
     "city_slug": "quang-binh",
-    "published": false
+    "published": true
   },
   {
     "name": "Động Thiên Đường",
@@ -1515,7 +1515,7 @@
     "region": "central",
     "city": "Quang Binh",
     "city_slug": "quang-binh",
-    "published": false
+    "published": true
   },
   {
     "name": "Vườn quốc gia Phong Nha - Kẻ Bàng",
@@ -1537,7 +1537,7 @@
     "region": "central",
     "city": "Quang Binh",
     "city_slug": "quang-binh",
-    "published": false
+    "published": true
   },
   {
     "name": "Suối Nước Moọc",
@@ -1559,7 +1559,7 @@
     "region": "central",
     "city": "Quang Binh",
     "city_slug": "quang-binh",
-    "published": false
+    "published": true
   },
   {
     "name": "Sông Chày - Hang Tối",
@@ -1581,7 +1581,7 @@
     "region": "central",
     "city": "Quang Binh",
     "city_slug": "quang-binh",
-    "published": false
+    "published": true
   },
   {
     "name": "Bãi biển Nhật Lệ",
@@ -1603,7 +1603,7 @@
     "region": "central",
     "city": "Quang Binh",
     "city_slug": "quang-binh",
-    "published": false
+    "published": true
   },
   {
     "name": "Hang Sơn Đoòng",
@@ -1625,7 +1625,7 @@
     "region": "central",
     "city": "Quang Binh",
     "city_slug": "quang-binh",
-    "published": false
+    "published": true
   },
   {
     "name": "Đại Nội Huế",
@@ -1691,7 +1691,7 @@
     "region": "central",
     "city": "Hue",
     "city_slug": "hue",
-    "published": false
+    "published": true
   },
   {
     "name": "Lăng Tự Đức",
@@ -1779,7 +1779,7 @@
     "region": "central",
     "city": "Hue",
     "city_slug": "hue",
-    "published": false
+    "published": true
   },
   {
     "name": "Chợ Đông Ba",
@@ -1823,7 +1823,7 @@
     "region": "central",
     "city": "Hue",
     "city_slug": "hue",
-    "published": false
+    "published": true
   },
   {
     "name": "Đèo Hải Vân",
@@ -1845,7 +1845,7 @@
     "region": "central",
     "city": "Da Nang",
     "city_slug": "da-nang",
-    "published": false
+    "published": true
   },
   {
     "name": "Bãi biển Mỹ Khê",
@@ -1977,7 +1977,7 @@
     "region": "central",
     "city": "Da Nang",
     "city_slug": "da-nang",
-    "published": false
+    "published": true
   },
   {
     "name": "Bà Nà Hills",
@@ -2021,7 +2021,7 @@
     "region": "central",
     "city": "Da Nang",
     "city_slug": "da-nang",
-    "published": false
+    "published": true
   },
   {
     "name": "Cầu sông Hàn",
@@ -2043,7 +2043,7 @@
     "region": "central",
     "city": "Da Nang",
     "city_slug": "da-nang",
-    "published": false
+    "published": true
   },
   {
     "name": "Phố cổ Hội An",
@@ -2131,7 +2131,7 @@
     "region": "central",
     "city": "Hoi An (Quang Nam)",
     "city_slug": "quang-nam",
-    "published": false
+    "published": true
   },
   {
     "name": "Rừng dừa Bảy Mẫu",
@@ -2175,7 +2175,7 @@
     "region": "central",
     "city": "Hoi An (Quang Nam)",
     "city_slug": "quang-nam",
-    "published": false
+    "published": true
   },
   {
     "name": "Thánh địa Mỹ Sơn",
@@ -2219,7 +2219,7 @@
     "region": "central",
     "city": "Hoi An (Quang Nam)",
     "city_slug": "quang-nam",
-    "published": false
+    "published": true
   },
   {
     "name": "Đảo Lý Sơn",
@@ -2241,7 +2241,7 @@
     "region": "central",
     "city": "Quang Ngai",
     "city_slug": "quang-ngai",
-    "published": false
+    "published": true
   },
   {
     "name": "Bãi biển Sa Huỳnh",
@@ -2593,7 +2593,7 @@
     "region": "central",
     "city": "Khanh Hoa",
     "city_slug": "khanh-hoa",
-    "published": false
+    "published": true
   },
   {
     "name": "Bãi biển Dốc Lết",
@@ -2615,7 +2615,7 @@
     "region": "central",
     "city": "Khanh Hoa",
     "city_slug": "khanh-hoa",
-    "published": false
+    "published": true
   },
   {
     "name": "Tháp Po Klong Garai",
@@ -2637,7 +2637,7 @@
     "region": "central",
     "city": "Ninh Thuan",
     "city_slug": "ninh-thuan",
-    "published": false
+    "published": true
   },
   {
     "name": "Vịnh Vĩnh Hy",
@@ -2659,7 +2659,7 @@
     "region": "central",
     "city": "Ninh Thuan",
     "city_slug": "ninh-thuan",
-    "published": false
+    "published": true
   },
   {
     "name": "Bãi biển Ninh Chữ",
