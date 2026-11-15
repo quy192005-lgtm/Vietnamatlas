@@ -9,6 +9,7 @@ import PlaceCard from "@/components/PlaceCard";
 import SectionHeading from "@/components/SectionHeading";
 import AdSlot from "@/components/AdSlot";
 import TravelBookingSidebar from "@/components/TravelBookingSidebar";
+import HeroBackgroundSlider from "@/components/HeroBackgroundSlider";
 import {
   Search,
   Train,
@@ -34,25 +35,10 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col gap-10 sm:gap-14 pb-16">
-      {/* 1. HERO SECTION (Full Width Cinematic Banner) */}
+      {/* 1. HERO SECTION (Full Width Cinematic Banner with 2s Auto Slider) */}
       <section className="relative min-h-[540px] sm:min-h-[600px] flex items-center justify-center bg-slate-900 text-white overflow-hidden">
-        {/* Real photo background (Hoi An Ancient Town - Steffen Schmitz, CC BY-SA 4.0) */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/H%E1%BB%99i_An%2C_Ancient_Town%2C_2020-01_CN-06.jpg/1920px-H%E1%BB%99i_An%2C_Ancient_Town%2C_2020-01_CN-06.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
-            alt="Hoi An Ancient Town by night"
-            fill
-            priority
-            className="object-cover opacity-45 brightness-90"
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-slate-950/60" />
-        </div>
-
-        {/* Hero Photo Credit (LAW 2) */}
-        <div className="absolute bottom-3 right-4 z-20 text-[10px] text-white/70 bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-md">
-          <span>Photo: Steffen Schmitz — CC BY-SA 4.0, via Wikimedia Commons</span>
-        </div>
+        {/* Dynamic Photo Slider transitioning every 2s */}
+        <HeroBackgroundSlider />
 
         {/* Hero Content */}
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center py-16 sm:py-20">
