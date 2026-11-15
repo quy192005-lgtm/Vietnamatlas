@@ -1,0 +1,322 @@
+export interface GuideStep {
+  step: number;
+  title: string;
+  description: string;
+}
+
+export interface GuideFaq {
+  question: string;
+  answer: string;
+}
+
+export interface GuideArticle {
+  slug: string;
+  title: string;
+  subtitle: string;
+  readingTime: string;
+  category: string;
+  heroImage: string;
+  photoCredit: string;
+  photoLicense: string;
+  photoPage: string;
+  problemStatement: string;
+  steps: GuideStep[];
+  tips: string[];
+  faq: GuideFaq[];
+  cta: {
+    title: string;
+    description: string;
+    buttonText: string;
+    partnerName: string;
+    linkKey: "twelveGo" | "booking" | "klook" | "airalo" | "official";
+    officialUrl?: string;
+    disclosure: string;
+  };
+}
+
+export const GUIDES: GuideArticle[] = [
+  {
+    slug: "vietnam-train-tickets",
+    title: "How to Book Train Tickets in Vietnam (Without Headaches)",
+    subtitle: "A practical guide to booking the Reunification Express, scenic coastal routes, and sleeper cabins with international cards.",
+    readingTime: "6 min read",
+    category: "Transportation",
+    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Da_Nang_Railway_Station_-_panoramio.jpg/1920px-Da_Nang_Railway_Station_-_panoramio.jpg",
+    photoCredit: "Vyacheslav Argenberg",
+    photoLicense: "CC BY 4.0",
+    photoPage: "https://commons.wikimedia.org/wiki/File:Da_Nang_Railway_Station_-_panoramio.jpg",
+    problemStatement:
+      "Vietnam's official state railway website (dsvn.vn) is notoriously difficult for international travelers. Portions of the payment gateway remain untranslated, and overseas Visa and Mastercard transactions are frequently declined without explanation. Booking directly at local train station ticket counters can also lead to miscommunications or sold-out sleeper berths during peak travel periods.",
+    steps: [
+      {
+        step: 1,
+        title: "Choose your travel route and train category",
+        description:
+          "The classic Reunification Express runs between Hanoi and Ho Chi Minh City. Key scenic segments include Hanoi to Hue, Hue to Da Nang (crossing the jaw-dropping Hai Van Pass overlooking the East Sea), and overnight trains from Hanoi to Lao Cai (for Sapa)."
+      },
+      {
+        step: 2,
+        title: "Select your berth class",
+        description:
+          "For long journeys or overnight trips, choose 4-berth soft sleeper compartments (first class) with clean linens, air conditioning, and lockable doors. 6-berth hard sleepers are slightly cheaper but more cramped."
+      },
+      {
+        step: 3,
+        title: "Book through an English-language aggregator with verified e-tickets",
+        description:
+          "Using 12Go allows you to browse all train schedules in English, pick your exact carriage and berth on an interactive seat map, and pay seamlessly using international credit cards or PayPal. You receive an electronic boarding voucher with a QR code that station staff scan directly from your phone."
+      },
+      {
+        step: 4,
+        title: "Boarding the train",
+        description:
+          "Arrive at the railway station 30 to 45 minutes before departure. Display your e-ticket on your smartphone along with your physical passport at the gate and cabin entrance."
+      }
+    ],
+    tips: [
+      "Book at least 1 to 2 weeks ahead during high season (November to April), and 1 to 2 months in advance if traveling during Tet (Lunar New Year).",
+      "Pack light layers and warm socks: train air conditioning is often set to freezing levels overnight.",
+      "Bring your own snacks, fresh fruit, and wet wipes; while train carts serve instant noodles and hot tea, gourmet options are limited.",
+      "Lower bunks are easiest to access with luggage, while upper bunks offer greater privacy and quiet.",
+      "For the Hue–Da Nang route, ensure you are seated on the ocean-facing side for spectacular cliffside coastal panoramas."
+    ],
+    faq: [
+      {
+        question: "Can I use an electronic ticket on my smartphone or must I print it?",
+        answer: "E-tickets issued by 12Go and Vietnam Railways have scannable QR codes that train conductors accept directly from your smartphone screen. You do not need to print them."
+      },
+      {
+        question: "Is luggage allowed inside sleeper compartments?",
+        answer: "Yes, you can stow suitcases and backpacks under the bottom bunks or on the overhead luggage shelf above the doorway."
+      },
+      {
+        question: "Are trains in Vietnam punctual?",
+        answer: "Main express trains (prefixed SE1 through SE8) are generally punctual, though minor delays of 15 to 45 minutes can occasionally occur on long cross-country runs."
+      }
+    ],
+    cta: {
+      title: "Check Train Schedules & Book Verified Tickets",
+      description: "Search live railway schedules across Vietnam, select your preferred sleeper bunk, and pay easily with international cards or PayPal on 12Go.",
+      buttonText: "Search Train Tickets on 12Go",
+      partnerName: "12Go Asia",
+      linkKey: "twelveGo",
+      disclosure: "We partner with 12Go to provide transparent ticket search. If you book through this link, we may earn a small referral commission at no extra cost to you."
+    }
+  },
+  {
+    slug: "vietnam-esim",
+    title: "Vietnam eSIM & Mobile Data: The Complete Tourist Guide",
+    subtitle: "Stay connected from the moment your plane lands in Vietnam without swapping physical SIM cards.",
+    readingTime: "5 min read",
+    category: "Connectivity",
+    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Hanoi_Noi_Bai_Airport_Terminal_2_Interior.jpg/1920px-Hanoi_Noi_Bai_Airport_Terminal_2_Interior.jpg",
+    photoCredit: "Dickelbers",
+    photoLicense: "CC BY-SA 4.0",
+    photoPage: "https://commons.wikimedia.org/wiki/File:Hanoi_Noi_Bai_Airport_Terminal_2_Interior.jpg",
+    problemStatement:
+      "Having mobile data the second you land in Vietnam is essential for ordering Grab rides, navigating Google Maps, translating menus, and keeping in touch with accommodation hosts. Buying a physical SIM card at arrival terminals requires waiting in long lines, presenting your passport for registration, handling tiny SIM ejection pins, and risking overpaying at airport kiosks.",
+    steps: [
+      {
+        step: 1,
+        title: "Confirm your phone's eSIM compatibility",
+        description:
+          "Most modern smartphones (iPhone XS and newer, Google Pixel 3 and newer, Samsung Galaxy S20 and newer) support eSIM alongside your home physical SIM."
+      },
+      {
+        step: 2,
+        title: "Purchase a Vietnam data plan prior to departure",
+        description:
+          "Buy a Vietnam eSIM package from Airalo before boarding your flight. Packages typically range from 1 GB up to 20 GB for 7 to 30 days of high-speed data on Vietnam's premier networks (Viettel / Vinaphone)."
+      },
+      {
+        step: 3,
+        title: "Install the eSIM on your device",
+        description:
+          "Scan the provided QR code or install with one tap inside the Airalo mobile app while connected to home Wi-Fi. Name the eSIM line 'Vietnam Travel'."
+      },
+      {
+        step: 4,
+        title: "Turn on Data Roaming upon touchdown",
+        description:
+          "When your airplane touches down at Hanoi, Da Nang, or Ho Chi Minh City, switch your cellular data line to the eSIM and toggle 'Data Roaming' ON. You will connect within seconds."
+      }
+    ],
+    tips: [
+      "For a typical 2-week trip with moderate navigation, messaging, and photo sharing, a 5 GB to 10 GB plan is ideal.",
+      "Leave your primary home SIM active for receiving SMS bank verification codes (OTPs), but turn off data roaming on that home line to avoid roaming fees.",
+      "Most tourist eSIMs provide data only. You do not need a local voice number since Grab, hotel concierges, and tour guides communicate via WhatsApp or in-app chat.",
+      "Always take a screenshot of your eSIM QR code and activation details in case you need offline reference during your flight."
+    ],
+    faq: [
+      {
+        question: "Can I use WhatsApp and iMessage with a data-only eSIM?",
+        answer: "Yes! Your existing WhatsApp account and iMessage continue functioning normally using your home phone number over the eSIM data connection."
+      },
+      {
+        question: "Will the eSIM work in rural areas like Sapa or Ha Giang?",
+        answer: "Yes, Airalo partners with top Vietnamese national carriers (such as Viettel and Vinaphone) that boast exceptional 4G coverage across mountain passes and islands."
+      },
+      {
+        question: "What happens if I run out of data?",
+        answer: "You can easily top up your data plan directly within the Airalo mobile application without needing to install a new eSIM profile."
+      }
+    ],
+    cta: {
+      title: "Get Your Vietnam eSIM Before You Fly",
+      description: "Browse affordable Vietnam data packages on Airalo, install in minutes, and connect immediately upon landing.",
+      buttonText: "Get an eSIM on Airalo",
+      partnerName: "Airalo",
+      linkKey: "airalo",
+      disclosure: "We partner with Airalo to recommend reliable mobile connectivity. If you purchase through this link, we may earn a small referral commission at no extra cost to you."
+    }
+  },
+  {
+    slug: "vietnam-evisa",
+    title: "Vietnam E-Visa: Official Step-by-Step Application Guide",
+    subtitle: "How to successfully apply on the official government portal without paying exorbitant third-party fees.",
+    readingTime: "7 min read",
+    category: "Visas & Entry",
+    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Hanoi_Train_Street_-_Vietnam.jpg/1920px-Hanoi_Train_Street_-_Vietnam.jpg",
+    photoCredit: "Steffen Schmitz",
+    photoLicense: "CC BY-SA 4.0",
+    photoPage: "https://commons.wikimedia.org/wiki/File:Hanoi_Train_Street_-_Vietnam.jpg",
+    problemStatement:
+      "A simple web search for 'Vietnam visa' returns hundreds of commercial agency websites that closely mimic government portals and charge up to three times the legal processing fee. Many tourists also experience delays due to common mistakes such as selecting the wrong entry checkpoint, submitting improper photo crops, or encountering credit card verification errors on the government payment processor.",
+    steps: [
+      {
+        step: 1,
+        title: "Navigate to the ONE AND ONLY official portal",
+        description:
+          "The genuine official immigration portal run by the Vietnamese government is evisa.gov.vn (or immigration.gov.vn). Do NOT pay intermediary visa agencies unless you require urgent consular assistance."
+      },
+      {
+        step: 2,
+        title: "Prepare standard digital documents",
+        description:
+          "You must upload: (1) A clear color portrait photo (4x6 cm, white background, no glasses, facing forward) in JPG format; and (2) A crisp, uncropped scan of your passport biographical page showing full MRZ lines with at least 6 months validity remaining."
+      },
+      {
+        step: 3,
+        title: "Carefully complete the application form",
+        description:
+          "Input your full name exactly as shown in the ICAO machine-readable lines of your passport. Crucially, select your exact intended entry checkpoint (e.g. 'Noi Bai Intl Airport - Ha Noi' or 'Tan Son Nhat Intl Airport - Ho Chi Minh City'). Changing entry ports after issuance is not permitted."
+      },
+      {
+        step: 4,
+        title: "Pay the standard non-refundable government fee",
+        description:
+          "The official fee is $25 USD for a single-entry e-visa (valid up to 90 days) or $50 USD for multiple-entry. Keep your Registration Code safely recorded."
+      },
+      {
+        step: 5,
+        title: "Download and print your approved visa letter",
+        description:
+          "Processing typically takes 3 to 5 business days (excluding weekends and Vietnamese national public holidays). Check status using your Registration Code, download the PDF, and print two physical copies."
+      }
+    ],
+    tips: [
+      "Submit your application at least 2 weeks before your flight to account for potential public holiday backlogs or request for photo resubmission.",
+      "Double check that your date of birth format conforms strictly to DD/MM/YYYY.",
+      "If your credit card payment fails on the government gateway, try another card or notify your bank that an international transaction with the Vietnamese State Treasury is legitimate.",
+      "Carry printed hard copies of your approved e-visa PDF to show airline check-in agents before boarding."
+    ],
+    faq: [
+      {
+        question: "How long is the Vietnam tourist e-visa valid for?",
+        answer: "Citizens of all countries are eligible for an e-visa valid for up to 90 days with either single or multiple entries."
+      },
+      {
+        question: "Can I enter through a different airport than the one on my e-visa?",
+        answer: "Strictly speaking, you must enter through the specific border gate or international airport designated on your approved e-visa document."
+      },
+      {
+        question: "Do I need to pay any stamping fee at the airport upon arrival?",
+        answer: "No. With an electronic visa (e-visa), all fees are settled online beforehand. You proceed straight to the immigration inspection line."
+      }
+    ],
+    cta: {
+      title: "Apply on the Official Government Website",
+      description: "Always use the official Vietnamese immigration website to pay the standard government fee without middleman markups.",
+      buttonText: "Go to the Official E-Visa Portal (evisa.gov.vn)",
+      partnerName: "Vietnam Immigration Department",
+      linkKey: "official",
+      officialUrl: "https://evisa.gov.vn",
+      disclosure: "We do not sell visa services or charge agency markups. We provide free educational instructions directing travelers exclusively to the official government portal."
+    }
+  },
+  {
+    slug: "airport-transfers",
+    title: "From the Airport to the City Center: Hanoi, Da Nang & Saigon",
+    subtitle: "Navigate airport arrivals safely, choose between public buses and Grab, and avoid notorious taxi scams.",
+    readingTime: "6 min read",
+    category: "Arrival & Logistics",
+    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/Tan_Son_Nhat_International_Airport_Terminal_2.jpg/1920px-Tan_Son_Nhat_International_Airport_Terminal_2.jpg",
+    photoCredit: "Lưu Ly",
+    photoLicense: "CC BY-SA 3.0",
+    photoPage: "https://commons.wikimedia.org/wiki/File:Tan_Son_Nhat_International_Airport_Terminal_2.jpg",
+    problemStatement:
+      "Arriving at an unfamiliar Asian airport after a long flight with luggage can feel overwhelming. International arrivals areas at Noi Bai and Tan Son Nhat are notorious for aggressive freelance touts who pose as official taxi dispatchers, run rigged meters, or demand steep airport exit tolls that can cost five times the genuine price.",
+    steps: [
+      {
+        step: 1,
+        title: "Hanoi Noi Bai International Airport (HAN)",
+        description:
+          "Located 30 km north of the city (40-50 min drive). Budget option: Express Bus 86 directly to the Old Quarter for 45,000 VND ($1.80). Convenience option: App-based Grab ride (~280,000–350,000 VND) or pre-booked private driver with name board."
+      },
+      {
+        step: 2,
+        title: "Da Nang International Airport (DAD)",
+        description:
+          "Located right inside the city center! It takes just 10 minutes (approx. 70,000–100,000 VND via Grab) to reach Han River bridges or 15 minutes to My Khe Beach. Hoi An is 30 km south (approx. 250,000–350,000 VND)."
+      },
+      {
+        step: 3,
+        title: "Ho Chi Minh City Tan Son Nhat (SGN)",
+        description:
+          "Located 7 km northwest of District 1 (30-60 min depending on heavy traffic). Yellow Airport Bus 109 runs to Ben Thanh Market for 15,000 VND. Grab pickup is situated on the 3rd floor of the multi-level parking garage across from the terminal."
+      },
+      {
+        step: 4,
+        title: "The pre-booked private transfer advantage",
+        description:
+          "If arriving late at night, traveling with elderly family or young children, or carrying multiple surfboards/heavy bags, booking a fixed-price private transfer on Klook provides absolute peace of mind: your driver waits at the arrival gate holding a sign with your name, including flight delay tracking."
+      }
+    ],
+    tips: [
+      "Never accept rides from touts approaching you inside the arrival lobby claiming to be 'official drivers'.",
+      "Only take reputable metered taxis with visible corporate branding: Mai Linh (bright green) or Vinasun (white with green/red stripes). Ensure the meter starts at the standard flag drop.",
+      "Make sure you have an active eSIM data connection so you can book a Grab from inside the baggage claim hall.",
+      "Keep small Vietnamese Dong notes (50,000–100,000 VND) handy in case you need to cover the standard airport vehicle gate toll (typically 10,000–15,000 VND)."
+    ],
+    faq: [
+      {
+        question: "Is Grab available at all three major Vietnam airports?",
+        answer: "Yes, Grab is fully operational at Noi Bai, Da Nang, and Tan Son Nhat airports with designated pickup lanes."
+      },
+      {
+        question: "How much should an airport taxi cost to central Hanoi?",
+        answer: "A standard 4-seater car ride to the Old Quarter costs roughly 280,000 to 350,000 VND (around $11 to $14 USD), including airport road tolls."
+      },
+      {
+        question: "What if my flight is delayed and I pre-booked a private transfer?",
+        answer: "When booking an airport transfer on Klook, you provide your flight number. Drivers monitor live arrival boards and automatically adjust pickup times free of charge."
+      }
+    ],
+    cta: {
+      title: "Pre-Book Fixed-Price Airport Transfers",
+      description: "Skip the queues and taxi hassles by arranging a private air-conditioned airport transfer with meet-and-greet service on Klook.",
+      buttonText: "Book Airport Transfers on Klook",
+      partnerName: "Klook",
+      linkKey: "klook",
+      disclosure: "We partner with Klook to provide reliable ground transport. If you book through this link, we may earn a small referral commission at no extra cost to you."
+    }
+  }
+];
+
+export function getAllGuides(): GuideArticle[] {
+  return GUIDES;
+}
+
+export function getGuideBySlug(slug: string): GuideArticle | undefined {
+  return GUIDES.find((g) => g.slug === slug);
+}

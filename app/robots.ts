@@ -1,0 +1,14 @@
+import { MetadataRoute } from "next";
+import { SITE_URL } from "@/config/site";
+
+export default function robots(): MetadataRoute.Robots {
+  const baseUrl = SITE_URL || "https://vietnamatlas.com";
+
+  return {
+    rules: {
+      userAgent: "*",
+      allow: "/",
+    },
+    sitemap: `${baseUrl}/sitemap.xml`,
+  };
+}
