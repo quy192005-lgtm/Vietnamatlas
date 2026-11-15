@@ -54,6 +54,26 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable} ${beVietnamPro.variable}`}>
       <head>
+        {/* Travelpayouts Drive Verification Script */}
+        <script
+          // @ts-expect-error custom travelpayouts attributes
+          nowprocket=""
+          data-noptimize="1"
+          data-cfasync="false"
+          data-wpfc-render="false"
+          seraph-accel-crit="1"
+          data-no-defer="1"
+          data-cmp-ab="2"
+          dangerouslySetInnerHTML={{
+            __html: `(function () {
+      var script = document.createElement("script");
+      script.async = 1;
+      script.setAttribute("data-cmp-ab","2");
+      script.src = 'https://emrldtp.com/NjAxMzA1.js?t=601305';
+      document.head.appendChild(script);
+  })();`,
+          }}
+        />
         <link
           rel="stylesheet"
           href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
