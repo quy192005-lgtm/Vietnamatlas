@@ -20,7 +20,7 @@ export default function Footer() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <span className="font-brand font-black text-2xl tracking-tight bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-transparent uppercase">
+              <span className="font-brand font-bold text-2xl -tracking-[0.025em] bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 bg-clip-text text-transparent leading-none">
                 {SITE_NAME}
               </span>
             </Link>

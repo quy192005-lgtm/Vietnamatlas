@@ -40,7 +40,7 @@ const config: Config = {
       fontFamily: {
         serif: ["var(--font-playfair)", "Georgia", "serif"],
         sans: ["var(--font-inter)", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-        brand: ["var(--font-montserrat)", "sans-serif"],
+        brand: ["var(--font-brand)", "var(--font-inter)", "sans-serif"],
       },
       borderRadius: {
         "2xl": "16px",

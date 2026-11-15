@@ -27,7 +27,7 @@ export default function Header() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="font-brand font-black text-xl sm:text-2xl tracking-tight bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-transparent group-hover:from-amber-500 group-hover:to-yellow-500 transition-all drop-shadow-xs uppercase">
+              <span className="font-brand font-bold text-2xl sm:text-[26px] -tracking-[0.025em] bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 bg-clip-text text-transparent group-hover:from-amber-500 group-hover:to-yellow-400 transition-all drop-shadow-xs leading-none">
                 {SITE_NAME}
               </span>
             </div>

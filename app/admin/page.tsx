@@ -20,7 +20,6 @@ import {
   X,
   AlertCircle,
   Clock,
-  Tag,
   Camera,
   Lock,
   EyeOff,
@@ -808,7 +807,7 @@ export default function AdminPage() {
               <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
               <span>Restricted Access</span>
             </div>
-            <h1 className="font-brand font-black text-2xl sm:text-3xl tracking-tight bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-transparent uppercase">
+            <h1 className="font-brand font-bold text-2xl sm:text-3xl -tracking-[0.025em] bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 bg-clip-text text-transparent">
               Vietnam Atlas
             </h1>
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mt-1">
@@ -926,8 +925,8 @@ export default function AdminPage() {
               />
             </div>
             <div>
-              <h1 className="font-brand font-black text-lg tracking-tight bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent flex items-center gap-2 uppercase">
-                Vietnam Atlas <span className="text-xs px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-sans font-medium border border-teal-500/30 normal-case">Owner Control Panel</span>
+              <h1 className="font-brand font-bold text-lg sm:text-xl -tracking-[0.025em] bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent flex items-center gap-2">
+                Vietnam Atlas <span className="text-xs px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-sans font-medium border border-teal-500/30 normal-case tracking-normal">Owner Control Panel</span>
               </h1>
             </div>
           </div>

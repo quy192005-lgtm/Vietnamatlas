@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display, Montserrat } from "next/font/google";
+import { Inter, Playfair_Display, Be_Vietnam_Pro } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -17,11 +17,11 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-montserrat",
+const beVietnamPro = Be_Vietnam_Pro({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-brand",
+  weight: ["400", "500", "600", "700"],
   display: "swap",
-  weight: ["600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -52,7 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable} ${montserrat.variable}`}>
+    <html lang="en" className={`${inter.variable} ${playfair.variable} ${beVietnamPro.variable}`}>
       <head>
         <link
           rel="stylesheet"
