@@ -1,0 +1,194 @@
+[
+  {
+    "city_slug": "hanoi",
+    "city": "Hanoi",
+    "region": "north",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/Hoan_Kiem_Lake_-_Hanoi%2C_Vietnam_-_DSC03687.JPG/1920px-Hoan_Kiem_Lake_-_Hanoi%2C_Vietnam_-_DSC03687.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Daderot",
+    "photo_license": "CC0"
+  },
+  {
+    "city_slug": "quang-ninh",
+    "city": "Quang Ninh",
+    "region": "north",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/View_from_the_top_of_Ti_Tov_island_2.jpg/1920px-View_from_the_top_of_Ti_Tov_island_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Jakub Hałun",
+    "photo_license": "CC BY 4.0"
+  },
+  {
+    "city_slug": "hai-phong",
+    "city": "Hai Phong",
+    "region": "north",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/Islands_southeast_of_Cat_Ba_Island_in_Vietnam%2C_20240131_1515_4743.jpg/1920px-Islands_southeast_of_Cat_Ba_Island_in_Vietnam%2C_20240131_1515_4743.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Jakub Hałun",
+    "photo_license": "CC BY 4.0"
+  },
+  {
+    "city_slug": "ninh-binh",
+    "city": "Ninh Binh",
+    "region": "north",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Trang_An_Landscape_Complex%2C_Ninh_Binh_Province%2C_Vietnam%2C_20240202_1433_5283.jpg/1920px-Trang_An_Landscape_Complex%2C_Ninh_Binh_Province%2C_Vietnam%2C_20240202_1433_5283.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Jakub Hałun",
+    "photo_license": "CC BY 4.0"
+  },
+  {
+    "city_slug": "lao-cai",
+    "city": "Lao Cai",
+    "region": "north",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/5/52/Nh%C3%A0_th%E1%BB%9D_%C4%91%C3%A1_t%E1%BA%A1i_trung_t%C3%A2m_Sa_Pa.jpg?utm_source=vi.wikipedia.org&utm_campaign=api&utm_content=original",
+    "photo_credit": "Wikimedia Commons",
+    "photo_license": "CC BY-SA 4.0"
+  },
+  {
+    "city_slug": "son-la",
+    "city": "Son La",
+    "region": "north",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Di_t%C3%ADch_B%C3%A1c_H%E1%BB%93_v%E1%BB%81_th%C4%83m_N%C3%B4ng_tr%C6%B0%E1%BB%9Dng_M%E1%BB%99c_Ch%C3%A2u.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "photo_credit": "Vietlong1220",
+    "photo_license": "CC BY-SA 4.0"
+  },
+  {
+    "city_slug": "ha-giang",
+    "city": "Ha Giang",
+    "region": "north",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/C%E1%BB%99t_c%E1%BB%9D_L%C5%A9ng_C%C3%BA_-_H%C3%A0_Giang.JPG/1920px-C%E1%BB%99t_c%E1%BB%9D_L%C5%A9ng_C%C3%BA_-_H%C3%A0_Giang.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "vi:User:Leminhel",
+    "photo_license": "Public domain"
+  },
+  {
+    "city_slug": "cao-bang",
+    "city": "Cao Bang",
+    "region": "north",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/Ban_Gioc_Waterfall_-_Trung_Kanh_District_-_Cao_Bang_Province_-_Vietnam_-_04_%2848119872007%29.jpg/1920px-Ban_Gioc_Waterfall_-_Trung_Kanh_District_-_Cao_Bang_Province_-_Vietnam_-_04_%2848119872007%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Adam Jones from Kelowna, BC, Canada",
+    "photo_license": "CC BY-SA 2.0"
+  },
+  {
+    "city_slug": "bac-kan",
+    "city": "Bac Kan",
+    "region": "north",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Ao_Ech%2C_Cat_Ba_National_Park%2C_Vietnam%2C_20240131_1027_4568.jpg/1920px-Ao_Ech%2C_Cat_Ba_National_Park%2C_Vietnam%2C_20240131_1027_4568.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Jakub Hałun",
+    "photo_license": "CC BY 4.0"
+  },
+  {
+    "city_slug": "phu-tho",
+    "city": "Phu Tho",
+    "region": "north",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/28/%C4%90%E1%BB%81n_Th%E1%BB%9D_H%C3%B9ng_V%C6%B0%C6%A1ng_-_Su%E1%BB%91i_Ti%C3%AAn.jpg/1920px-%C4%90%E1%BB%81n_Th%E1%BB%9D_H%C3%B9ng_V%C6%B0%C6%A1ng_-_Su%E1%BB%91i_Ti%C3%AAn.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Xuannguyen1133",
+    "photo_license": "CC BY-SA 4.0"
+  },
+  {
+    "city_slug": "hoa-binh",
+    "city": "Hoa Binh",
+    "region": "north",
+    "photo_url": "https://upload.wikimedia.org/wikipedia/commons/0/02/UBND_x%C3%A3_%C4%90%E1%BA%A1i_Th%E1%BA%AFng.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+    "photo_credit": "Taxigiadinh",
+    "photo_license": "CC BY-SA 4.0"
+  },
+  {
+    "city_slug": "dien-bien",
+    "city": "Dien Bien",
+    "region": "north",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/Crater_Left_by_Vietminh_Dynamite_Blast_-_Hill_A1_%28Eliane_2%29_-_Dien_Bien_Phu_-_Vietnam_%2848168795271%29.jpg/1920px-Crater_Left_by_Vietminh_Dynamite_Blast_-_Hill_A1_%28Eliane_2%29_-_Dien_Bien_Phu_-_Vietnam_%2848168795271%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Adam Jones from Kelowna, BC, Canada",
+    "photo_license": "CC BY-SA 2.0"
+  },
+  {
+    "city_slug": "vinh-phuc",
+    "city": "Vinh Phuc",
+    "region": "north",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/26/Gastroserica_dembickyi_Ahrens%2C_2000_%2833429510863%29.png/1920px-Gastroserica_dembickyi_Ahrens%2C_2000_%2833429510863%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Udo Schmidt from Deutschland",
+    "photo_license": "CC BY-SA 2.0"
+  },
+  {
+    "city_slug": "ha-nam",
+    "city": "Ha Nam",
+    "region": "north",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Tam_Chuc_Pagoda_-_Ha_Nam.jpg/1920px-Tam_Chuc_Pagoda_-_Ha_Nam.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Milad Mosapoor",
+    "photo_license": "Attribution"
+  },
+  {
+    "city_slug": "thanh-hoa",
+    "city": "Thanh Hoa",
+    "region": "central",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/Ru%E1%BB%99ng_b%E1%BA%ADc_thang_P%C3%B9_Lu%C3%B4ng_1_-_NKS.jpg/1920px-Ru%E1%BB%99ng_b%E1%BA%ADc_thang_P%C3%B9_Lu%C3%B4ng_1_-_NKS.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "NKSTTSSHNVN",
+    "photo_license": "CC BY-SA 4.0"
+  },
+  {
+    "city_slug": "quang-binh",
+    "city": "Quang Binh",
+    "region": "central",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Cueva_Phong_Nha%2C_Vietnam_%2838652790530%29.jpg/1920px-Cueva_Phong_Nha%2C_Vietnam_%2838652790530%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Edgardo W. Olivera from Montevideo, Uruguay",
+    "photo_license": "CC BY 2.0"
+  },
+  {
+    "city_slug": "hue",
+    "city": "Hue",
+    "region": "central",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Vietnam%2C_Hue%2C_Imperial_City_of_Hue%2C_Enclosure.jpg/1920px-Vietnam%2C_Hue%2C_Imperial_City_of_Hue%2C_Enclosure.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Vyacheslav Argenberg",
+    "photo_license": "CC BY 4.0"
+  },
+  {
+    "city_slug": "da-nang",
+    "city": "Da Nang",
+    "region": "central",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/%C4%90%C3%A0_N%E1%BA%B5ng%2C_H%E1%BA%A3i_V%C3%A2n_Pass%2C_2020-01_CN-01.jpg/1920px-%C4%90%C3%A0_N%E1%BA%B5ng%2C_H%E1%BA%A3i_V%C3%A2n_Pass%2C_2020-01_CN-01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Steffen Schmitz (more photos)",
+    "photo_license": "CC BY-SA 4.0"
+  },
+  {
+    "city_slug": "quang-nam",
+    "city": "Hoi An (Quang Nam)",
+    "region": "central",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/H%E1%BB%99i_An%2C_Ancient_Town%2C_2020-01_CN-06.jpg/1920px-H%E1%BB%99i_An%2C_Ancient_Town%2C_2020-01_CN-06.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Steffen Schmitz (more photos)",
+    "photo_license": "CC BY-SA 4.0"
+  },
+  {
+    "city_slug": "quang-ngai",
+    "city": "Quang Ngai",
+    "region": "central",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/Background-3062008.jpg/1920px-Background-3062008.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Quangpraha",
+    "photo_license": "CC0"
+  },
+  {
+    "city_slug": "khanh-hoa",
+    "city": "Khanh Hoa",
+    "region": "central",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/H%C3%B2a_th%C6%B0%E1%BB%A3ng_%E1%BA%A4n_Kim_-_T%E1%BB%95_Tu%C3%A2n_-_Ho%E1%BA%B1ng_T%E1%BB%8Bnh._%E5%8D%B0_%E9%87%91_%E7%A5%96_%E6%81%82_%E5%BC%98_%E5%87%80.jpg/1920px-H%C3%B2a_th%C6%B0%E1%BB%A3ng_%E1%BA%A4n_Kim_-_T%E1%BB%95_Tu%C3%A2n_-_Ho%E1%BA%B1ng_T%E1%BB%8Bnh._%E5%8D%B0_%E9%87%91_%E7%A5%96_%E6%81%82_%E5%BC%98_%E5%87%80.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Thích Đồng Thanh",
+    "photo_license": "CC BY-SA 4.0"
+  },
+  {
+    "city_slug": "ninh-thuan",
+    "city": "Ninh Thuan",
+    "region": "central",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Po_Klong_Garai_Temple_4.jpg/1920px-Po_Klong_Garai_Temple_4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Theodor",
+    "photo_license": "CC BY-SA 4.0"
+  },
+  {
+    "city_slug": "da-lat",
+    "city": "Da Lat (Lam Dong)",
+    "region": "central",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Ho_Xuan_Huong_-_Huy_Phuong_1.jpg/1920px-Ho_Xuan_Huong_-_Huy_Phuong_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "Trần Huy Phương",
+    "photo_license": "CC BY-SA 3.0"
+  },
+  {
+    "city_slug": "ho-chi-minh-city",
+    "city": "Ho Chi Minh City",
+    "region": "south",
+    "photo_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/President%27s_bedroom_Independence_Palace_Ho_Chi_Minh_city_Saigon_%2838647650545%29.jpg/1920px-President%27s_bedroom_Independence_Palace_Ho_Chi_Minh_city_Saigon_%2838647650545%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "photo_credit": "dronepicr",
+    "photo_license": "CC BY 2.0"
+  }
+]

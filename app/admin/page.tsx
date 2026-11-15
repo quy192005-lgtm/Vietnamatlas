@@ -86,6 +86,22 @@ interface CommunityPhotoItem {
   index: number;
 }
 
+interface CityItem {
+  city_slug: string;
+  city: string;
+  region: "north" | "central" | "south";
+  photo_url: string;
+  photo_credit: string;
+  photo_license: string;
+  count: number;
+  available_photos?: {
+    place_name_en: string;
+    place_slug: string;
+    photo_url: string;
+    photo_credit: string;
+  }[];
+}
+
 const CATEGORIES = [
   "Historic Sites",
   "Nature & Lakes",
@@ -110,7 +126,39 @@ export default function AdminPage() {
   const [loginLoading, setLoginLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const [activeTab, setActiveTab] = useState<"places" | "guides" | "photos">("places");
+  const [activeTab, setActiveTab] = useState<"places" | "cities" | "guides" | "photos">("places");
+
+  // CITIES & DESTINATIONS STATE
+  const [citiesList, setCitiesList] = useState<CityItem[]>([]);
+  const [citiesLoading, setCitiesLoading] = useState(false);
+  const [citySearch, setCitySearch] = useState("");
+  const [cityRegionFilter, setCityRegionFilter] = useState("all");
+
+  // City Edit Modal state
+  const [cityModalOpen, setCityModalOpen] = useState(false);
+  const [cityForm, setCityForm] = useState<{
+    city_slug: string;
+    city: string;
+    region: "north" | "central" | "south";
+    photo_url: string;
+    photo_credit: string;
+    photo_license: string;
+    available_photos: {
+      place_name_en: string;
+      place_slug: string;
+      photo_url: string;
+      photo_credit: string;
+    }[];
+  }>({
+    city_slug: "",
+    city: "",
+    region: "north",
+    photo_url: "",
+    photo_credit: "",
+    photo_license: "CC BY-SA 4.0",
+    available_photos: [],
+  });
+  const [citySaving, setCitySaving] = useState(false);
 
   // PLACES STATE
   const [places, setPlaces] = useState<Place[]>([]);
@@ -260,6 +308,22 @@ export default function AdminPage() {
     }
   }, []);
 
+  // Fetch cities/destinations from API
+  const fetchCities = useCallback(async () => {
+    setCitiesLoading(true);
+    try {
+      const res = await fetch("/api/cities");
+      const data = await res.json();
+      if (data.success) {
+        setCitiesList(data.cities || []);
+      }
+    } catch (err) {
+      console.error("Failed to load cities:", err);
+    } finally {
+      setCitiesLoading(false);
+    }
+  }, []);
+
   // Check session on mount
   const checkAuth = useCallback(async () => {
     try {
@@ -293,8 +357,9 @@ export default function AdminPage() {
     if (isAuthenticated) {
       fetchCommunityPhotos();
       fetchAllPlacesList();
+      fetchCities();
     }
-  }, [isAuthenticated, fetchCommunityPhotos, fetchAllPlacesList]);
+  }, [isAuthenticated, fetchCommunityPhotos, fetchAllPlacesList, fetchCities]);
 
   // Login handler
   const handleLogin = async (e: React.FormEvent) => {
@@ -638,6 +703,50 @@ export default function AdminPage() {
     }
   };
 
+  // City cover photo edit handlers
+  const handleOpenEditCity = (c: CityItem) => {
+    setCityForm({
+      city_slug: c.city_slug,
+      city: c.city,
+      region: c.region,
+      photo_url: c.photo_url || "",
+      photo_credit: c.photo_credit || "Wikimedia Commons",
+      photo_license: c.photo_license || "CC BY-SA 4.0",
+      available_photos: c.available_photos || [],
+    });
+    setCityModalOpen(true);
+  };
+
+  const handleCityFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!cityForm.city_slug) return;
+    setCitySaving(true);
+    try {
+      const res = await fetch("/api/cities", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          city_slug: cityForm.city_slug,
+          photo_url: cityForm.photo_url,
+          photo_credit: cityForm.photo_credit,
+          photo_license: cityForm.photo_license,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(`Updated cover photo for ${cityForm.city}!`);
+        setCityModalOpen(false);
+        fetchCities();
+      } else {
+        showToast(data.error || "Failed to update city cover photo", "error");
+      }
+    } catch (err: any) {
+      showToast(err.message || "Failed to update city cover photo", "error");
+    } finally {
+      setCitySaving(false);
+    }
+  };
+
   // 1. Loading session check
   if (isAuthenticated === null) {
     return (
@@ -827,13 +936,14 @@ export default function AdminPage() {
             <button
               onClick={() => {
                 fetchPlaces();
+                fetchCities();
                 fetchGuides();
                 fetchCommunityPhotos();
               }}
               className="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5 text-xs font-medium"
               title="Refresh Data"
             >
-              <RefreshCw className={`w-4 h-4 ${loading || guidesLoading || communityLoading ? "animate-spin text-teal-400" : ""}`} />
+              <RefreshCw className={`w-4 h-4 ${loading || citiesLoading || guidesLoading || communityLoading ? "animate-spin text-teal-400" : ""}`} />
               <span className="hidden sm:inline">Refresh</span>
             </button>
 
@@ -885,7 +995,7 @@ export default function AdminPage() {
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-6">
         
         {/* TOP SECTION SWITCHER TABS */}
-        <div className="flex items-center gap-2 p-1.5 bg-slate-200/80 rounded-2xl w-fit border border-slate-300/60 shadow-inner">
+        <div className="flex flex-wrap items-center gap-2 p-1.5 bg-slate-200/80 rounded-2xl w-fit border border-slate-300/60 shadow-inner">
           <button
             type="button"
             onClick={() => setActiveTab("places")}
@@ -897,6 +1007,19 @@ export default function AdminPage() {
           >
             <Compass className="w-4 h-4 text-teal-600" />
             <span>Places Directory ({stats.total.toLocaleString()})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("cities")}
+            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 ${
+              activeTab === "cities"
+                ? "bg-white text-teal-800 shadow-md border border-slate-200"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            <MapPin className="w-4 h-4 text-teal-600" />
+            <span>Destinations &amp; Cities ({citiesList.length})</span>
           </button>
 
           <button
@@ -1236,7 +1359,188 @@ export default function AdminPage() {
         )}
 
         {/* ============================================================== */}
-        {/* TAB 2: PRACTICAL TRAVEL GUIDES MANAGEMENT */}
+        {/* TAB 2: DESTINATIONS & CITIES COVER PHOTOS */}
+        {/* ============================================================== */}
+        {activeTab === "cities" && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h2 className="font-serif text-xl font-bold text-slate-900 flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-teal-600" />
+                  <span>Destinations &amp; City Cover Photos</span>
+                </h2>
+                <p className="text-xs text-slate-500 mt-1">
+                  Manage the primary cover photo for all 24 published provinces and cities shown on /destinations, homepage, and city detail pages.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-teal-50 text-teal-800 border border-teal-200">
+                  {citiesList.length} Total Destinations
+                </span>
+              </div>
+            </div>
+
+            {/* SEARCH & REGION FILTER BAR */}
+            <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="relative w-full sm:w-80">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Filter destinations by name..."
+                  value={citySearch}
+                  onChange={(e) => setCitySearch(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-teal-500 text-slate-800"
+                />
+                {citySearch && (
+                  <button
+                    onClick={() => setCitySearch("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+                {(["all", "north", "central", "south"] as const).map((r) => (
+                  <button
+                    key={r}
+                    onClick={() => setCityRegionFilter(r)}
+                    className={`px-3.5 py-1.5 rounded-xl text-xs font-medium capitalize transition-all shrink-0 ${
+                      cityRegionFilter === r
+                        ? "bg-slate-900 text-white shadow-sm"
+                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    }`}
+                  >
+                    {r === "all" ? "All Regions" : `${r} Vietnam`}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* CITIES GRID */}
+            {citiesLoading ? (
+              <div className="bg-white rounded-2xl p-12 text-center border border-slate-200">
+                <RefreshCw className="w-6 h-6 animate-spin text-teal-600 mx-auto mb-2" />
+                <p className="text-xs text-slate-500">Loading destination photos...</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                {citiesList
+                  .filter((c) => {
+                    const matchSearch =
+                      !citySearch ||
+                      c.city.toLowerCase().includes(citySearch.toLowerCase()) ||
+                      c.city_slug.toLowerCase().includes(citySearch.toLowerCase());
+                    const matchRegion = cityRegionFilter === "all" || c.region === cityRegionFilter;
+                    return matchSearch && matchRegion;
+                  })
+                  .map((c) => {
+                    const regionColor =
+                      c.region === "north"
+                        ? "bg-teal-500/90 text-white"
+                        : c.region === "central"
+                        ? "bg-amber-500/90 text-white"
+                        : "bg-emerald-600/90 text-white";
+
+                    return (
+                      <div
+                        key={c.city_slug}
+                        className="group bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col"
+                      >
+                        {/* Cover Image Container */}
+                        <div className="relative h-48 w-full bg-slate-100 overflow-hidden">
+                          {c.photo_url ? (
+                            <Image
+                              src={c.photo_url}
+                              alt={c.city}
+                              fill
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                              className="object-cover group-hover:scale-105 transition-transform duration-500"
+                              unoptimized
+                            />
+                          ) : (
+                            <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-100">
+                              <Camera className="w-8 h-8 mb-1 opacity-50" />
+                              <span className="text-[11px]">No cover photo</span>
+                            </div>
+                          )}
+
+                          {/* Gradient overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent pointer-events-none" />
+
+                          {/* Top Badges */}
+                          <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 pointer-events-none">
+                            <span
+                              className={`text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full shadow-sm backdrop-blur-sm ${regionColor}`}
+                            >
+                              {c.region} Vietnam
+                            </span>
+                            <span className="text-[11px] font-semibold bg-slate-900/80 backdrop-blur-sm text-white px-2.5 py-1 rounded-full shadow-sm">
+                              {c.count} Places Listed
+                            </span>
+                          </div>
+
+                          {/* City Name overlay on image */}
+                          <div className="absolute bottom-3 left-3 right-3 text-white">
+                            <h3 className="font-serif text-xl font-bold tracking-tight drop-shadow-md">
+                              {c.city}
+                            </h3>
+                            <span className="text-[11px] font-mono text-slate-300 opacity-90">
+                              /cities/{c.city_slug}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Card Body */}
+                        <div className="p-4 flex-1 flex flex-col justify-between space-y-3 bg-white">
+                          <div className="text-[11px] text-slate-500 space-y-1">
+                            <div className="flex items-center gap-1.5 truncate">
+                              <span className="font-semibold text-slate-700">Photo Credit:</span>
+                              <span className="truncate" title={c.photo_credit || "Unspecified"}>
+                                {c.photo_credit || "Unspecified"}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-semibold text-slate-700">License:</span>
+                              <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-mono">
+                                {c.photo_license || "CC BY-SA 4.0"}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Actions */}
+                          <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEditCity(c)}
+                              className="flex-1 py-2 px-3 bg-teal-50 hover:bg-teal-100 active:bg-teal-200 text-teal-800 text-xs font-semibold rounded-xl border border-teal-200/80 transition-colors flex items-center justify-center gap-1.5"
+                            >
+                              <Edit2 className="w-3.5 h-3.5 text-teal-600" />
+                              <span>Change Cover Photo</span>
+                            </button>
+
+                            <Link
+                              href={`/cities/${c.city_slug}`}
+                              target="_blank"
+                              className="p-2 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors"
+                              title={`View public page for ${c.city}`}
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ============================================================== */}
+        {/* TAB 3: PRACTICAL TRAVEL GUIDES MANAGEMENT */}
         {/* ============================================================== */}
         {activeTab === "guides" && (
           <div className="space-y-6">
@@ -2281,6 +2585,195 @@ export default function AdminPage() {
                 >
                   {photoSaving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : null}
                   <span>{photoModalMode === "add" ? "Publish to Live Site" : "Save Changes"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* 5. EDIT CITY COVER PHOTO MODAL */}
+      {cityModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-5 max-h-[92vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between border-b border-slate-100 pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200">
+                    {cityForm.region} Vietnam
+                  </span>
+                  <span className="text-xs font-mono text-slate-400">/cities/{cityForm.city_slug}</span>
+                </div>
+                <h3 className="font-serif text-2xl font-bold text-slate-900 mt-1">
+                  Change Cover Photo: {cityForm.city}
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Choose from existing places in {cityForm.city} or paste a custom high-resolution image URL.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setCityModalOpen(false)}
+                className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCityFormSubmit} className="space-y-5">
+              {/* Live Preview Box */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Current Cover Photo Live Preview
+                </label>
+                <div className="relative h-56 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-inner flex items-center justify-center">
+                  {cityForm.photo_url ? (
+                    <>
+                      <Image
+                        src={cityForm.photo_url}
+                        alt={cityForm.city}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+                      <div className="absolute bottom-3 left-4 right-4 text-white text-xs pointer-events-none">
+                        <p className="font-serif font-bold text-base">{cityForm.city}</p>
+                        <p className="text-[11px] text-slate-300 opacity-90 truncate">
+                          Photo: {cityForm.photo_credit || "Uncredited"} — {cityForm.photo_license}
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center text-slate-400">
+                      <Camera className="w-8 h-8 mx-auto mb-1 opacity-50" />
+                      <p className="text-xs">No image URL specified yet</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* 1-Click Pick from Existing Places */}
+              {cityForm.available_photos && cityForm.available_photos.length > 0 && (
+                <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200/80">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-xs font-bold text-slate-800">
+                      Quick-Pick from Places in {cityForm.city} ({cityForm.available_photos.length} photos)
+                    </label>
+                    <span className="text-[11px] text-teal-700 font-medium">Click any thumbnail to select</span>
+                  </div>
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5 max-h-48 overflow-y-auto p-1">
+                    {cityForm.available_photos.map((item, idx) => {
+                      const isSelected = cityForm.photo_url === item.photo_url;
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => {
+                            setCityForm((prev) => ({
+                              ...prev,
+                              photo_url: item.photo_url,
+                              photo_credit: item.photo_credit || prev.photo_credit,
+                            }));
+                          }}
+                          className={`relative h-20 rounded-xl overflow-hidden border-2 transition-all group text-left ${
+                            isSelected
+                              ? "border-teal-600 ring-2 ring-teal-500/40 shadow-md scale-[1.02]"
+                              : "border-transparent hover:border-slate-300 opacity-80 hover:opacity-100"
+                          }`}
+                          title={`Use photo from: ${item.place_name_en}`}
+                        >
+                          <Image
+                            src={item.photo_url}
+                            alt={item.place_name_en}
+                            fill
+                            sizes="120px"
+                            className="object-cover"
+                            unoptimized
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                          <span className="absolute bottom-1 left-1.5 right-1.5 text-[9px] font-medium text-white truncate drop-shadow">
+                            {item.place_name_en}
+                          </span>
+                          {isSelected && (
+                            <div className="absolute top-1 right-1 bg-teal-600 text-white rounded-full p-0.5 shadow">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Custom Image URL inputs */}
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Photo URL (Unsplash, Wikimedia, Direct CDN URL) *
+                  </label>
+                  <input
+                    type="url"
+                    required
+                    value={cityForm.photo_url}
+                    onChange={(e) => setCityForm({ ...cityForm, photo_url: e.target.value })}
+                    placeholder="https://images.unsplash.com/... or https://upload.wikimedia.org/..."
+                    className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      Photo Credit / Photographer *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={cityForm.photo_credit}
+                      onChange={(e) => setCityForm({ ...cityForm, photo_credit: e.target.value })}
+                      placeholder="e.g. Jakub Hałun, Elena Rostova, Unsplash"
+                      className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      License
+                    </label>
+                    <select
+                      value={cityForm.photo_license}
+                      onChange={(e) => setCityForm({ ...cityForm, photo_license: e.target.value })}
+                      className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
+                    >
+                      <option value="CC BY-SA 4.0">CC BY-SA 4.0</option>
+                      <option value="CC BY 4.0">CC BY 4.0</option>
+                      <option value="CC BY-SA 3.0">CC BY-SA 3.0</option>
+                      <option value="CC0">CC0 (Public Domain)</option>
+                      <option value="Unsplash License">Unsplash License</option>
+                      <option value="Editorial Use">Editorial Use</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Form buttons */}
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setCityModalOpen(false)}
+                  className="px-4 py-2 border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 font-medium text-xs transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={citySaving || !cityForm.photo_url}
+                  className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-xl font-medium text-xs shadow-md shadow-teal-700/20 transition-all flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {citySaving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : null}
+                  <span>Save Cover Photo</span>
                 </button>
               </div>
             </form>

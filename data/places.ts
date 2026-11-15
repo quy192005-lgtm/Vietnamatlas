@@ -1,4 +1,5 @@
 import placesData from "./places.json";
+import citiesData from "./cities.json";
 
 export interface Place {
   // 12 raw fields
@@ -100,18 +101,26 @@ export function getCities(): CityInfo[] {
     map.get(p.city_slug)!.places.push(p);
   });
 
+  const customCityMap = new Map<string, any>();
+  if (Array.isArray(citiesData)) {
+    citiesData.forEach((c: any) => {
+      customCityMap.set(c.city_slug, c);
+    });
+  }
+
   const list: CityInfo[] = [];
   map.forEach((val) => {
+    const customConfig = customCityMap.get(val.city_slug);
     const photoPlace = val.places.find((p) => p.photo_status === "ok" && p.photo_url) || val.places[0];
     list.push({
       city: val.city,
       city_slug: val.city_slug,
       region: val.region,
       count: val.places.length,
-      photo_url: photoPlace ? photoPlace.photo_url : "",
-      photo_credit: photoPlace ? photoPlace.photo_credit : "",
-      photo_license: photoPlace ? photoPlace.photo_license : "",
-      photo_page: photoPlace ? photoPlace.photo_page : "",
+      photo_url: customConfig?.photo_url || (photoPlace ? photoPlace.photo_url : ""),
+      photo_credit: customConfig?.photo_credit || (photoPlace ? photoPlace.photo_credit : ""),
+      photo_license: customConfig?.photo_license || (photoPlace ? photoPlace.photo_license : ""),
+      photo_page: customConfig?.photo_page || (photoPlace ? photoPlace.photo_page : ""),
     });
   });
 
