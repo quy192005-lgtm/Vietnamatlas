@@ -33,10 +33,10 @@ export const REGIONS: Record<"north" | "central" | "south", RegionInfo> = {
       "Central Vietnam represents a mesmerizing tapestry of royal heritage, coastal beauty, and culinary sophistication. The historic imperial capital of Hue is crowned by the Nguyen dynasty citadel and royal tombs, while nearby Hoi An charms travelers with preserved 16th-century merchant houses and evening lantern-lit canals. Modern Da Nang bridges the coast with expansive beaches and world-class architecture, complemented by the cool pine-scented highlands of Da Lat.",
     climate: "Tropical monsoon with a pronounced wet season from September to December and sunny, hot conditions from April to August.",
     bestTime: "February to May for dry, pleasant weather ideal for both coastal exploration and cultural walking tours.",
-    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Hoi_An_Ancient_Town_-_Vietnam_-_2022.jpg/1920px-Hoi_An_Ancient_Town_-_Vietnam_-_2022.jpg",
+    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/H%E1%BB%99i_An%2C_Ancient_Town%2C_2020-01_CN-06.jpg/1920px-H%E1%BB%99i_An%2C_Ancient_Town%2C_2020-01_CN-06.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
     photoCredit: "Steffen Schmitz",
     photoLicense: "CC BY-SA 4.0",
-    photoPage: "https://commons.wikimedia.org/wiki/File:Hoi_An_Ancient_Town_-_Vietnam_-_2022.jpg"
+    photoPage: "https://commons.wikimedia.org/wiki/File:H%E1%BB%99i_An,_Ancient_Town,_2020-01_CN-06.jpg"
   },
   south: {
     id: "south",
@@ -46,9 +46,9 @@ export const REGIONS: Record<"north" | "central" | "south", RegionInfo> = {
       "Southern Vietnam is defined by dynamic economic ambition, boundless cafe culture, and tropical waterways. Ho Chi Minh City pulses with vibrant street life, historic colonial landmarks, and trendy rooftop bars. Beyond the metropolis lie the lush labyrinthine canals and floating markets of the Mekong Delta, as well as the secluded sandy bays of Phu Quoc island.",
     climate: "Consistently warm year-round tropical climate with two distinct seasons: dry (December to April) and wet (May to November).",
     bestTime: "December to April when days are sunny, rainfall is minimal, and humidity is comfortable for exploring.",
-    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Notre-Dame_Cathedral_Basilica_of_Saigon_in_2019.jpg/1920px-Notre-Dame_Cathedral_Basilica_of_Saigon_in_2019.jpg",
-    photoCredit: "Tuấn Anh",
+    heroImage: "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/Saigon_Central_Post_Office_20190922.jpg/1920px-Saigon_Central_Post_Office_20190922.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    photoCredit: "Suicasmo",
     photoLicense: "CC BY-SA 4.0",
-    photoPage: "https://commons.wikimedia.org/wiki/File:Notre-Dame_Cathedral_Basilica_of_Saigon_in_2019.jpg"
+    photoPage: "https://commons.wikimedia.org/wiki/File:Saigon_Central_Post_Office_20190922.jpg"
   }
 };
