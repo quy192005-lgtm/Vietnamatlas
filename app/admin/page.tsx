@@ -641,42 +641,69 @@ export default function AdminPage() {
   // 1. Loading session check
   if (isAuthenticated === null) {
     return (
-      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4">
-        <RefreshCw className="w-8 h-8 animate-spin text-teal-400 mb-3" />
-        <p className="text-sm font-medium text-slate-300">Checking admin session...</p>
+      <div className="min-h-screen bg-[#FAF7F2] flex flex-col items-center justify-center p-4 relative overflow-hidden">
+        {/* Traditional Dong Son Bronze Drum Embossed Background Watermark */}
+        <div
+          className="fixed inset-0 pointer-events-none z-0 opacity-[0.16] bg-repeat bg-center"
+          style={{
+            backgroundImage: "url('/dong-son-texture.jpg')",
+            backgroundSize: "900px auto",
+            backgroundAttachment: "fixed",
+          }}
+          aria-hidden="true"
+        />
+        <div className="relative z-10 flex flex-col items-center">
+          <RefreshCw className="w-8 h-8 animate-spin text-teal-600 mb-3" />
+          <p className="text-sm font-medium text-slate-600">Verifying secure administrative session...</p>
+        </div>
       </div>
     );
   }
 
-  // 2. Unauthenticated: Show sleek Login Screen
+  // 2. Unauthenticated: Show sleek Login Screen with Dong Son Bronze Drum background
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white flex flex-col items-center justify-center p-4 relative overflow-hidden">
-        {/* Subtle decorative glow */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="min-h-screen bg-[#FAF7F2] flex flex-col items-center justify-center p-4 relative overflow-hidden">
+        {/* Traditional Dong Son Bronze Drum Embossed Background Watermark */}
+        <div
+          className="fixed inset-0 pointer-events-none z-0 opacity-[0.16] bg-repeat bg-center"
+          style={{
+            backgroundImage: "url('/dong-son-texture.jpg')",
+            backgroundSize: "900px auto",
+            backgroundAttachment: "fixed",
+          }}
+          aria-hidden="true"
+        />
 
-        <div className="max-w-md w-full bg-slate-900/90 backdrop-blur-xl border border-slate-800 rounded-3xl p-7 sm:p-9 shadow-2xl relative z-10">
+        {/* Soft radial vignette: leaves center clear & gives subtle depth */}
+        <div
+          className="fixed inset-0 pointer-events-none z-0 bg-[radial-gradient(ellipse_at_center,_transparent_30%,_rgba(250,247,242,0.85)_100%)]"
+          aria-hidden="true"
+        />
+
+        {/* Login Card */}
+        <div className="max-w-md w-full bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-7 sm:p-9 shadow-2xl shadow-slate-900/10 relative z-10 text-slate-900">
           {/* Header */}
           <div className="text-center mb-7">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-teal-600 to-teal-400 text-white flex items-center justify-center mx-auto mb-4 shadow-lg shadow-teal-500/20 border border-teal-400/30">
+            <div className="w-14 h-14 rounded-2xl bg-teal-600 text-white flex items-center justify-center mx-auto mb-4 shadow-lg shadow-teal-600/20 border border-teal-500">
               <Lock className="w-7 h-7" />
             </div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 text-[11px] font-semibold uppercase tracking-wider mb-2">
-              <ShieldCheck className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-[11px] font-semibold uppercase tracking-wider mb-2">
+              <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
               <span>Restricted Access</span>
             </div>
-            <h1 className="font-serif text-2xl font-bold text-white tracking-tight">
+            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
               Owner Control Panel
             </h1>
-            <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
-              Vietnam Atlas editorial administration. Please enter your secret owner password to continue.
+            <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+              Vietnam Atlas editorial administration. Please enter your secret owner credentials to continue.
             </p>
           </div>
 
           {/* Error Banner */}
           {loginError && (
-            <div className="mb-5 p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-xl flex items-center gap-2.5 text-xs text-rose-300">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+            <div className="mb-5 p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2.5 text-xs text-rose-700">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
               <span>{loginError}</span>
             </div>
           )}
@@ -685,7 +712,7 @@ export default function AdminPage() {
           <form onSubmit={handleLogin} className="space-y-4">
             {/* Email Field */}
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                 Owner Email (Email quản trị viên)
               </label>
               <div className="relative">
@@ -700,14 +727,14 @@ export default function AdminPage() {
                   placeholder="Enter your admin email..."
                   required
                   autoFocus
-                  className="w-full pl-10 pr-4 py-3 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all font-mono"
+                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-teal-600 focus:bg-white focus:ring-1 focus:ring-teal-600 transition-all font-mono"
                 />
               </div>
             </div>
 
             {/* Password Field */}
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                 Owner Password (Mật khẩu)
               </label>
               <div className="relative">
@@ -721,12 +748,12 @@ export default function AdminPage() {
                   }}
                   placeholder="Enter your password..."
                   required
-                  className="w-full pl-10 pr-11 py-3 bg-slate-800/80 border border-slate-700 rounded-xl text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all font-mono"
+                  className="w-full pl-10 pr-11 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-teal-600 focus:bg-white focus:ring-1 focus:ring-teal-600 transition-all font-mono"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-200 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-700 transition-colors"
                   title={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -737,7 +764,7 @@ export default function AdminPage() {
             <button
               type="submit"
               disabled={loginLoading || !loginEmail || !loginPassword}
-              className="w-full py-3 px-4 bg-teal-600 hover:bg-teal-500 active:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-sm rounded-xl shadow-lg shadow-teal-600/30 transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-sm rounded-xl shadow-lg shadow-teal-700/20 transition-all flex items-center justify-center gap-2"
             >
               {loginLoading ? (
                 <>
@@ -754,10 +781,10 @@ export default function AdminPage() {
           </form>
 
           {/* Back link */}
-          <div className="mt-6 pt-5 border-t border-slate-800/80 text-center">
+          <div className="mt-6 pt-5 border-t border-slate-100 text-center">
             <Link
               href="/"
-              className="text-xs text-slate-400 hover:text-teal-400 transition-colors inline-flex items-center gap-1"
+              className="text-xs text-slate-500 hover:text-teal-700 font-medium transition-colors inline-flex items-center gap-1"
             >
               <span>← Return to Public Website</span>
             </Link>
@@ -768,7 +795,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 pb-20">
+    <div className="min-h-screen bg-[#FAF7F2]/70 text-slate-900 pb-20">
       {/* 1. TOP HEADER */}
       <header className="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40 shadow-md">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
