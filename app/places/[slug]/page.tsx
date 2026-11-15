@@ -8,7 +8,6 @@ import { getPublishedPlaces, getPlaceBySlug, getNearbyPlaces } from "@/data/plac
 import Breadcrumb from "@/components/Breadcrumb";
 import PlaceCard from "@/components/PlaceCard";
 import AdSlot from "@/components/AdSlot";
-import SharePhotoCard from "@/components/SharePhotoCard";
 import {
   MapPin,
   ExternalLink,
@@ -17,7 +16,6 @@ import {
   Hotel,
   Ticket,
   Train,
-  Camera,
 } from "lucide-react";
 
 interface PlacePageProps {
@@ -163,43 +161,6 @@ export default function PlaceDetailPage({ params }: PlacePageProps) {
         </p>
       </div>
 
-      {/* NV-12: PHOTOS FROM TRAVELLERS (COMMUNITY GALLERY) */}
-      {place.extra_photos && place.extra_photos.length > 0 && (
-        <section className="space-y-4 pt-2">
-          <div className="flex items-center gap-2">
-            <Camera className="w-5 h-5 text-teal-600" />
-            <h2 className="font-serif text-2xl font-bold text-travel-text">
-              Photos from travellers
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {place.extra_photos.map((photo, idx) => (
-              <figure
-                key={idx}
-                className="group rounded-2xl overflow-hidden border border-travel-border bg-white shadow-sm flex flex-col"
-              >
-                <div className="relative aspect-[4/3] w-full bg-slate-100 overflow-hidden">
-                  <Image
-                    src={photo.src}
-                    alt={`${place.name_en} — photo by ${photo.credit_name}`}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                </div>
-                <figcaption className="p-3 bg-white text-xs text-travel-subtext border-t border-slate-100">
-                  <span className="font-medium text-slate-700">
-                    Photo: {photo.credit_name}
-                  </span>{" "}
-                  <span className="text-slate-400">— traveller contribution</span>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </section>
-      )}
-
       {/* 5. GOOD TO KNOW (TABLE / INFO GRID) */}
       <section className="bg-travel-muted rounded-3xl border border-travel-border p-6 sm:p-8">
         <h2 className="font-serif text-xl font-bold text-travel-text mb-4 flex items-center gap-2">
@@ -338,9 +299,6 @@ export default function PlaceDetailPage({ params }: PlacePageProps) {
           * Transparent disclosure: We may earn a small referral commission if you complete a booking through these partner links, at no additional cost to you.
         </p>
       </section>
-
-      {/* NV-12: SHARE YOUR PHOTO CALLOUT (placed after Plan your visit, before Nearby places) */}
-      <SharePhotoCard placeNameEn={place.name_en} />
 
       {/* 7. NV-10: AdSlot before Nearby places */}
       <AdSlot format="horizontal" />
