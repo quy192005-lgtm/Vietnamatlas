@@ -153,9 +153,17 @@ export default function Footer() {
         {/* Copyright bottom bar */}
         <div className="border-t border-travel-border pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-travel-subtext gap-3">
           <p>© {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</p>
-          <p className="flex items-center gap-1">
-            Built with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" /> for travelers exploring Vietnam.
-          </p>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/admin"
+              className="text-slate-400 hover:text-teal-600 transition-colors flex items-center gap-1 text-[11px]"
+            >
+              <span>⚙️ Owner Admin</span>
+            </Link>
+            <p className="flex items-center gap-1">
+              Built with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" /> for travelers exploring Vietnam.
+            </p>
+          </div>
         </div>
       </div>
     </footer>
