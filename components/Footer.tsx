@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { SITE_NAME, SITE_TAGLINE } from "@/config/site";
-import { Compass, BookOpen, ShieldCheck, Heart } from "lucide-react";
+import { SITE_NAME, SITE_TAGLINE, CONTACT_EMAIL } from "@/config/site";
+import { Compass, BookOpen, ShieldCheck, Heart, Mail } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -126,29 +126,50 @@ export default function Footer() {
           <div>
             <h3 className="font-serif text-base font-bold text-travel-text mb-4 flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-teal-500" />
-              Transparency
+              Transparency &amp; Legal
             </h3>
-            <ul className="space-y-2 text-sm text-travel-subtext">
+            <ul className="space-y-2.5 text-sm text-travel-subtext">
               <li>
-                <Link href="/affiliate-disclosure" className="hover:text-teal-600 transition-colors font-medium text-teal-600">
+                <Link href="/affiliate-disclosure" className="hover:text-teal-600 transition-colors font-medium text-teal-700">
                   Affiliate Disclosure
                 </Link>
               </li>
               <li>
+                <Link href="/privacy" className="hover:text-teal-600 transition-colors font-medium text-teal-700">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-teal-600 transition-colors font-medium">
+                  Contact Us
+                </Link>
+              </li>
+              <li>
                 <Link href="/about" className="hover:text-teal-600 transition-colors">
-                  About & Contact
+                  About Project
                 </Link>
               </li>
               <li>
                 <Link
                   href="/traveller-photos"
-                  className="hover:text-teal-600 transition-colors font-medium text-teal-600 inline-flex items-center gap-1"
+                  className="hover:text-teal-600 transition-colors font-medium text-teal-600 inline-flex items-center gap-1 text-xs"
                 >
                   <span>Contribute a photo</span>
                   <span aria-hidden="true">&rarr;</span>
                 </Link>
               </li>
-              <li className="pt-3 text-xs leading-relaxed text-travel-subtext">
+              {CONTACT_EMAIL && CONTACT_EMAIL.trim() !== "" && (
+                <li className="pt-1.5 border-t border-travel-border/60">
+                  <a
+                    href={`mailto:${CONTACT_EMAIL}`}
+                    className="text-xs font-mono text-teal-700 hover:text-teal-800 break-all inline-flex items-center gap-1.5"
+                  >
+                    <Mail className="w-3.5 h-3.5 shrink-0 text-teal-600" />
+                    <span>{CONTACT_EMAIL}</span>
+                  </a>
+                </li>
+              )}
+              <li className="pt-2 text-xs leading-relaxed text-travel-subtext">
                 Photos: Wikimedia Commons contributors, licensed as credited on each page.
               </li>
             </ul>
@@ -159,7 +180,7 @@ export default function Footer() {
         <div className="bg-white border border-travel-border rounded-2xl p-5 mb-8 text-xs text-travel-subtext leading-relaxed">
           <p className="font-semibold text-travel-text mb-1 flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-amber-500" />
-            Affiliate Disclosure & Transparency Notice
+            Affiliate Disclosure &amp; Transparency Notice
           </p>
           <p>
             Some links on this site are affiliate links. If you book or buy through them, we may earn a small commission at no extra cost to you. This helps us keep the site free and up to date. We only link to services we would use ourselves. Photos on this site come from Wikimedia Commons and are credited on each page.
@@ -169,14 +190,23 @@ export default function Footer() {
         {/* Copyright bottom bar */}
         <div className="border-t border-travel-border pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-travel-subtext gap-3">
           <p>© {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4 text-xs">
+            <Link href="/privacy" className="hover:text-teal-600 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/affiliate-disclosure" className="hover:text-teal-600 transition-colors">
+              Affiliate Disclosure
+            </Link>
+            <Link href="/contact" className="hover:text-teal-600 transition-colors">
+              Contact
+            </Link>
             <Link
               href="/admin"
               className="text-slate-400 hover:text-teal-600 transition-colors flex items-center gap-1 text-[11px]"
             >
               <span>⚙️ Owner Admin</span>
             </Link>
-            <p className="flex items-center gap-1">
+            <p className="flex items-center gap-1 text-slate-500">
               Built with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" /> for travelers exploring Vietnam.
             </p>
           </div>
