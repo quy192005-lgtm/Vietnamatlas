@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { SITE_NAME } from "@/config/site";
 import { Search, Menu, X, ChevronDown, Compass, MapPin, BookOpen, Info, Camera } from "lucide-react";
@@ -14,12 +15,19 @@ export default function Header() {
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-18">
           {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-2 group py-2">
-            <span className="w-8 h-8 rounded-lg bg-teal-500 text-white flex items-center justify-center font-serif font-bold text-lg shadow-sm group-hover:bg-teal-600 transition-colors">
-              V
-            </span>
+          <Link href="/" className="flex items-center gap-2.5 group py-2">
+            <div className="relative w-9 h-9 rounded-xl overflow-hidden shadow-sm shrink-0 border border-amber-400/40 bg-teal-800 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+              <Image
+                src="/logo-icon.png"
+                alt="Vietnam Atlas Logo"
+                width={36}
+                height={36}
+                className="w-full h-full object-cover"
+                priority
+              />
+            </div>
             <div className="flex flex-col">
-              <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-travel-text group-hover:text-teal-500 transition-colors">
+              <span className="font-brand font-black text-xl sm:text-2xl tracking-tight bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-transparent group-hover:from-amber-500 group-hover:to-yellow-500 transition-all drop-shadow-xs uppercase">
                 {SITE_NAME}
               </span>
             </div>

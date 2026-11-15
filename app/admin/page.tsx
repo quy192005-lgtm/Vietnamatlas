@@ -685,18 +685,25 @@ export default function AdminPage() {
         <div className="max-w-md w-full bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-7 sm:p-9 shadow-2xl shadow-slate-900/10 relative z-10 text-slate-900">
           {/* Header */}
           <div className="text-center mb-7">
-            <div className="w-14 h-14 rounded-2xl bg-teal-600 text-white flex items-center justify-center mx-auto mb-4 shadow-lg shadow-teal-600/20 border border-teal-500">
-              <Lock className="w-7 h-7" />
+            <div className="w-16 h-16 rounded-2xl overflow-hidden mx-auto mb-4 shadow-lg shadow-amber-500/20 border-2 border-amber-400/50 bg-teal-800 flex items-center justify-center">
+              <Image
+                src="/logo-icon.png"
+                alt="Vietnam Atlas Logo"
+                width={64}
+                height={64}
+                className="w-full h-full object-cover"
+                priority
+              />
             </div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-[11px] font-semibold uppercase tracking-wider mb-2">
-              <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-semibold uppercase tracking-wider mb-2">
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
               <span>Restricted Access</span>
             </div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-              Owner Control Panel
+            <h1 className="font-brand font-black text-2xl sm:text-3xl tracking-tight bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-transparent uppercase">
+              Vietnam Atlas
             </h1>
-            <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
-              Vietnam Atlas editorial administration. Please enter your secret owner credentials to continue.
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mt-1">
+              Owner Control Panel
             </p>
           </div>
 
@@ -800,12 +807,18 @@ export default function AdminPage() {
       <header className="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40 shadow-md">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="w-8 h-8 rounded-lg bg-teal-500 text-white flex items-center justify-center font-serif font-bold text-lg shadow-sm">
-              V
-            </span>
+            <div className="relative w-9 h-9 rounded-xl overflow-hidden shadow-sm shrink-0 border border-amber-400/40 bg-teal-800 flex items-center justify-center">
+              <Image
+                src="/logo-icon.png"
+                alt="Vietnam Atlas Logo"
+                width={36}
+                height={36}
+                className="w-full h-full object-cover"
+              />
+            </div>
             <div>
-              <h1 className="font-serif text-lg font-bold tracking-tight text-white flex items-center gap-2">
-                Vietnam Atlas <span className="text-xs px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-sans font-medium border border-teal-500/30">Owner Control Panel</span>
+              <h1 className="font-brand font-black text-lg tracking-tight bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent flex items-center gap-2 uppercase">
+                Vietnam Atlas <span className="text-xs px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-sans font-medium border border-teal-500/30 normal-case">Owner Control Panel</span>
               </h1>
             </div>
           </div>

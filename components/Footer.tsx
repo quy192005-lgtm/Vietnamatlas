@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { SITE_NAME, SITE_TAGLINE } from "@/config/site";
 import { Compass, BookOpen, ShieldCheck, Heart } from "lucide-react";
 
@@ -9,11 +10,17 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           {/* Col 1: About */}
           <div className="md:col-span-1 space-y-4">
-            <Link href="/" className="inline-flex items-center gap-2">
-              <span className="w-8 h-8 rounded-lg bg-teal-500 text-white flex items-center justify-center font-serif font-bold text-lg">
-                V
-              </span>
-              <span className="font-serif text-2xl font-bold text-travel-text">
+            <Link href="/" className="inline-flex items-center gap-2.5 group">
+              <div className="relative w-9 h-9 rounded-xl overflow-hidden shadow-sm shrink-0 border border-amber-400/40 bg-teal-800 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+                <Image
+                  src="/logo-icon.png"
+                  alt="Vietnam Atlas Logo"
+                  width={36}
+                  height={36}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span className="font-brand font-black text-2xl tracking-tight bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-transparent uppercase">
                 {SITE_NAME}
               </span>
             </Link>
