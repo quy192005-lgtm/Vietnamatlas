@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import {
   Search,
   Plus,
@@ -21,6 +22,15 @@ import {
   Clock,
   Tag,
 } from "lucide-react";
+
+const LocationPickerMap = dynamic(() => import("@/components/LocationPickerMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[200px] w-full bg-slate-100 animate-pulse rounded-xl flex items-center justify-center text-xs text-slate-400">
+      Loading interactive map...
+    </div>
+  ),
+});
 
 interface Place {
   name: string;
@@ -662,9 +672,19 @@ export default function AdminPage() {
                               {place.region}
                             </span>
                           </div>
-                          <span className="text-slate-600 font-medium">
+                          <span className="text-slate-700 font-medium text-xs block">
                             {place.city || place.area}
                           </span>
+                          <div className="text-[10px] font-mono mt-0.5 flex items-center gap-1 text-slate-500">
+                            <MapPin className="w-3 h-3 text-teal-600 shrink-0" />
+                            {place.lat && place.lng ? (
+                              <span>
+                                {place.lat.toFixed(3)}, {place.lng.toFixed(3)}
+                              </span>
+                            ) : (
+                              <span className="text-amber-600 font-sans font-medium">No coords</span>
+                            )}
+                          </div>
                         </td>
 
                         <td className="py-3 px-4">
@@ -885,7 +905,7 @@ export default function AdminPage() {
       {/* 5. MODAL DIALOG (Add / Edit Place) */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 my-8">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 my-8 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
               <h3 className="font-serif text-2xl font-bold text-slate-900">
                 {modalMode === "add" ? "Add New Place" : "Edit Place"}
@@ -1014,6 +1034,137 @@ export default function AdminPage() {
                     onChange={(e) => setFormData({ ...formData, photo_credit: e.target.value })}
                     placeholder="e.g. Steffen Schmitz — CC BY-SA 4.0"
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
+                  />
+                </div>
+              </div>
+
+              {/* Map Coordinates & Interactive Location Picker */}
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 font-semibold text-slate-800 text-xs">
+                    <MapPin className="w-4 h-4 text-teal-600" />
+                    <span>Map Coordinates &amp; Pin Location (Tọa độ bản đồ)</span>
+                  </div>
+                  {formData.lat && formData.lng && (
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${formData.lat},${formData.lng}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] text-teal-600 hover:text-teal-700 font-medium inline-flex items-center gap-1"
+                    >
+                      <span>Check on Google Maps</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-medium text-slate-700 mb-1">
+                      Latitude (Vĩ độ - Lat)
+                    </label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={formData.lat}
+                      onChange={(e) => {
+                        const newLat = e.target.value;
+                        setFormData((prev) => ({
+                          ...prev,
+                          lat: newLat,
+                          maps_url:
+                            newLat && prev.lng
+                              ? `https://www.google.com/maps/search/?api=1&query=${newLat},${prev.lng}`
+                              : prev.maps_url,
+                        }));
+                      }}
+                      placeholder="e.g. 20.7398"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-medium text-slate-700 mb-1">
+                      Longitude (Kinh độ - Lng)
+                    </label>
+                    <input
+                      type="number"
+                      step="any"
+                      value={formData.lng}
+                      onChange={(e) => {
+                        const newLng = e.target.value;
+                        setFormData((prev) => ({
+                          ...prev,
+                          lng: newLng,
+                          maps_url:
+                            prev.lat && newLng
+                              ? `https://www.google.com/maps/search/?api=1&query=${prev.lat},${newLng}`
+                              : prev.maps_url,
+                        }));
+                      }}
+                      placeholder="e.g. 105.2364"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
+                    />
+                  </div>
+                </div>
+
+                {/* Quick Paste & Search Helper */}
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200 text-[11px]">
+                  <div className="flex items-center gap-1.5 flex-1 min-w-[220px]">
+                    <span className="text-slate-500 whitespace-nowrap">Dán nhanh:</span>
+                    <input
+                      type="text"
+                      placeholder="Paste 'lat, lng' (VD: 20.7398, 105.2364)"
+                      onChange={(e) => {
+                        const raw = e.target.value.trim();
+                        const parts = raw.split(/[\s,]+/).filter(Boolean);
+                        if (parts.length >= 2) {
+                          const pLat = parseFloat(parts[0]);
+                          const pLng = parseFloat(parts[1]);
+                          if (!isNaN(pLat) && !isNaN(pLng)) {
+                            setFormData((prev) => ({
+                              ...prev,
+                              lat: pLat.toString(),
+                              lng: pLng.toString(),
+                              maps_url: `https://www.google.com/maps/search/?api=1&query=${pLat},${pLng}`,
+                            }));
+                          }
+                        }
+                      }}
+                      className="flex-1 px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-teal-500"
+                    />
+                  </div>
+
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                      `${formData.name || formData.name_en} ${formData.city} Vietnam`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-2.5 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg font-medium inline-flex items-center gap-1 transition-colors"
+                    title="Mở Google Maps tìm địa điểm này để lấy tọa độ"
+                  >
+                    <span>🔍 Tìm trên Google Maps</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+
+                {/* Interactive Leaflet Mini Map Picker */}
+                <div className="pt-2">
+                  <label className="block font-medium text-slate-600 mb-1.5 text-[11px]">
+                    Click trên bản đồ hoặc kéo thả ghim để chọn vị trí chính xác:
+                  </label>
+                  <LocationPickerMap
+                    lat={formData.lat ? parseFloat(formData.lat) : null}
+                    lng={formData.lng ? parseFloat(formData.lng) : null}
+                    onChange={(newLat, newLng) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        lat: newLat.toString(),
+                        lng: newLng.toString(),
+                        maps_url: `https://www.google.com/maps/search/?api=1&query=${newLat},${newLng}`,
+                      }));
+                    }}
                   />
                 </div>
               </div>

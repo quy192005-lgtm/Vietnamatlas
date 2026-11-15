@@ -178,14 +178,22 @@ export async function PUT(request: NextRequest) {
 
     // Update fields
     const current = allPlaces[index];
+    const newLat = body.lat !== undefined ? (body.lat ? parseFloat(body.lat) : null) : current.lat;
+    const newLng = body.lng !== undefined ? (body.lng ? parseFloat(body.lng) : null) : current.lng;
+
     const updated = {
       ...current,
       ...body,
       // Ensure slug stays consistent unless explicitly provided
       slug: current.slug,
       photo_status: (body.photo_url || current.photo_url) ? "ok" : "missing",
-      lat: body.lat !== undefined ? (body.lat ? parseFloat(body.lat) : null) : current.lat,
-      lng: body.lng !== undefined ? (body.lng ? parseFloat(body.lng) : null) : current.lng,
+      lat: newLat,
+      lng: newLng,
+      maps_url:
+        body.maps_url ||
+        (newLat && newLng
+          ? `https://www.google.com/maps/search/?api=1&query=${newLat},${newLng}`
+          : current.maps_url),
       published: body.published !== undefined ? Boolean(body.published) : current.published,
     };
 
