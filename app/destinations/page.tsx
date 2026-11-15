@@ -35,8 +35,8 @@ export default function DestinationsPage() {
         </p>
       </div>
 
-      {/* 2-Column Layout matching Vietnam Coracle (Left: Content, Right: Sticky Sidebar) */}
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
+      {/* 2-Column Layout (Left: Content, Right: Always Sticky Sidebar) */}
+      <div className="flex flex-col lg:flex-row gap-8 items-stretch">
         {/* Left Main Area: Takes all available width */}
         <div className="flex-1 min-w-0 space-y-12">
           {regions.map((regKey) => {
@@ -128,9 +128,11 @@ export default function DestinationsPage() {
           })}
         </div>
 
-        {/* Right Sidebar: Perfectly sticky & matching Vietnam Coracle */}
-        <div className="w-full lg:w-[330px] xl:w-[350px] shrink-0">
-          <TravelBookingSidebar className="sticky top-20" />
+        {/* Right Sidebar: Always sticky */}
+        <div className="w-full lg:w-[330px] xl:w-[350px] shrink-0 lg:self-stretch">
+          <div className="sticky top-24 z-30">
+            <TravelBookingSidebar />
+          </div>
         </div>
       </div>
     </div>

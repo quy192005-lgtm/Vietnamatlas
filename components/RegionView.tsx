@@ -42,8 +42,8 @@ export default function RegionView({ region, cities, places }: RegionViewProps) 
         ]}
       />
 
-      {/* Main 2-column layout: Left Expansive + Right Sticky 330px */}
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
+      {/* Main 2-column layout: Left Expansive + Right Always Sticky */}
+      <div className="flex flex-col lg:flex-row gap-8 items-stretch">
         {/* Left main content */}
         <div className="flex-1 min-w-0 space-y-10">
           {/* Hero Banner for Region */}
@@ -217,8 +217,10 @@ export default function RegionView({ region, cities, places }: RegionViewProps) 
         </div>
 
         {/* Right Sticky Sidebar */}
-        <div className="w-full lg:w-[320px] xl:w-[340px] shrink-0">
-          <TravelBookingSidebar currentCity={region.name} className="sticky top-20" />
+        <div className="w-full lg:w-[320px] xl:w-[340px] shrink-0 lg:self-stretch">
+          <div className="sticky top-24 z-30">
+            <TravelBookingSidebar currentCity={region.name} />
+          </div>
         </div>
       </div>
     </div>

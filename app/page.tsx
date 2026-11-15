@@ -114,7 +114,7 @@ export default function HomePage() {
           viewAllText="View all regions"
         />
 
-        <div className="flex flex-col lg:flex-row gap-8 xl:gap-10 items-start">
+        <div className="flex flex-col lg:flex-row gap-8 xl:gap-10 items-stretch">
           {/* LEFT MAIN AREA */}
           <div className="flex-1 min-w-0 space-y-16">
             {/* 2. THREE REGIONAL CARDS */}
@@ -440,9 +440,11 @@ export default function HomePage() {
             </section>
           </div>
 
-          {/* RIGHT COLUMN: STICKY SIDEBAR (Matching Vietnam Coracle video) */}
-          <div className="w-full lg:w-[330px] xl:w-[350px] shrink-0">
-            <TravelBookingSidebar className="sticky top-20" />
+          {/* RIGHT COLUMN: ALWAYS STICKY SIDEBAR */}
+          <div className="w-full lg:w-[330px] xl:w-[350px] shrink-0 lg:self-stretch">
+            <div className="sticky top-24 z-30">
+              <TravelBookingSidebar />
+            </div>
           </div>
         </div>
       </div>
