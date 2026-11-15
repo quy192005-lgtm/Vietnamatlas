@@ -19,7 +19,13 @@
     "region": "north",
     "city": "Hanoi",
     "city_slug": "hanoi",
-    "published": true
+    "published": true,
+    "extra_photos": [
+      {
+        "src": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=80",
+        "credit_name": "Elena Rostova"
+      }
+    ]
   },
   {
     "name": "Lăng Chủ tịch Hồ Chí Minh",
@@ -349,7 +355,13 @@
     "region": "north",
     "city": "Quang Ninh",
     "city_slug": "quang-ninh",
-    "published": true
+    "published": true,
+    "extra_photos": [
+      {
+        "src": "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1200&q=80",
+        "credit_name": "Marcus Vance"
+      }
+    ]
   },
   {
     "name": "Đảo Tuần Châu",
@@ -1229,7 +1241,13 @@
     "region": "north",
     "city": "Hoa Binh",
     "city_slug": "hoa-binh",
-    "published": true
+    "published": true,
+    "extra_photos": [
+      {
+        "src": "https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?auto=format&fit=crop&w=1200&q=80",
+        "credit_name": "Sarah Jenkins"
+      }
+    ]
   },
   {
     "name": "Đồi A1 Điện Biên Phủ",

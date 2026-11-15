@@ -4,14 +4,13 @@ import Link from "next/link";
 import { SITE_NAME, PHOTO_FORM_URL } from "@/config/site";
 import { getAllCommunityPhotos } from "@/data/places";
 import Breadcrumb from "@/components/Breadcrumb";
+import SharePhotoButton from "@/components/SharePhotoButton";
 import {
   Camera,
   UploadCloud,
   CheckCircle2,
   Award,
-  ExternalLink,
   MapPin,
-  Sparkles,
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -49,24 +48,13 @@ export default function TravellerPhotosPage() {
           Real photos from people who have actually been there. Every picture below was shared by a traveller, reviewed by hand, and published with their name credited.
         </p>
 
-        {/* CTA Button or Coming Soon Notice */}
+        {/* CTA Button */}
         <div className="pt-2 flex flex-col items-center justify-center gap-2">
-          {hasFormUrl ? (
-            <a
-              href={PHOTO_FORM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-2xl text-base transition-all shadow-md hover:shadow-lg min-h-[48px]"
-            >
-              <Camera className="w-5 h-5" />
-              <span>Share your photo</span>
-              <ExternalLink className="w-4 h-4 opacity-80" />
-            </a>
-          ) : (
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 text-slate-500 text-xs font-medium border border-slate-200">
-              <Sparkles className="w-4 h-4 text-slate-400" />
-              <span>Photo submissions open soon.</span>
-            </div>
+          <SharePhotoButton formUrl={PHOTO_FORM_URL} />
+          {!hasFormUrl && (
+            <span className="text-[11px] text-slate-400">
+              * Click to view submission guide or connect Google Form
+            </span>
           )}
         </div>
       </div>
@@ -202,20 +190,9 @@ export default function TravellerPhotosPage() {
             <p className="text-xs sm:text-sm text-travel-subtext max-w-md mx-auto">
               Have you recently explored a temple, bay, mountain pass, or street food alley in Vietnam? Send us your shot and get featured!
             </p>
-            {hasFormUrl && (
-              <div className="pt-2">
-                <a
-                  href={PHOTO_FORM_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-2xl text-sm transition-all shadow-sm hover:shadow"
-                >
-                  <Camera className="w-4 h-4" />
-                  <span>Share your photo</span>
-                  <ExternalLink className="w-3.5 h-3.5 opacity-80" />
-                </a>
-              </div>
-            )}
+            <div className="pt-2">
+              <SharePhotoButton formUrl={PHOTO_FORM_URL} />
+            </div>
           </div>
         )}
       </section>
