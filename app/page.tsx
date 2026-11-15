@@ -347,9 +347,9 @@ export default function HomePage() {
             {/* 6. PLAN YOUR TRIP STRIP (AFFILIATE PARTNERS - LAW 4) */}
             <section className="w-full">
               <div className="bg-[#FAF7F2] rounded-3xl p-8 sm:p-10 shadow-xl relative overflow-hidden border border-amber-200/80">
-                {/* Traditional Dong Son Bronze Drum Pattern in authentic warm golden tone (30% opacity) */}
+                {/* Traditional Dong Son Bronze Drum Pattern in authentic warm golden tone (15% opacity) */}
                 <div
-                  className="absolute inset-0 pointer-events-none z-0 opacity-30 bg-repeat bg-center"
+                  className="absolute inset-0 pointer-events-none z-0 opacity-[0.15] bg-repeat bg-center"
                   style={{
                     backgroundImage: "url('/dong-son-texture.jpg')",
                     backgroundSize: "750px auto",
