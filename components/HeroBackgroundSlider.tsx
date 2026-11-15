@@ -52,11 +52,11 @@ export const HERO_SLIDES: HeroSlide[] = [
 export default function HeroBackgroundSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Auto transition every 2 seconds (2000ms) as requested by user
+  // Auto transition every 4 seconds (4000ms) as requested by user
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 2000);
+    }, 4000);
 
     return () => clearInterval(timer);
   }, []);
@@ -79,7 +79,7 @@ export default function HeroBackgroundSlider() {
               alt={slide.title}
               fill
               priority={index === 0}
-              className="object-cover opacity-50 brightness-95 transform scale-105 transition-transform duration-[2000ms]"
+              className="object-cover opacity-50 brightness-95 transform scale-105 transition-transform duration-[4000ms]"
               sizes="100vw"
             />
           </div>
