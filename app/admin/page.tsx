@@ -15,9 +15,11 @@ import {
   RefreshCw,
   Compass,
   Eye,
-  SlidersHorizontal,
+  BookOpen,
   X,
   AlertCircle,
+  Clock,
+  Tag,
 } from "lucide-react";
 
 interface Place {
@@ -42,6 +44,18 @@ interface Place {
   published: boolean;
 }
 
+interface Guide {
+  slug: string;
+  title: string;
+  subtitle: string;
+  readingTime: string;
+  category: string;
+  heroImage: string;
+  photoCredit: string;
+  photoLicense: string;
+  problemStatement?: string;
+}
+
 const CATEGORIES = [
   "Historic Sites",
   "Nature & Lakes",
@@ -56,27 +70,28 @@ const CATEGORIES = [
   "Attractions",
 ];
 
-const REGIONS: ("north" | "central" | "south")[] = ["north", "central", "south"];
-
 export default function AdminPage() {
+  const [activeTab, setActiveTab] = useState<"places" | "guides">("places");
+
+  // PLACES STATE
   const [places, setPlaces] = useState<Place[]>([]);
   const [stats, setStats] = useState({ total: 0, published: 0, draft: 0 });
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  // Filters
+  // Filters for places
   const [search, setSearch] = useState("");
   const [regionFilter, setRegionFilter] = useState("all");
   const [publishedFilter, setPublishedFilter] = useState("all");
 
-  // Modal states
+  // Place Modal states
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
-  // Form state
+  // Place Form state
   const [formData, setFormData] = useState({
     slug: "",
     name_en: "",
@@ -92,6 +107,26 @@ export default function AdminPage() {
     lng: "",
     maps_url: "",
     published: false,
+  });
+
+  // GUIDES STATE
+  const [guides, setGuides] = useState<Guide[]>([]);
+  const [guidesLoading, setGuidesLoading] = useState(false);
+  const [guideModalOpen, setGuideModalOpen] = useState(false);
+  const [guideModalMode, setGuideModalMode] = useState<"add" | "edit">("add");
+  const [guideSaving, setGuideSaving] = useState(false);
+
+  // Guide Form state
+  const [guideForm, setGuideForm] = useState({
+    slug: "",
+    title: "",
+    subtitle: "",
+    category: "Transportation",
+    readingTime: "5 min read",
+    heroImage: "",
+    photoCredit: "Wikimedia Commons",
+    photoLicense: "CC BY-SA 4.0",
+    problemStatement: "",
   });
 
   // Fetch places from API
@@ -119,9 +154,27 @@ export default function AdminPage() {
     }
   }, [page, search, regionFilter, publishedFilter]);
 
+  // Fetch guides from API
+  const fetchGuides = useCallback(async () => {
+    setGuidesLoading(true);
+    try {
+      const res = await fetch("/api/guides");
+      const data = await res.json();
+      setGuides(data.guides || []);
+    } catch (err) {
+      console.error("Failed to load guides:", err);
+    } finally {
+      setGuidesLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchPlaces();
   }, [fetchPlaces]);
+
+  useEffect(() => {
+    fetchGuides();
+  }, [fetchGuides]);
 
   // Show temporary toast message
   const showToast = (text: string, type: "success" | "error" = "success") => {
@@ -129,7 +182,7 @@ export default function AdminPage() {
     setTimeout(() => setMessage(null), 3500);
   };
 
-  // Quick toggle publish status
+  // Quick toggle publish status for places
   const handleTogglePublish = async (place: Place) => {
     const newStatus = !place.published;
     try {
@@ -179,7 +232,7 @@ export default function AdminPage() {
     }
   };
 
-  // Open modal for Create
+  // Open modal for Create Place
   const handleOpenAdd = () => {
     setModalMode("add");
     setFormData({
@@ -201,7 +254,7 @@ export default function AdminPage() {
     setModalOpen(true);
   };
 
-  // Open modal for Edit
+  // Open modal for Edit Place
   const handleOpenEdit = (place: Place) => {
     setModalMode("edit");
     setFormData({
@@ -223,7 +276,7 @@ export default function AdminPage() {
     setModalOpen(true);
   };
 
-  // Submit modal form (Add or Edit)
+  // Submit modal form (Add or Edit Place)
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -255,6 +308,92 @@ export default function AdminPage() {
     }
   };
 
+  // GUIDES HANDLERS
+  const handleOpenAddGuide = () => {
+    setGuideModalMode("add");
+    setGuideForm({
+      slug: "",
+      title: "",
+      subtitle: "",
+      category: "Transportation",
+      readingTime: "6 min read",
+      heroImage: "",
+      photoCredit: "Wikimedia Commons",
+      photoLicense: "CC BY-SA 4.0",
+      problemStatement: "",
+    });
+    setGuideModalOpen(true);
+  };
+
+  const handleOpenEditGuide = (guide: Guide) => {
+    setGuideModalMode("edit");
+    setGuideForm({
+      slug: guide.slug,
+      title: guide.title,
+      subtitle: guide.subtitle,
+      category: guide.category,
+      readingTime: guide.readingTime,
+      heroImage: guide.heroImage,
+      photoCredit: guide.photoCredit,
+      photoLicense: guide.photoLicense,
+      problemStatement: guide.problemStatement || "",
+    });
+    setGuideModalOpen(true);
+  };
+
+  const handleDeleteGuide = async (guide: Guide) => {
+    if (!confirm(`Are you sure you want to delete guide: "${guide.title}"?`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/guides?slug=${encodeURIComponent(guide.slug)}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        showToast(`Deleted guide: ${guide.title}`);
+        fetchGuides();
+      } else {
+        showToast(data.error || "Failed to delete guide", "error");
+      }
+    } catch (err) {
+      showToast("Delete request failed", "error");
+    }
+  };
+
+  const handleGuideSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setGuideSaving(true);
+
+    try {
+      const method = guideModalMode === "add" ? "POST" : "PUT";
+      const res = await fetch("/api/guides", {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(guideForm),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        showToast(
+          guideModalMode === "add"
+            ? `Successfully published new guide: "${guideForm.title}"!`
+            : `Updated guide: "${guideForm.title}"!`
+        );
+        setGuideModalOpen(false);
+        fetchGuides();
+      } else {
+        showToast(data.error || "Failed to save guide", "error");
+      }
+    } catch (err: any) {
+      showToast(err.message || "Failed to save guide", "error");
+    } finally {
+      setGuideSaving(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-20">
       {/* 1. TOP HEADER */}
@@ -273,11 +412,14 @@ export default function AdminPage() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => fetchPlaces()}
+              onClick={() => {
+                fetchPlaces();
+                fetchGuides();
+              }}
               className="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5 text-xs font-medium"
               title="Refresh Data"
             >
-              <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-teal-400" : ""}`} />
+              <RefreshCw className={`w-4 h-4 ${loading || guidesLoading ? "animate-spin text-teal-400" : ""}`} />
               <span className="hidden sm:inline">Refresh</span>
             </button>
 
@@ -310,292 +452,434 @@ export default function AdminPage() {
 
       {/* MAIN CONTAINER */}
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-6">
-        {/* 2. STATS CARDS */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
-            <div>
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
-                Total Places
-              </span>
-              <span className="font-serif text-3xl font-bold text-slate-900 mt-1 block">
-                {stats.total.toLocaleString()}
-              </span>
-            </div>
-            <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
-              <Compass className="w-6 h-6" />
-            </div>
-          </div>
-
-          <div
-            onClick={() => setPublishedFilter(publishedFilter === "true" ? "all" : "true")}
-            className={`bg-white rounded-2xl p-5 border shadow-sm flex items-center justify-between cursor-pointer transition-all ${
-              publishedFilter === "true" ? "border-teal-500 ring-2 ring-teal-500/20" : "border-slate-200 hover:border-slate-300"
-            }`}
-          >
-            <div>
-              <span className="text-xs font-semibold text-teal-600 uppercase tracking-wider block">
-                Published &amp; Live
-              </span>
-              <span className="font-serif text-3xl font-bold text-teal-700 mt-1 block">
-                {stats.published.toLocaleString()}
-              </span>
-            </div>
-            <div className="w-12 h-12 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
-              <CheckCircle2 className="w-6 h-6" />
-            </div>
-          </div>
-
-          <div
-            onClick={() => setPublishedFilter(publishedFilter === "false" ? "all" : "false")}
-            className={`bg-white rounded-2xl p-5 border shadow-sm flex items-center justify-between cursor-pointer transition-all ${
-              publishedFilter === "false" ? "border-amber-500 ring-2 ring-amber-500/20" : "border-slate-200 hover:border-slate-300"
-            }`}
-          >
-            <div>
-              <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider block">
-                Drafts (Unpublished)
-              </span>
-              <span className="font-serif text-3xl font-bold text-amber-700 mt-1 block">
-                {stats.draft.toLocaleString()}
-              </span>
-            </div>
-            <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
-              <XCircle className="w-6 h-6" />
-            </div>
-          </div>
-        </div>
-
-        {/* 3. TOOLBAR (Search + Filters + Add Button) */}
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-          <div className="flex-1 flex flex-wrap items-center gap-3">
-            {/* Search Input */}
-            <div className="relative min-w-[240px] flex-1 max-w-md">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Search English name, Vietnamese name, city..."
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setPage(1);
-                }}
-                className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-teal-500 focus:bg-white transition-colors"
-              />
-            </div>
-
-            {/* Region Filter */}
-            <select
-              value={regionFilter}
-              onChange={(e) => {
-                setRegionFilter(e.target.value);
-                setPage(1);
-              }}
-              className="py-2 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 focus:outline-none focus:border-teal-500"
-            >
-              <option value="all">All Regions</option>
-              <option value="north">North Vietnam</option>
-              <option value="central">Central Vietnam</option>
-              <option value="south">South Vietnam</option>
-            </select>
-
-            {/* Status Filter */}
-            <select
-              value={publishedFilter}
-              onChange={(e) => {
-                setPublishedFilter(e.target.value);
-                setPage(1);
-              }}
-              className="py-2 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 focus:outline-none focus:border-teal-500"
-            >
-              <option value="all">All Status</option>
-              <option value="true">Live Only (Published)</option>
-              <option value="false">Drafts Only</option>
-            </select>
-          </div>
-
-          {/* ADD PLACE BUTTON */}
+        
+        {/* TOP SECTION SWITCHER TABS */}
+        <div className="flex items-center gap-2 p-1.5 bg-slate-200/80 rounded-2xl w-fit border border-slate-300/60 shadow-inner">
           <button
             type="button"
-            onClick={handleOpenAdd}
-            className="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs rounded-xl shadow-sm transition-colors flex items-center justify-center gap-1.5 shrink-0 min-h-[40px]"
+            onClick={() => setActiveTab("places")}
+            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 ${
+              activeTab === "places"
+                ? "bg-white text-teal-800 shadow-md border border-slate-200"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
           >
-            <Plus className="w-4 h-4" />
-            <span>Add New Place</span>
+            <Compass className="w-4 h-4 text-teal-600" />
+            <span>Places Directory ({stats.total.toLocaleString()})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("guides")}
+            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 ${
+              activeTab === "guides"
+                ? "bg-white text-teal-800 shadow-md border border-slate-200"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            <BookOpen className="w-4 h-4 text-amber-600" />
+            <span>Practical Travel Guides ({guides.length})</span>
           </button>
         </div>
 
-        {/* 4. PLACES TABLE */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[11px]">
-                  <th className="py-3 px-4 w-16">Photo</th>
-                  <th className="py-3 px-4">Place Name</th>
-                  <th className="py-3 px-4">Region / City</th>
-                  <th className="py-3 px-4">Category</th>
-                  <th className="py-3 px-4 text-center">Status</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {places.map((place) => (
-                  <tr key={place.slug} className="hover:bg-slate-50/70 transition-colors">
-                    {/* Thumbnail */}
-                    <td className="py-3 px-4">
-                      <div className="w-12 h-12 rounded-lg bg-slate-100 overflow-hidden relative border border-slate-200 shrink-0">
-                        {place.photo_url ? (
-                          <Image
-                            src={place.photo_url}
-                            alt={place.name_en}
-                            fill
-                            className="object-cover"
-                            sizes="48px"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-slate-400">
-                            <MapPin className="w-4 h-4" />
+        {/* ============================================================== */}
+        {/* TAB 1: PLACES MANAGEMENT */}
+        {/* ============================================================== */}
+        {activeTab === "places" && (
+          <div className="space-y-6">
+            {/* STATS CARDS */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                    Total Places
+                  </span>
+                  <span className="font-serif text-3xl font-bold text-slate-900 mt-1 block">
+                    {stats.total.toLocaleString()}
+                  </span>
+                </div>
+                <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
+                  <Compass className="w-6 h-6" />
+                </div>
+              </div>
+
+              <div
+                onClick={() => setPublishedFilter(publishedFilter === "true" ? "all" : "true")}
+                className={`bg-white rounded-2xl p-5 border shadow-sm flex items-center justify-between cursor-pointer transition-all ${
+                  publishedFilter === "true" ? "border-teal-500 ring-2 ring-teal-500/20" : "border-slate-200 hover:border-slate-300"
+                }`}
+              >
+                <div>
+                  <span className="text-xs font-semibold text-teal-600 uppercase tracking-wider block">
+                    Published &amp; Live
+                  </span>
+                  <span className="font-serif text-3xl font-bold text-teal-700 mt-1 block">
+                    {stats.published.toLocaleString()}
+                  </span>
+                </div>
+                <div className="w-12 h-12 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
+                  <CheckCircle2 className="w-6 h-6" />
+                </div>
+              </div>
+
+              <div
+                onClick={() => setPublishedFilter(publishedFilter === "false" ? "all" : "false")}
+                className={`bg-white rounded-2xl p-5 border shadow-sm flex items-center justify-between cursor-pointer transition-all ${
+                  publishedFilter === "false" ? "border-amber-500 ring-2 ring-amber-500/20" : "border-slate-200 hover:border-slate-300"
+                }`}
+              >
+                <div>
+                  <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider block">
+                    Drafts (Unpublished)
+                  </span>
+                  <span className="font-serif text-3xl font-bold text-amber-700 mt-1 block">
+                    {stats.draft.toLocaleString()}
+                  </span>
+                </div>
+                <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+                  <XCircle className="w-6 h-6" />
+                </div>
+              </div>
+            </div>
+
+            {/* TOOLBAR */}
+            <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+              <div className="flex-1 flex flex-wrap items-center gap-3">
+                {/* Search */}
+                <div className="relative min-w-[240px] flex-1 max-w-md">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Search English name, Vietnamese name, city..."
+                    value={search}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      setPage(1);
+                    }}
+                    className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-teal-500 focus:bg-white transition-colors"
+                  />
+                </div>
+
+                {/* Region Filter */}
+                <select
+                  value={regionFilter}
+                  onChange={(e) => {
+                    setRegionFilter(e.target.value);
+                    setPage(1);
+                  }}
+                  className="py-2 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 focus:outline-none focus:border-teal-500"
+                >
+                  <option value="all">All Regions</option>
+                  <option value="north">North Vietnam</option>
+                  <option value="central">Central Vietnam</option>
+                  <option value="south">South Vietnam</option>
+                </select>
+
+                {/* Status Filter */}
+                <select
+                  value={publishedFilter}
+                  onChange={(e) => {
+                    setPublishedFilter(e.target.value);
+                    setPage(1);
+                  }}
+                  className="py-2 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 focus:outline-none focus:border-teal-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="true">Live Only (Published)</option>
+                  <option value="false">Drafts Only</option>
+                </select>
+              </div>
+
+              {/* Add Button */}
+              <button
+                type="button"
+                onClick={handleOpenAdd}
+                className="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs rounded-xl shadow-sm transition-colors flex items-center justify-center gap-1.5 shrink-0 min-h-[40px]"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add New Place</span>
+              </button>
+            </div>
+
+            {/* PLACES TABLE */}
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[11px]">
+                      <th className="py-3 px-4 w-16">Photo</th>
+                      <th className="py-3 px-4">Place Name</th>
+                      <th className="py-3 px-4">Region / City</th>
+                      <th className="py-3 px-4">Category</th>
+                      <th className="py-3 px-4 text-center">Status</th>
+                      <th className="py-3 px-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {places.map((place) => (
+                      <tr key={place.slug} className="hover:bg-slate-50/70 transition-colors">
+                        <td className="py-3 px-4">
+                          <div className="w-12 h-12 rounded-lg bg-slate-100 overflow-hidden relative border border-slate-200 shrink-0">
+                            {place.photo_url ? (
+                              <Image
+                                src={place.photo_url}
+                                alt={place.name_en}
+                                fill
+                                className="object-cover"
+                                sizes="48px"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-slate-400">
+                                <MapPin className="w-4 h-4" />
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                    </td>
+                        </td>
 
-                    {/* Name */}
-                    <td className="py-3 px-4">
-                      <div className="font-semibold text-slate-900 text-sm">
-                        {place.name_en}
-                      </div>
-                      <div className="text-[11px] text-slate-500">
-                        {place.name}
-                      </div>
-                      <span className="text-[10px] text-slate-400 font-mono">
-                        /{place.slug}
-                      </span>
-                    </td>
+                        <td className="py-3 px-4">
+                          <div className="font-semibold text-slate-900 text-sm">
+                            {place.name_en}
+                          </div>
+                          <div className="text-[11px] text-slate-500">
+                            {place.name}
+                          </div>
+                          <span className="text-[10px] text-slate-400 font-mono">
+                            /{place.slug}
+                          </span>
+                        </td>
 
-                    {/* Region / City */}
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide ${
-                            place.region === "north"
-                              ? "bg-teal-50 text-teal-700 border border-teal-200"
-                              : place.region === "central"
-                              ? "bg-amber-50 text-amber-700 border border-amber-200"
-                              : "bg-rose-50 text-rose-700 border border-rose-200"
-                          }`}
-                        >
-                          {place.region}
-                        </span>
-                      </div>
-                      <span className="text-slate-600 font-medium">
-                        {place.city || place.area}
-                      </span>
-                    </td>
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-1.5 mb-1">
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide ${
+                                place.region === "north"
+                                  ? "bg-teal-50 text-teal-700 border border-teal-200"
+                                  : place.region === "central"
+                                  ? "bg-amber-50 text-amber-700 border border-amber-200"
+                                  : "bg-rose-50 text-rose-700 border border-rose-200"
+                              }`}
+                            >
+                              {place.region}
+                            </span>
+                          </div>
+                          <span className="text-slate-600 font-medium">
+                            {place.city || place.area}
+                          </span>
+                        </td>
 
-                    {/* Category */}
-                    <td className="py-3 px-4">
-                      <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-medium text-[11px] border border-slate-200">
-                        {place.category_en || place.category}
-                      </span>
-                    </td>
+                        <td className="py-3 px-4">
+                          <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-medium text-[11px] border border-slate-200">
+                            {place.category_en || place.category}
+                          </span>
+                        </td>
 
-                    {/* Status Toggle */}
-                    <td className="py-3 px-4 text-center">
-                      <button
-                        type="button"
-                        onClick={() => handleTogglePublish(place)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
-                          place.published
-                            ? "bg-teal-100 text-teal-800 hover:bg-teal-200 border border-teal-300"
-                            : "bg-slate-100 text-slate-500 hover:bg-slate-200 border border-slate-300"
-                        }`}
-                        title="Click to toggle Published / Draft"
-                      >
-                        {place.published ? (
-                          <>
-                            <CheckCircle2 className="w-3.5 h-3.5 text-teal-600" />
-                            <span>Live</span>
-                          </>
-                        ) : (
-                          <>
-                            <XCircle className="w-3.5 h-3.5 text-slate-400" />
-                            <span>Draft</span>
-                          </>
-                        )}
-                      </button>
-                    </td>
-
-                    {/* Actions */}
-                    <td className="py-3 px-4 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        {place.published && (
-                          <Link
-                            href={`/places/${place.slug}`}
-                            target="_blank"
-                            className="p-1.5 text-slate-400 hover:text-teal-600 hover:bg-slate-100 rounded-lg transition-colors"
-                            title="View on site"
+                        <td className="py-3 px-4 text-center">
+                          <button
+                            type="button"
+                            onClick={() => handleTogglePublish(place)}
+                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                              place.published
+                                ? "bg-teal-100 text-teal-800 hover:bg-teal-200 border border-teal-300"
+                                : "bg-slate-100 text-slate-500 hover:bg-slate-200 border border-slate-300"
+                            }`}
+                            title="Click to toggle Published / Draft"
                           >
-                            <ExternalLink className="w-4 h-4" />
-                          </Link>
-                        )}
+                            {place.published ? (
+                              <>
+                                <CheckCircle2 className="w-3.5 h-3.5 text-teal-600" />
+                                <span>Live</span>
+                              </>
+                            ) : (
+                              <>
+                                <XCircle className="w-3.5 h-3.5 text-slate-400" />
+                                <span>Draft</span>
+                              </>
+                            )}
+                          </button>
+                        </td>
+
+                        <td className="py-3 px-4 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            {place.published && (
+                              <Link
+                                href={`/places/${place.slug}`}
+                                target="_blank"
+                                className="p-1.5 text-slate-400 hover:text-teal-600 hover:bg-slate-100 rounded-lg transition-colors"
+                                title="View on site"
+                              >
+                                <ExternalLink className="w-4 h-4" />
+                              </Link>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEdit(place)}
+                              className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                              title="Edit Place"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeletePlace(place)}
+                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                              title="Delete Place"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+
+                    {places.length === 0 && !loading && (
+                      <tr>
+                        <td colSpan={6} className="py-12 text-center text-slate-500">
+                          No places found matching your filters.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* PAGINATION */}
+              <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
+                <span>
+                  Showing Page <strong>{page}</strong> of <strong>{totalPages}</strong>
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    disabled={page <= 1}
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors font-medium shadow-sm"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    type="button"
+                    disabled={page >= totalPages}
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors font-medium shadow-sm"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ============================================================== */}
+        {/* TAB 2: PRACTICAL TRAVEL GUIDES MANAGEMENT */}
+        {/* ============================================================== */}
+        {activeTab === "guides" && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+              <div>
+                <h2 className="font-serif text-xl font-bold text-slate-900">
+                  Practical Travel Guides Articles
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Manage the guide cards displayed on the homepage and at /guides.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleOpenAddGuide}
+                className="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs rounded-xl shadow-sm transition-colors flex items-center gap-1.5"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add New Guide Article</span>
+              </button>
+            </div>
+
+            {/* GUIDES GRID / LIST */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {guides.map((guide) => (
+                <div
+                  key={guide.slug}
+                  className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col sm:flex-row hover:shadow-md transition-all"
+                >
+                  {/* Photo Preview */}
+                  <div className="sm:w-48 h-40 sm:h-auto bg-slate-100 relative shrink-0">
+                    {guide.heroImage ? (
+                      <Image
+                        src={guide.heroImage}
+                        alt={guide.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 100vw, 192px"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-400">
+                        <BookOpen className="w-8 h-8" />
+                      </div>
+                    )}
+                    <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white/90 text-teal-800 shadow-sm backdrop-blur-sm">
+                      {guide.category}
+                    </span>
+                  </div>
+
+                  {/* Content Info */}
+                  <div className="p-5 flex flex-col justify-between flex-1">
+                    <div>
+                      <div className="flex items-center gap-2 text-[11px] text-slate-400 mb-1">
+                        <Clock className="w-3.5 h-3.5" />
+                        <span>{guide.readingTime}</span>
+                        <span>•</span>
+                        <span className="font-mono text-[10px]">/{guide.slug}</span>
+                      </div>
+
+                      <h3 className="font-serif text-base font-bold text-slate-900 leading-snug line-clamp-2 mb-2">
+                        {guide.title}
+                      </h3>
+
+                      <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                        {guide.subtitle}
+                      </p>
+                    </div>
+
+                    <div className="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                      <span className="text-[10px] text-slate-400 truncate max-w-[150px]">
+                        Photo: {guide.photoCredit || "Uncredited"}
+                      </span>
+
+                      <div className="flex items-center gap-2">
+                        <Link
+                          href={`/guides/${guide.slug}`}
+                          target="_blank"
+                          className="p-1.5 text-slate-400 hover:text-teal-600 hover:bg-slate-100 rounded-lg transition-colors"
+                          title="View live article"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </Link>
                         <button
                           type="button"
-                          onClick={() => handleOpenEdit(place)}
-                          className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
-                          title="Edit Place"
+                          onClick={() => handleOpenEditGuide(guide)}
+                          className="px-3 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors flex items-center gap-1"
                         >
-                          <Edit2 className="w-4 h-4" />
+                          <Edit2 className="w-3.5 h-3.5" />
+                          <span>Edit</span>
                         </button>
                         <button
                           type="button"
-                          onClick={() => handleDeletePlace(place)}
+                          onClick={() => handleDeleteGuide(guide)}
                           className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-                          title="Delete Place"
+                          title="Delete guide"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
-                    </td>
-                  </tr>
-                ))}
-
-                {places.length === 0 && !loading && (
-                  <tr>
-                    <td colSpan={6} className="py-12 text-center text-slate-500">
-                      No places found matching your filters.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          {/* PAGINATION */}
-          <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
-            <span>
-              Showing Page <strong>{page}</strong> of <strong>{totalPages}</strong>
-            </span>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                disabled={page <= 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors font-medium shadow-sm"
-              >
-                Previous
-              </button>
-              <button
-                type="button"
-                disabled={page >= totalPages}
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors font-medium shadow-sm"
-              >
-                Next
-              </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+        )}
+
       </div>
 
       {/* 5. MODAL DIALOG (Add / Edit Place) */}
@@ -616,7 +900,6 @@ export default function AdminPage() {
             </div>
 
             <form onSubmit={handleFormSubmit} className="space-y-4 text-xs">
-              {/* Names */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-medium text-slate-700 mb-1">
@@ -646,7 +929,6 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* Region & City & Category */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="block font-medium text-slate-700 mb-1">
@@ -695,7 +977,6 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* Description */}
               <div>
                 <label className="block font-medium text-slate-700 mb-1">
                   English Description
@@ -709,7 +990,6 @@ export default function AdminPage() {
                 />
               </div>
 
-              {/* Photo URL & Credit */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-medium text-slate-700 mb-1">
@@ -738,36 +1018,6 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* Coordinates */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-medium text-slate-700 mb-1">
-                    Latitude
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.lat}
-                    onChange={(e) => setFormData({ ...formData, lat: e.target.value })}
-                    placeholder="e.g. 20.8038"
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-medium text-slate-700 mb-1">
-                    Longitude
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.lng}
-                    onChange={(e) => setFormData({ ...formData, lng: e.target.value })}
-                    placeholder="e.g. 106.9996"
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
-                  />
-                </div>
-              </div>
-
-              {/* Published Switch */}
               <div className="pt-2 flex items-center justify-between border-t border-slate-100">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -782,7 +1032,6 @@ export default function AdminPage() {
                 </label>
               </div>
 
-              {/* Submit Buttons */}
               <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
                 <button
                   type="button"
@@ -798,6 +1047,146 @@ export default function AdminPage() {
                 >
                   {saving ? <RefreshCw className="w-4 h-4 animate-spin" /> : null}
                   <span>{modalMode === "add" ? "Create Place" : "Save Changes"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 6. MODAL DIALOG (Add / Edit Guide Article) */}
+      {guideModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 my-8">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+              <h3 className="font-serif text-2xl font-bold text-slate-900">
+                {guideModalMode === "add" ? "Add New Travel Guide" : "Edit Travel Guide"}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setGuideModalOpen(false)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleGuideSubmit} className="space-y-4 text-xs">
+              <div>
+                <label className="block font-medium text-slate-700 mb-1">
+                  Article Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={guideForm.title}
+                  onChange={(e) => setGuideForm({ ...guideForm, title: e.target.value })}
+                  placeholder="e.g. How to Book Sleeper Buses Across Vietnam"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
+                />
+              </div>
+
+              <div>
+                <label className="block font-medium text-slate-700 mb-1">
+                  Subtitle / Summary *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={guideForm.subtitle}
+                  onChange={(e) => setGuideForm({ ...guideForm, subtitle: e.target.value })}
+                  placeholder="e.g. Practical advice on overnight routes, reputable bus operators, and booking online..."
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-medium text-slate-700 mb-1">
+                    Category *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={guideForm.category}
+                    onChange={(e) => setGuideForm({ ...guideForm, category: e.target.value })}
+                    placeholder="e.g. Transportation, Visas & Entry, Connectivity..."
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-medium text-slate-700 mb-1">
+                    Reading Time
+                  </label>
+                  <input
+                    type="text"
+                    value={guideForm.readingTime}
+                    onChange={(e) => setGuideForm({ ...guideForm, readingTime: e.target.value })}
+                    placeholder="e.g. 5 min read"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
+                  />
+                </div>
+              </div>
+
+              {/* Photo settings */}
+              <div>
+                <label className="block font-medium text-slate-700 mb-1">
+                  Hero Image URL (Wikimedia Commons) *
+                </label>
+                <input
+                  type="url"
+                  required
+                  value={guideForm.heroImage}
+                  onChange={(e) => setGuideForm({ ...guideForm, heroImage: e.target.value })}
+                  placeholder="https://thumb.wikimedia.org/..."
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-medium text-slate-700 mb-1">
+                    Photo Credit
+                  </label>
+                  <input
+                    type="text"
+                    value={guideForm.photoCredit}
+                    onChange={(e) => setGuideForm({ ...guideForm, photoCredit: e.target.value })}
+                    placeholder="e.g. Jakub Hałun"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-medium text-slate-700 mb-1">
+                    Photo License
+                  </label>
+                  <input
+                    type="text"
+                    value={guideForm.photoLicense}
+                    onChange={(e) => setGuideForm({ ...guideForm, photoLicense: e.target.value })}
+                    placeholder="e.g. CC BY-SA 4.0"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-teal-500 text-slate-900"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setGuideModalOpen(false)}
+                  className="px-4 py-2 border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={guideSaving}
+                  className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium shadow-sm transition-colors flex items-center gap-1.5"
+                >
+                  {guideSaving ? <RefreshCw className="w-4 h-4 animate-spin" /> : null}
+                  <span>{guideModalMode === "add" ? "Create Article" : "Save Changes"}</span>
                 </button>
               </div>
             </form>
