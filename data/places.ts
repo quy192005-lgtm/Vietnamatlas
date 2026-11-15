@@ -24,6 +24,9 @@ export interface Place {
   city: string;
   city_slug: string;
   published: boolean;
+
+  // NV-12: Community photos submitted by visitors
+  extra_photos?: { src: string; credit_name: string }[];
 }
 
 export interface CityInfo {

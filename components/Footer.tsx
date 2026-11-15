@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SITE_NAME, SITE_TAGLINE } from "@/config/site";
+import { SITE_NAME, SITE_TAGLINE, PHOTO_FORM_URL } from "@/config/site";
 import { Compass, BookOpen, ShieldCheck, Heart } from "lucide-react";
 
 export default function Footer() {
@@ -132,6 +132,19 @@ export default function Footer() {
                   About & Contact
                 </Link>
               </li>
+              {PHOTO_FORM_URL && PHOTO_FORM_URL !== "#" && (
+                <li>
+                  <a
+                    href={PHOTO_FORM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-teal-600 transition-colors font-medium text-teal-600 inline-flex items-center gap-1"
+                  >
+                    <span>Contribute a photo</span>
+                    <span aria-hidden="true">&rarr;</span>
+                  </a>
+                </li>
+              )}
               <li className="pt-3 text-xs leading-relaxed text-travel-subtext">
                 Photos: Wikimedia Commons contributors, licensed as credited on each page.
               </li>

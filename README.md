@@ -85,6 +85,53 @@ Mở tệp `config/site.ts`:
 
 ---
 
+### 4. Thiết Lập Nút "Share Your Photo" & Quy Trình Duyệt Ảnh Cộng Đồng (NV-12)
+
+Trang web cho phép khách du lịch quốc tế gửi ảnh trải nghiệm thực tế thông qua **Google Form**. Hệ thống không mở cổng upload file trực tiếp lên server để đảm bảo an toàn 100% và không phát sinh chi phí backend. Chủ web duyệt tay ảnh trước khi đăng.
+
+#### A. Tạo Google Form (Làm 1 lần, ~10 phút):
+Tạo 1 Google Form bằng tiếng Anh gồm đúng 5 mục sau:
+1. **Tiêu đề Form:** `Share your Vietnam travel photo`
+2. **Ô 1 — `Your name (shown as photo credit)`:** Dạng Short answer (Trả lời ngắn), **Bắt buộc (Required)**.
+3. **Ô 2 — `Email (optional)`:** Dạng Short answer, không bắt buộc.
+4. **Ô 3 — `Which place is this photo of?`:** Dạng Short answer, **Bắt buộc (Required)**.
+   > 💡 *Đây là ô sẽ được tự động điền sẵn tên địa điểm khi khách bấm từ trang chi tiết.*
+5. **Ô 4 — `Upload your photo`:** Dạng File upload (Tải tệp lên), chỉ chọn loại Image, kích thước tối đa 10 MB, **Bắt buộc (Required)**. *(Khách cần đăng nhập Google để tải ảnh lên Drive của bạn).*
+6. **Ô 5 — Ô tick cam kết bản quyền:** Dạng Checkboxes (Hộp kiểm) với 1 lựa chọn duy nhất, **Bắt buộc (Required)**, giữ nguyên văn tiếng Anh:
+   `This photo is my own work, and I give this website permission to publish it with credit to my name.`
+7. **Thông điệp cảm ơn sau khi gửi (Settings → Presentation → Confirmation message):**
+   `Thank you! Every photo is reviewed by hand — if yours is selected, it will appear on the place page with your name credited.`
+
+#### B. Kích hoạt nút trên website:
+1. Trong Google Form, bấm menu 3 chấm góc trên bên phải → chọn **Get pre-filled link** (Nhận đường liên kết được điền sẵn) → gõ chữ `TEST` vào ô *Which place is this photo of?* → bấm **Get link** → **Copy link**.
+2. Nhìn vào link vừa copy, bạn sẽ thấy đoạn dạng:
+   `https://docs.google.com/forms/d/e/.../viewform?usp=pp_url&entry.123456789=TEST`
+   Phần `entry.123456789` chính là mã field của ô địa điểm.
+3. Mở tệp `config/site.ts`:
+   - Dán link form gốc vào `PHOTO_FORM_URL = "https://forms.gle/..."` (hoặc link form đầy đủ).
+   - Dán mã entry vào `PHOTO_FORM_PLACE_FIELD = "entry.123456789"`.
+4. Chạy `npm run build` và deploy. Nút `Share your photo` sẽ tự động hiển thị trên mọi trang địa điểm và link `Contribute a photo` sẽ xuất hiện ở Footer!
+
+#### C. Quy trình duyệt ảnh của chủ web:
+1. Mở thư mục Google Drive tự động liên kết với Form để xem các ảnh khách vừa tải lên.
+2. **Nếu ảnh đạt chuẩn (đẹp, rõ nét, đúng địa điểm):**
+   - Tải ảnh về máy và lưu vào thư mục `public/photos/community/{slug}/` (ví dụ: `public/photos/community/hoan-kiem-lake/morning-walk.jpg`).
+   - Mở `data/places.json` (hoặc qua trang Admin), thêm trường `extra_photos` vào địa điểm đó:
+     ```json
+     "extra_photos": [
+       {
+         "src": "/photos/community/hoan-kiem-lake/morning-walk.jpg",
+         "credit_name": "Sarah Jenkins"
+       }
+     ]
+     ```
+     *(Điền đúng `credit_name` theo tên khách đã khai trong form).*
+   - Chạy `npm run build` và `git push` để cập nhật lên live. Khối `Photos from travellers` sẽ tự động hiện dưới mô tả với dòng ghi công: `Photo: Sarah Jenkins — traveller contribution`.
+3. **Nếu ảnh không đạt (mờ, lệch chủ đề, vi phạm thuần phong mỹ tục):**
+   - Xóa tệp khỏi Google Drive, không cần phản hồi.
+
+---
+
 ## ⚖️ Luật Cứng & Pháp Lý (Hard Rules)
 1. **Giao diện & nội dung 100% tiếng Anh:** Tên tiếng Việt chỉ hiển thị ở dòng phụ `Local name:` tại trang chi tiết.
 2. **Ghi công bản quyền ảnh Wikimedia Commons:** Mọi ảnh đều hiển thị dòng credit tác giả + loại giấy phép CC và đường dẫn nguồn.
