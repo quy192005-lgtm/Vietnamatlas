@@ -7,11 +7,13 @@ import { SITE_NAME } from "@/config/site";
 import {
   Hotel,
   Train,
+  Bus,
   Ticket,
   Smartphone,
-  ExternalLink,
+  Heart,
   ShieldCheck,
-  Info,
+  ChevronRight,
+  ExternalLink,
 } from "lucide-react";
 
 interface TravelBookingSidebarProps {
@@ -23,29 +25,19 @@ export default function TravelBookingSidebar({
   currentCity,
   className = "",
 }: TravelBookingSidebarProps) {
-  const [activeTab, setActiveTab] = useState<"stays" | "transit" | "tours" | "esim">("stays");
+  const [activeTab, setActiveTab] = useState<"stays" | "trains" | "buses" | "tours" | "esim">("stays");
 
-  // Form states for Stays
-  const [stayCity, setStayCity] = useState(currentCity || "Hanoi");
+  // Form states
+  const [city, setCity] = useState(currentCity || "Hanoi");
+  const [originCity, setOriginCity] = useState("Hanoi");
+  const [destCity, setDestCity] = useState(currentCity || "Da Nang");
   const [checkInDate, setCheckInDate] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() + 1);
     return d.toISOString().split("T")[0];
   });
-  const [stayNights, setStayNights] = useState("2");
-  const [stayPartner, setStayPartner] = useState("booking");
-
-  // Form states for Transit
-  const [transitOrigin, setTransitOrigin] = useState("Hanoi");
-  const [transitDest, setTransitDest] = useState(currentCity || "Da Nang");
-  const [transitDate, setTransitDate] = useState(() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 2);
-    return d.toISOString().split("T")[0];
-  });
-
-  // Form states for Tours
-  const [tourCity, setTourCity] = useState(currentCity || "Da Nang");
+  const [nights, setNights] = useState("2 nights");
+  const [partner, setPartner] = useState("Booking.com");
 
   const citiesList = [
     "Hanoi",
@@ -60,14 +52,14 @@ export default function TravelBookingSidebar({
     "Phu Quoc",
   ];
 
-  const handleBookingSubmit = (e: React.FormEvent) => {
+  const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     let targetUrl = "#";
 
     if (activeTab === "stays") {
       targetUrl = AFFILIATES.booking;
-    } else if (activeTab === "transit") {
+    } else if (activeTab === "trains" || activeTab === "buses") {
       targetUrl = AFFILIATES.twelveGo;
     } else if (activeTab === "tours") {
       targetUrl = AFFILIATES.klook;
@@ -79,9 +71,10 @@ export default function TravelBookingSidebar({
       window.open(targetUrl, "_blank", "noopener,noreferrer,nofollow");
     } else {
       const fallbackUrls = {
-        stays: `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(stayCity + ", Vietnam")}`,
-        transit: `https://12go.asia/en/travel/${encodeURIComponent(transitOrigin.toLowerCase())}/${encodeURIComponent(transitDest.toLowerCase())}`,
-        tours: `https://www.klook.com/en-US/search/result/?query=${encodeURIComponent(tourCity + " Vietnam")}`,
+        stays: `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(city + ", Vietnam")}`,
+        trains: `https://12go.asia/en/travel/${encodeURIComponent(originCity.toLowerCase())}/${encodeURIComponent(destCity.toLowerCase())}`,
+        buses: `https://12go.asia/en/travel/${encodeURIComponent(originCity.toLowerCase())}/${encodeURIComponent(destCity.toLowerCase())}`,
+        tours: `https://www.klook.com/en-US/search/result/?query=${encodeURIComponent(city + " Vietnam")}`,
         esim: "https://www.airalo.com/vietnam-esim",
       };
       window.open(fallbackUrls[activeTab], "_blank", "noopener,noreferrer,nofollow");
@@ -89,261 +82,271 @@ export default function TravelBookingSidebar({
   };
 
   return (
-    <aside className={`w-full ${className}`}>
-      {/* UNIFIED COMPACT CARD: Fits comfortably within standard laptop viewports */}
-      <div className="bg-slate-900 text-white rounded-3xl p-5 shadow-xl border border-slate-800">
-        {/* Top: Compact Creator Header (Vietnam Coracle inspired) */}
-        <div className="flex items-center gap-3 pb-3 mb-3 border-b border-slate-800/80">
-          <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-teal-500 to-emerald-400 p-0.5 shrink-0 shadow-sm">
-            <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center font-serif text-sm font-bold text-teal-300">
-              VA
-            </div>
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1.5">
-              <h3 className="font-serif text-sm font-bold text-white truncate">
-                {SITE_NAME}
-              </h3>
-              <span className="text-[10px] text-teal-400 bg-teal-950 px-1.5 py-0.2 rounded border border-teal-800/60 shrink-0">
-                Guide
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400 truncate">
-              Independent Directory • 1,000 Places
-            </p>
-          </div>
-          <div className="flex items-center gap-1 shrink-0">
-            <Link
-              href="/about"
-              className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
-              title="About this site"
-            >
-              <Info className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/affiliate-disclosure"
-              className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
-              title="Affiliate disclosure"
-            >
-              <ShieldCheck className="w-4 h-4" />
-            </Link>
+    <aside className={`w-full space-y-6 ${className}`}>
+      {/* 1. AUTHOR / CREATOR PROFILE (Exact match to Vietnam Coracle "I'm Tom" card) */}
+      <div className="bg-[#12161A] text-white rounded-2xl p-6 shadow-2xl border border-white/5 text-center">
+        {/* Circle avatar */}
+        <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-2 border-teal-500/40 p-0.5 shadow-lg bg-slate-800">
+          <div className="w-full h-full rounded-full bg-gradient-to-tr from-teal-700 via-slate-800 to-indigo-800 flex items-center justify-center text-white font-serif font-bold text-2xl tracking-tight">
+            Q
           </div>
         </div>
 
-        {/* Middle: Booking Header & 4 Tabs */}
-        <div className="mb-3">
-          <div className="flex items-center justify-between mb-2">
-            <h4 className="font-serif text-base font-bold text-white tracking-tight">
-              Plan & Book Your <span className="text-teal-400">Trip</span>
-            </h4>
-            <span className="text-[10px] text-slate-400">Direct partners</span>
-          </div>
+        <h3 className="font-serif text-xl font-bold tracking-tight text-white mb-2">
+          I&apos;m Quy
+        </h3>
 
-          {/* 4 Tabs */}
-          <div className="grid grid-cols-4 gap-1 p-1 bg-slate-950 rounded-xl border border-slate-800">
-            <button
-              type="button"
-              onClick={() => setActiveTab("stays")}
-              className={`flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-[10px] font-medium transition-all min-h-[38px] ${
-                activeTab === "stays"
-                  ? "bg-teal-500 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              <Hotel className="w-3.5 h-3.5 mb-0.5" />
-              <span>Stays</span>
-            </button>
+        <p className="text-xs text-slate-300 leading-relaxed font-normal mb-5 px-1">
+          I&apos;m the creator of {SITE_NAME}: a free, independent travel directory for Vietnam. There is no sponsored bias. If you enjoy the site, please support it.{" "}
+          <Link href="/about" className="text-teal-400 hover:underline">
+            Read more &rsaquo;
+          </Link>
+        </p>
 
-            <button
-              type="button"
-              onClick={() => setActiveTab("transit")}
-              className={`flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-[10px] font-medium transition-all min-h-[38px] ${
-                activeTab === "transit"
-                  ? "bg-teal-500 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              <Train className="w-3.5 h-3.5 mb-0.5" />
-              <span>Trains</span>
-            </button>
+        {/* Action buttons matching the video's Donate & Patron pills */}
+        <div className="space-y-2.5">
+          <Link
+            href="/about"
+            className="w-full py-2.5 px-4 rounded-xl bg-[#363299] hover:bg-[#433cc7] text-white text-xs font-semibold shadow-md transition-colors flex items-center justify-center gap-2 min-h-[42px]"
+          >
+            <Heart className="w-3.5 h-3.5 text-rose-300 fill-rose-300" />
+            <span>Support this Project</span>
+          </Link>
 
-            <button
-              type="button"
-              onClick={() => setActiveTab("tours")}
-              className={`flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-[10px] font-medium transition-all min-h-[38px] ${
-                activeTab === "tours"
-                  ? "bg-teal-500 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              <Ticket className="w-3.5 h-3.5 mb-0.5" />
-              <span>Tours</span>
-            </button>
+          <Link
+            href="/affiliate-disclosure"
+            className="w-full py-2.5 px-4 rounded-xl bg-[#21262D] hover:bg-[#2b313a] text-slate-200 text-xs font-medium border border-white/10 transition-colors flex items-center justify-center gap-1.5 min-h-[42px]"
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-teal-400" />
+            <span>Affiliate Disclosure</span>
+          </Link>
+        </div>
+      </div>
 
-            <button
-              type="button"
-              onClick={() => setActiveTab("esim")}
-              className={`flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg text-[10px] font-medium transition-all min-h-[38px] ${
-                activeTab === "esim"
-                  ? "bg-teal-500 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              <Smartphone className="w-3.5 h-3.5 mb-0.5" />
-              <span>eSIM</span>
-            </button>
-          </div>
+      {/* 2. BOOK YOUR STAY WIDGET (Exact match to Vietnam Coracle's "Book Your Stay" widget) */}
+      <div className="bg-[#12161A] text-white rounded-2xl p-6 shadow-2xl border border-white/5">
+        <h4 className="font-serif text-2xl font-bold tracking-tight text-center mb-4">
+          Book Your <span className="text-[#6366F1]">Stay</span>
+        </h4>
+
+        {/* 5 Tab icons matching the video */}
+        <div className="grid grid-cols-5 gap-1 p-1 bg-[#0A0D10] rounded-xl mb-5 border border-white/5">
+          {/* Stays */}
+          <button
+            type="button"
+            onClick={() => setActiveTab("stays")}
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] font-medium transition-all ${
+              activeTab === "stays"
+                ? "bg-[#4338CA] text-white shadow-md font-semibold"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <Hotel className="w-4 h-4 mb-1" />
+            <span>Stays</span>
+          </button>
+
+          {/* Trains */}
+          <button
+            type="button"
+            onClick={() => setActiveTab("trains")}
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] font-medium transition-all ${
+              activeTab === "trains"
+                ? "bg-[#4338CA] text-white shadow-md font-semibold"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <Train className="w-4 h-4 mb-1" />
+            <span>Trains</span>
+          </button>
+
+          {/* Buses */}
+          <button
+            type="button"
+            onClick={() => setActiveTab("buses")}
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] font-medium transition-all ${
+              activeTab === "buses"
+                ? "bg-[#4338CA] text-white shadow-md font-semibold"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <Bus className="w-4 h-4 mb-1" />
+            <span>Buses</span>
+          </button>
+
+          {/* Tours */}
+          <button
+            type="button"
+            onClick={() => setActiveTab("tours")}
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] font-medium transition-all ${
+              activeTab === "tours"
+                ? "bg-[#4338CA] text-white shadow-md font-semibold"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <Ticket className="w-4 h-4 mb-1" />
+            <span>Tours</span>
+          </button>
+
+          {/* eSIM */}
+          <button
+            type="button"
+            onClick={() => setActiveTab("esim")}
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] font-medium transition-all ${
+              activeTab === "esim"
+                ? "bg-[#4338CA] text-white shadow-md font-semibold"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <Smartphone className="w-4 h-4 mb-1" />
+            <span>eSIM</span>
+          </button>
         </div>
 
-        {/* Compact Form Body */}
-        <form onSubmit={handleBookingSubmit} className="space-y-2.5">
-          {/* TAB 1: STAYS */}
+        {/* Input Form matching the exact layout in the video */}
+        <form onSubmit={handleSearchSubmit} className="space-y-3.5">
+          {/* TAB: STAYS */}
           {activeTab === "stays" && (
             <>
               <div>
-                <label className="block text-[10px] font-medium text-slate-300 mb-1">
-                  City in Vietnam:
+                <label className="block text-[11px] text-slate-400 mb-1">
+                  City:
                 </label>
                 <select
-                  value={stayCity}
-                  onChange={(e) => setStayCity(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-teal-500"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                 >
                   {citiesList.map((c) => (
                     <option key={c} value={c}>
-                      {c}, Vietnam
+                      {c}
                     </option>
                   ))}
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2.5">
                 <div>
-                  <label className="block text-[10px] font-medium text-slate-300 mb-1">
+                  <label className="block text-[11px] text-slate-400 mb-1">
                     Check-in:
                   </label>
                   <input
                     type="date"
                     value={checkInDate}
                     onChange={(e) => setCheckInDate(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-teal-500"
+                    className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-medium text-slate-300 mb-1">
-                    Duration:
+                  <label className="block text-[11px] text-slate-400 mb-1">
+                    Nights:
                   </label>
                   <select
-                    value={stayNights}
-                    onChange={(e) => setStayNights(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-teal-500"
+                    value={nights}
+                    onChange={(e) => setNights(e.target.value)}
+                    className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                   >
-                    <option value="1">1 night</option>
-                    <option value="2">2 nights</option>
-                    <option value="3">3 nights</option>
-                    <option value="5">5 nights</option>
-                    <option value="7">7 nights</option>
+                    <option value="1 night">1 night</option>
+                    <option value="2 nights">2 nights</option>
+                    <option value="3 nights">3 nights</option>
+                    <option value="5 nights">5 nights</option>
+                    <option value="7 nights">7 nights</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-[10px] font-medium text-slate-300 mb-1">
-                  Provider:
+                <label className="block text-[11px] text-slate-400 mb-1">
+                  With:
                 </label>
                 <select
-                  value={stayPartner}
-                  onChange={(e) => setStayPartner(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-teal-500"
+                  value={partner}
+                  onChange={(e) => setPartner(e.target.value)}
+                  className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                 >
-                  <option value="booking">Booking.com (Worldwide Hotels)</option>
-                  <option value="agoda">Agoda (Southeast Asia)</option>
+                  <option value="Agoda">Agoda</option>
+                  <option value="Booking.com">Booking.com</option>
                 </select>
               </div>
 
               <button
                 type="submit"
-                className="w-full mt-1 py-2.5 px-3 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-semibold text-xs shadow-md transition-colors flex items-center justify-center gap-1.5 min-h-[40px]"
+                className="w-full mt-2 py-3 px-4 rounded-xl bg-[#363299] hover:bg-[#433cc7] text-white font-semibold text-xs sm:text-sm shadow-lg transition-colors flex items-center justify-center gap-1.5"
               >
-                <span>Search Hotels &rarr;</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Search Hotels &rsaquo;</span>
               </button>
             </>
           )}
 
-          {/* TAB 2: TRANSIT */}
-          {activeTab === "transit" && (
+          {/* TAB: TRAINS / BUSES */}
+          {(activeTab === "trains" || activeTab === "buses") && (
             <>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block text-[10px] font-medium text-slate-300 mb-1">
-                    From:
-                  </label>
-                  <select
-                    value={transitOrigin}
-                    onChange={(e) => setTransitOrigin(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-teal-500"
-                  >
-                    {citiesList.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-medium text-slate-300 mb-1">
-                    To:
-                  </label>
-                  <select
-                    value={transitDest}
-                    onChange={(e) => setTransitDest(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-teal-500"
-                  >
-                    {citiesList.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              <div>
+                <label className="block text-[11px] text-slate-400 mb-1">
+                  From:
+                </label>
+                <select
+                  value={originCity}
+                  onChange={(e) => setOriginCity(e.target.value)}
+                  className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                >
+                  {citiesList.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
-                <label className="block text-[10px] font-medium text-slate-300 mb-1">
-                  Travel Date:
+                <label className="block text-[11px] text-slate-400 mb-1">
+                  To:
+                </label>
+                <select
+                  value={destCity}
+                  onChange={(e) => setDestCity(e.target.value)}
+                  className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                >
+                  {citiesList.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] text-slate-400 mb-1">
+                  Departure Date:
                 </label>
                 <input
                   type="date"
-                  value={transitDate}
-                  onChange={(e) => setTransitDate(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-teal-500"
+                  value={checkInDate}
+                  onChange={(e) => setCheckInDate(e.target.value)}
+                  className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full mt-1 py-2.5 px-3 rounded-xl bg-terracotta-500 hover:bg-terracotta-600 text-white font-semibold text-xs shadow-md transition-colors flex items-center justify-center gap-1.5 min-h-[40px]"
+                className="w-full mt-2 py-3 px-4 rounded-xl bg-[#363299] hover:bg-[#433cc7] text-white font-semibold text-xs sm:text-sm shadow-lg transition-colors flex items-center justify-center gap-1.5"
               >
-                <span>Search Trains on 12Go &rarr;</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Search {activeTab === "trains" ? "Trains" : "Buses"} on 12Go &rsaquo;</span>
               </button>
             </>
           )}
 
-          {/* TAB 3: TOURS */}
+          {/* TAB: TOURS */}
           {activeTab === "tours" && (
             <>
               <div>
-                <label className="block text-[10px] font-medium text-slate-300 mb-1">
-                  Tour Destination:
+                <label className="block text-[11px] text-slate-400 mb-1">
+                  Destination:
                 </label>
                 <select
-                  value={tourCity}
-                  onChange={(e) => setTourCity(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-teal-500"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
                 >
                   {citiesList.map((c) => (
                     <option key={c} value={c}>
@@ -353,45 +356,43 @@ export default function TravelBookingSidebar({
                 </select>
               </div>
 
-              <div className="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-[11px] text-slate-300">
-                Explore day tours, boat cruises, cooking classes, and attraction tickets verified on Klook.
+              <div className="bg-[#1A1F26] p-3 rounded-xl border border-white/5 text-[11px] text-slate-300">
+                Browse day tours, island boat cruises, cooking workshops, and attraction tickets.
               </div>
 
               <button
                 type="submit"
-                className="w-full mt-1 py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs shadow-md transition-colors flex items-center justify-center gap-1.5 min-h-[40px]"
+                className="w-full mt-2 py-3 px-4 rounded-xl bg-[#363299] hover:bg-[#433cc7] text-white font-semibold text-xs sm:text-sm shadow-lg transition-colors flex items-center justify-center gap-1.5"
               >
-                <span>Find Tours on Klook &rarr;</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Search Tours on Klook &rsaquo;</span>
               </button>
             </>
           )}
 
-          {/* TAB 4: ESIM */}
+          {/* TAB: ESIM */}
           {activeTab === "esim" && (
             <>
-              <div className="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-[11px] text-slate-300 space-y-1">
-                <span className="font-semibold text-teal-400 block text-xs">
-                  Vietnam Tourist eSIM
+              <div className="bg-[#1A1F26] p-3 rounded-xl border border-white/5 text-[11px] text-slate-300 space-y-1.5">
+                <span className="font-semibold text-indigo-300 block text-xs">
+                  Airalo Vietnam eSIM
                 </span>
                 <p className="text-[10px] text-slate-400">
-                  Instant QR setup for 4G data on Viettel/Vinaphone. No passport lines at the airport.
+                  Instant 4G connection via Viettel/Vinaphone. Ready the second you touch down in Vietnam.
                 </p>
               </div>
 
               <button
                 type="submit"
-                className="w-full mt-1 py-2.5 px-3 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-semibold text-xs shadow-md transition-colors flex items-center justify-center gap-1.5 min-h-[40px]"
+                className="w-full mt-2 py-3 px-4 rounded-xl bg-[#363299] hover:bg-[#433cc7] text-white font-semibold text-xs sm:text-sm shadow-lg transition-colors flex items-center justify-center gap-1.5"
               >
-                <span>Get Airalo eSIM &rarr;</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Get Airalo eSIM &rsaquo;</span>
               </button>
             </>
           )}
         </form>
 
-        <p className="mt-3 text-[9px] text-slate-400 text-center leading-normal">
-          * Transparent disclosure: Referral commission may be earned at zero extra cost to you.
+        <p className="mt-3.5 text-[9px] text-slate-400 text-center leading-normal">
+          * Transparent note: When you book via these links, we may earn an affiliate commission at no extra cost to you.
         </p>
       </div>
     </aside>
