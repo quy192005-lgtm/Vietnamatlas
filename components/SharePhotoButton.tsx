@@ -114,10 +114,10 @@ export default function SharePhotoButton({
               <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 space-y-1.5">
                 <div className="font-semibold flex items-center gap-1.5">
                   <HelpCircle className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span>Dành cho Chủ web (Owner):</span>
+                  <span>Webmaster Configuration:</span>
                 </div>
                 <p className="leading-relaxed text-[11px] text-amber-800">
-                  Nút này mở Google Form để khách gửi ảnh lên Google Drive của bạn. Để kích hoạt link thật, bạn mở file <code className="bg-amber-100 px-1 py-0.5 rounded text-amber-900 font-mono">config/site.ts</code> và dán link Google Form vào biến <code className="bg-amber-100 px-1 py-0.5 rounded text-amber-900 font-mono">PHOTO_FORM_URL</code> (xem hướng dẫn ở Mục 4 trong README).
+                  This button opens a Google Form where visitors submit photos directly into your private Google Drive. To activate your live submission form, add your Google Form URL to <code className="bg-amber-100 px-1 py-0.5 rounded text-amber-900 font-mono">PHOTO_FORM_URL</code> in <code className="bg-amber-100 px-1 py-0.5 rounded text-amber-900 font-mono">config/site.ts</code>.
                 </p>
               </div>
             </div>
@@ -130,7 +130,7 @@ export default function SharePhotoButton({
                 rel="noopener noreferrer"
                 className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-medium text-xs sm:text-sm transition-colors inline-flex items-center gap-1.5"
               >
-                <span>Mở Google Forms</span>
+                <span>Create Google Form</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
               <button
@@ -138,7 +138,7 @@ export default function SharePhotoButton({
                 onClick={() => setModalOpen(false)}
                 className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold text-xs sm:text-sm transition-colors shadow-sm"
               >
-                Đã hiểu
+                Got It
               </button>
             </div>
           </div>
