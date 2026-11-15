@@ -20,25 +20,25 @@ export default function DestinationsPage() {
   const regions: ("north" | "central" | "south")[] = ["north", "central", "south"];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <Breadcrumb items={[{ label: "Destinations" }]} />
 
-      <div className="mb-10">
-        <span className="text-xs font-semibold uppercase tracking-wider text-teal-600 mb-2 block">
+      <div className="mb-8">
+        <span className="text-xs font-semibold uppercase tracking-wider text-teal-600 mb-1.5 block">
           Directory Directory
         </span>
-        <h1 className="font-serif text-3xl sm:text-5xl font-bold text-travel-text tracking-tight mb-4">
+        <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-travel-text tracking-tight mb-2">
           All Destinations in Vietnam
         </h1>
-        <p className="text-base text-travel-subtext max-w-3xl leading-relaxed">
+        <p className="text-sm sm:text-base text-travel-subtext max-w-3xl leading-relaxed">
           Explore curated destinations grouped across Vietnam&apos;s three distinct geographical regions. Browse historical hubs, mountain highlands, and idyllic coastal settlements.
         </p>
       </div>
 
-      {/* 2-Column Editorial Layout (Main Content + Right Booking Sidebar) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Main Area: Regional Sections & Cities */}
-        <div className="lg:col-span-8 xl:col-span-8 space-y-12">
+      {/* 2-Column Responsive Layout: Left Expansive Content + Right Compact Sticky Sidebar */}
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
+        {/* Left Main Area: Takes all available width */}
+        <div className="flex-1 min-w-0 space-y-10">
           {regions.map((regKey) => {
             const regInfo = REGIONS[regKey];
             const regCities = cities.filter((c) => c.region === regKey);
@@ -47,13 +47,13 @@ export default function DestinationsPage() {
             return (
               <section
                 key={regKey}
-                className="bg-white rounded-3xl border border-travel-border p-6 sm:p-8 shadow-card"
+                className="bg-white rounded-3xl border border-travel-border p-6 sm:p-7 shadow-card"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-8 border-b border-travel-border gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 mb-6 border-b border-travel-border gap-3">
                   <div>
-                    <div className="flex items-center gap-2 mb-1.5">
+                    <div className="flex items-center gap-2 mb-1">
                       <span
-                        className={`w-3 h-3 rounded-full ${
+                        className={`w-2.5 h-2.5 rounded-full ${
                           regKey === "north"
                             ? "bg-teal-500"
                             : regKey === "central"
@@ -61,21 +61,21 @@ export default function DestinationsPage() {
                             : "bg-rose-500"
                         }`}
                       />
-                      <span className="text-xs font-semibold uppercase tracking-wider text-travel-subtext">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-travel-subtext">
                         {regPlacesCount} places published
                       </span>
                     </div>
                     <h2 className="font-serif text-2xl sm:text-3xl font-bold text-travel-text">
                       {regInfo.name}
                     </h2>
-                    <p className="text-sm text-travel-subtext mt-1 max-w-2xl">
+                    <p className="text-xs sm:text-sm text-travel-subtext mt-0.5 max-w-2xl">
                       {regInfo.tagline}
                     </p>
                   </div>
 
                   <Link
                     href={`/regions/${regKey}`}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-700 font-medium text-xs sm:text-sm transition-colors shrink-0 min-h-[44px]"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-700 font-medium text-xs sm:text-sm transition-colors shrink-0 min-h-[40px]"
                   >
                     <span>Explore {regInfo.name}</span>
                     <ArrowRight className="w-4 h-4" />
@@ -83,7 +83,7 @@ export default function DestinationsPage() {
                 </div>
 
                 {/* Grid of cities in this region */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-5">
                   {regCities.map((city) => (
                     <Link
                       key={city.city_slug}
@@ -112,7 +112,7 @@ export default function DestinationsPage() {
                         </div>
                       </div>
 
-                      <div className="p-3.5 flex items-center justify-between text-xs text-travel-subtext">
+                      <div className="p-3 flex items-center justify-between text-xs text-travel-subtext">
                         <span>{city.count} places</span>
                         <span className="text-teal-600 font-semibold group-hover:translate-x-1 transition-transform">
                           Explore &rarr;
@@ -126,9 +126,9 @@ export default function DestinationsPage() {
           })}
         </div>
 
-        {/* Right Sidebar: Sticky Trip Booking & Creator Card */}
-        <div className="lg:col-span-4 xl:col-span-4">
-          <TravelBookingSidebar className="sticky top-24" />
+        {/* Right Sidebar: Perfectly sized, sticky at top-20 */}
+        <div className="w-full lg:w-[320px] xl:w-[340px] shrink-0">
+          <TravelBookingSidebar className="sticky top-20" />
         </div>
       </div>
     </div>

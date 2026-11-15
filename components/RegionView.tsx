@@ -34,7 +34,7 @@ export default function RegionView({ region, cities, places }: RegionViewProps) 
   }, [places, selectedCategory]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
       <Breadcrumb
         items={[
           { label: "Destinations", href: "/destinations" },
@@ -42,19 +42,19 @@ export default function RegionView({ region, cities, places }: RegionViewProps) 
         ]}
       />
 
-      {/* Main 2-column grid layout (Left: content, Right: sticky booking sidebar) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      {/* Main 2-column layout: Left Expansive + Right Sticky 330px */}
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
         {/* Left main content */}
-        <div className="lg:col-span-8 xl:col-span-8 space-y-12">
+        <div className="flex-1 min-w-0 space-y-10">
           {/* Hero Banner for Region */}
-          <div className="relative rounded-3xl overflow-hidden bg-slate-900 text-white min-h-[380px] flex items-end p-6 sm:p-10 shadow-xl">
+          <div className="relative rounded-3xl overflow-hidden bg-slate-900 text-white min-h-[340px] flex items-end p-6 sm:p-8 shadow-xl">
             <Image
               src={region.heroImage}
               alt={region.name}
               fill
               priority
               className="object-cover opacity-45"
-              sizes="(max-width: 1024px) 100vw, 800px"
+              sizes="(max-width: 1024px) 100vw, 900px"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
 
@@ -76,30 +76,30 @@ export default function RegionView({ region, cities, places }: RegionViewProps) 
             </div>
 
             <div className="relative z-10 max-w-2xl">
-              <span className="text-xs font-semibold uppercase tracking-wider text-teal-300 mb-2 block">
+              <span className="text-xs font-semibold uppercase tracking-wider text-teal-300 mb-1.5 block">
                 Regional Guide • {places.length} Places Published
               </span>
-              <h1 className="font-serif text-3xl sm:text-5xl font-bold tracking-tight mb-3">
+              <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-2">
                 {region.name}
               </h1>
-              <p className="text-sm sm:text-base text-slate-200 leading-relaxed mb-6">
+              <p className="text-xs sm:text-sm text-slate-200 leading-relaxed mb-4">
                 {region.description}
               </p>
 
               {/* Climate & Best Time Strip */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-white/20 text-xs">
-                <div className="flex items-start gap-2 bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-3 border-t border-white/20 text-xs">
+                <div className="flex items-start gap-2 bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/10">
                   <Sun className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-semibold block text-white">Climate:</span>
-                    <span className="text-slate-300">{region.climate}</span>
+                    <span className="font-semibold block text-white text-[11px]">Climate:</span>
+                    <span className="text-slate-300 text-[11px]">{region.climate}</span>
                   </div>
                 </div>
-                <div className="flex items-start gap-2 bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10">
+                <div className="flex items-start gap-2 bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/10">
                   <Calendar className="w-4 h-4 text-teal-300 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-semibold block text-white">Best Season:</span>
-                    <span className="text-slate-300">{region.bestTime}</span>
+                    <span className="font-semibold block text-white text-[11px]">Best Season:</span>
+                    <span className="text-slate-300 text-[11px]">{region.bestTime}</span>
                   </div>
                 </div>
               </div>
@@ -108,10 +108,10 @@ export default function RegionView({ region, cities, places }: RegionViewProps) 
 
           {/* Cities in this Region */}
           <div>
-            <h2 className="font-serif text-2xl font-bold text-travel-text mb-4">
+            <h2 className="font-serif text-xl sm:text-2xl font-bold text-travel-text mb-3">
               Cities & Hubs in {region.name}
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
               {cities.map((city) => (
                 <Link
                   key={city.city_slug}
@@ -150,12 +150,12 @@ export default function RegionView({ region, cities, places }: RegionViewProps) 
 
           {/* Places in this Region with Category Filter */}
           <div>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-travel-border">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-travel-border">
               <div>
-                <h2 className="font-serif text-2xl font-bold text-travel-text">
+                <h2 className="font-serif text-xl sm:text-2xl font-bold text-travel-text">
                   All Places in {region.name}
                 </h2>
-                <p className="text-xs sm:text-sm text-travel-subtext mt-1">
+                <p className="text-xs text-travel-subtext mt-0.5">
                   Showing {filteredPlaces.length} of {places.length} published landmarks
                 </p>
               </div>
@@ -167,13 +167,13 @@ export default function RegionView({ region, cities, places }: RegionViewProps) 
             </div>
 
             {/* Category Filter Chips */}
-            <div className="flex flex-wrap gap-2 mb-8">
+            <div className="flex flex-wrap gap-2 mb-6">
               {categories.map((cat) => (
                 <button
                   key={cat}
                   type="button"
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors min-h-[44px] flex items-center ${
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors min-h-[38px] flex items-center ${
                     selectedCategory === cat
                       ? "bg-teal-500 text-white shadow-sm"
                       : "bg-travel-muted text-travel-text hover:bg-teal-50 hover:text-teal-600 border border-travel-border"
@@ -185,12 +185,12 @@ export default function RegionView({ region, cities, places }: RegionViewProps) 
             </div>
 
             {/* Places Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredPlaces.map((place, index) => (
                 <div key={place.slug} className="contents">
                   <PlaceCard place={place} />
-                  {/* AdSlot after the 4th card */}
-                  {index === 3 && (
+                  {/* AdSlot after the 6th card */}
+                  {index === 5 && (
                     <div className="col-span-full">
                       <AdSlot format="horizontal" />
                     </div>
@@ -217,8 +217,8 @@ export default function RegionView({ region, cities, places }: RegionViewProps) 
         </div>
 
         {/* Right Sticky Sidebar */}
-        <div className="lg:col-span-4 xl:col-span-4">
-          <TravelBookingSidebar currentCity={region.name} className="sticky top-24" />
+        <div className="w-full lg:w-[320px] xl:w-[340px] shrink-0">
+          <TravelBookingSidebar currentCity={region.name} className="sticky top-20" />
         </div>
       </div>
     </div>

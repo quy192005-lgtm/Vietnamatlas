@@ -57,7 +57,7 @@ export default function CityView({
   }, [geoPlaces]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
       <Breadcrumb
         items={[
           { label: "Destinations", href: "/destinations" },
@@ -66,30 +66,30 @@ export default function CityView({
         ]}
       />
 
-      {/* Main 2-column grid layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      {/* Main 2-column layout: Left Expansive + Right Sticky 330px */}
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
         {/* Left main area */}
-        <div className="lg:col-span-8 xl:col-span-8 space-y-10">
+        <div className="flex-1 min-w-0 space-y-8">
           {/* Header section */}
-          <div className="bg-white rounded-3xl border border-travel-border p-6 sm:p-10 shadow-card">
-            <div className="flex items-center gap-2 mb-2">
+          <div className="bg-white rounded-3xl border border-travel-border p-6 sm:p-8 shadow-card">
+            <div className="flex items-center gap-2 mb-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-teal-500" />
               <span className="text-xs font-semibold uppercase tracking-wider text-teal-600">
                 {region.toUpperCase()} VIETNAM • {places.length} PLACES PUBLISHED
               </span>
             </div>
 
-            <h1 className="font-serif text-3xl sm:text-5xl font-bold text-travel-text tracking-tight mb-3">
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-travel-text tracking-tight mb-2">
               {cityName}
             </h1>
 
             {cityDetails && (
-              <div className="space-y-4 max-w-3xl">
-                <p className="text-base text-travel-subtext leading-relaxed">
+              <div className="space-y-3 max-w-3xl">
+                <p className="text-sm sm:text-base text-travel-subtext leading-relaxed">
                   {cityDetails.description}
                 </p>
                 {cityDetails.travelTips && (
-                  <div className="flex items-start gap-2.5 bg-travel-muted p-4 rounded-xl border border-travel-border text-xs text-travel-text">
+                  <div className="flex items-start gap-2 bg-travel-muted p-3.5 rounded-xl border border-travel-border text-xs text-travel-text">
                     <Info className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-teal-700">Local travel tip:</strong>{" "}
@@ -103,12 +103,12 @@ export default function CityView({
 
           {/* Places and filter */}
           <div>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-travel-border">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-travel-border">
               <div>
-                <h2 className="font-serif text-2xl font-bold text-travel-text">
+                <h2 className="font-serif text-xl sm:text-2xl font-bold text-travel-text">
                   Published Places in {cityName}
                 </h2>
-                <p className="text-xs sm:text-sm text-travel-subtext mt-1">
+                <p className="text-xs text-travel-subtext mt-0.5">
                   Showing {filteredPlaces.length} of {places.length} landmarks
                 </p>
               </div>
@@ -120,13 +120,13 @@ export default function CityView({
             </div>
 
             {/* Category chips */}
-            <div className="flex flex-wrap gap-2 mb-8">
+            <div className="flex flex-wrap gap-2 mb-6">
               {categories.map((cat) => (
                 <button
                   key={cat}
                   type="button"
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors min-h-[44px] flex items-center ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors min-h-[38px] flex items-center ${
                     selectedCategory === cat
                       ? "bg-teal-500 text-white shadow-sm"
                       : "bg-travel-muted text-travel-text hover:bg-teal-50 hover:text-teal-600 border border-travel-border"
@@ -138,12 +138,12 @@ export default function CityView({
             </div>
 
             {/* Places Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredPlaces.map((place, index) => (
                 <div key={place.slug} className="contents">
                   <PlaceCard place={place} />
-                  {/* AdSlot after the 4th card */}
-                  {index === 3 && (
+                  {/* AdSlot after the 6th card */}
+                  {index === 5 && (
                     <div className="col-span-full">
                       <AdSlot format="horizontal" />
                     </div>
@@ -170,7 +170,7 @@ export default function CityView({
 
           {/* Mini Map at the bottom */}
           {geoPlaces.length > 0 && (
-            <section className="bg-white rounded-3xl border border-travel-border p-6 sm:p-8 shadow-card">
+            <section className="bg-white rounded-3xl border border-travel-border p-6 sm:p-7 shadow-card">
               <div className="mb-4">
                 <span className="text-xs font-semibold uppercase tracking-wider text-teal-600 mb-1 block">
                   Geographic Map
@@ -187,7 +187,7 @@ export default function CityView({
                 places={geoPlaces}
                 initialCenter={cityCenter}
                 initialZoom={12}
-                height="340px"
+                height="320px"
                 showFilters={false}
               />
             </section>
@@ -195,8 +195,8 @@ export default function CityView({
         </div>
 
         {/* Right Sticky Sidebar */}
-        <div className="lg:col-span-4 xl:col-span-4">
-          <TravelBookingSidebar currentCity={cityName} className="sticky top-24" />
+        <div className="w-full lg:w-[320px] xl:w-[340px] shrink-0">
+          <TravelBookingSidebar currentCity={cityName} className="sticky top-20" />
         </div>
       </div>
     </div>
