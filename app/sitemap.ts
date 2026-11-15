@@ -4,7 +4,7 @@ import { getPublishedPlaces, getCities } from "@/data/places";
 import { getAllGuides } from "@/data/guides";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = SITE_URL || "https://vietnamatlas.com"; // Fallback domain for sitemap URLs
+  const baseUrl = SITE_URL || "https://vietnamatlas-three.vercel.app";
 
   const publishedPlaces = getPublishedPlaces();
   const publishedCities = getCities();

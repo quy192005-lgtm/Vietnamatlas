@@ -3,6 +3,6 @@
 export const AFFILIATES = {
   twelveGo: "#", // TODO: real affiliate link for 12Go (Trains, buses, ferries in Vietnam)
   booking: "#",  // TODO: real affiliate link for Booking.com (Hotels & accommodations)
-  klook: "#",    // TODO: real affiliate link for Klook (Tours, attractions & transfers)
-  airalo: "#",   // TODO: real affiliate link for Airalo (Vietnam eSIM & mobile data)
+  klook: "https://klook.tp.st/vsF8RVws",
+  airalo: "https://airalo.tp.st/UC1RIA56",
 };

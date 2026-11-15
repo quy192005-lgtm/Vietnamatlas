@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { SITE_URL } from "@/config/site";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = SITE_URL || "https://vietnamatlas.com";
+  const baseUrl = SITE_URL || "https://vietnamatlas-three.vercel.app";
 
   return {
     rules: {
