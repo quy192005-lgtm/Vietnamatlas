@@ -77,24 +77,37 @@ export default function TravelBookingSidebar({
     }
   };
 
+  const tabLabels = {
+    stays: "Stay",
+    trains: "Trains",
+    buses: "Buses",
+    tours: "Tours",
+    esim: "eSIM",
+  };
+
   return (
     <aside className={`w-full space-y-6 ${className}`}>
-      {/* BOOK YOUR STAY WIDGET */}
-      <div className="bg-[#12161A] text-white rounded-2xl p-6 shadow-2xl border border-white/5">
-        <h4 className="font-serif text-2xl font-bold tracking-tight text-center mb-4">
-          Book Your <span className="text-[#6366F1]">Stay</span>
-        </h4>
+      {/* BOOK YOUR STAY / TRIP WIDGET (Light Theme) */}
+      <div className="bg-white text-slate-800 rounded-2xl p-6 shadow-card hover:shadow-card-hover border border-travel-border transition-all duration-300">
+        <div className="text-center mb-5">
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-teal-600 mb-1 block">
+            Plan &amp; Reserve
+          </span>
+          <h4 className="font-serif text-2xl font-bold tracking-tight text-travel-text">
+            Book Your <span className="text-teal-600">{tabLabels[activeTab]}</span>
+          </h4>
+        </div>
 
-        {/* 5 Tab icons matching the video */}
-        <div className="grid grid-cols-5 gap-1 p-1 bg-[#0A0D10] rounded-xl mb-5 border border-white/5">
+        {/* 5 Tab icons */}
+        <div className="grid grid-cols-5 gap-1 p-1 bg-slate-100 rounded-xl mb-5 border border-slate-200/80">
           {/* Stays */}
           <button
             type="button"
             onClick={() => setActiveTab("stays")}
-            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] font-medium transition-all ${
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] transition-all min-h-[44px] ${
               activeTab === "stays"
-                ? "bg-[#4338CA] text-white shadow-md font-semibold"
-                : "text-slate-400 hover:text-white"
+                ? "bg-teal-600 text-white shadow-sm font-semibold"
+                : "text-slate-600 hover:text-slate-900 hover:bg-white/80 font-medium"
             }`}
           >
             <Hotel className="w-4 h-4 mb-1" />
@@ -105,10 +118,10 @@ export default function TravelBookingSidebar({
           <button
             type="button"
             onClick={() => setActiveTab("trains")}
-            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] font-medium transition-all ${
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] transition-all min-h-[44px] ${
               activeTab === "trains"
-                ? "bg-[#4338CA] text-white shadow-md font-semibold"
-                : "text-slate-400 hover:text-white"
+                ? "bg-teal-600 text-white shadow-sm font-semibold"
+                : "text-slate-600 hover:text-slate-900 hover:bg-white/80 font-medium"
             }`}
           >
             <Train className="w-4 h-4 mb-1" />
@@ -119,10 +132,10 @@ export default function TravelBookingSidebar({
           <button
             type="button"
             onClick={() => setActiveTab("buses")}
-            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] font-medium transition-all ${
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] transition-all min-h-[44px] ${
               activeTab === "buses"
-                ? "bg-[#4338CA] text-white shadow-md font-semibold"
-                : "text-slate-400 hover:text-white"
+                ? "bg-teal-600 text-white shadow-sm font-semibold"
+                : "text-slate-600 hover:text-slate-900 hover:bg-white/80 font-medium"
             }`}
           >
             <Bus className="w-4 h-4 mb-1" />
@@ -133,10 +146,10 @@ export default function TravelBookingSidebar({
           <button
             type="button"
             onClick={() => setActiveTab("tours")}
-            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] font-medium transition-all ${
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] transition-all min-h-[44px] ${
               activeTab === "tours"
-                ? "bg-[#4338CA] text-white shadow-md font-semibold"
-                : "text-slate-400 hover:text-white"
+                ? "bg-teal-600 text-white shadow-sm font-semibold"
+                : "text-slate-600 hover:text-slate-900 hover:bg-white/80 font-medium"
             }`}
           >
             <Ticket className="w-4 h-4 mb-1" />
@@ -147,10 +160,10 @@ export default function TravelBookingSidebar({
           <button
             type="button"
             onClick={() => setActiveTab("esim")}
-            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] font-medium transition-all ${
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg text-[10px] transition-all min-h-[44px] ${
               activeTab === "esim"
-                ? "bg-[#4338CA] text-white shadow-md font-semibold"
-                : "text-slate-400 hover:text-white"
+                ? "bg-teal-600 text-white shadow-sm font-semibold"
+                : "text-slate-600 hover:text-slate-900 hover:bg-white/80 font-medium"
             }`}
           >
             <Smartphone className="w-4 h-4 mb-1" />
@@ -158,19 +171,19 @@ export default function TravelBookingSidebar({
           </button>
         </div>
 
-        {/* Input Form matching the exact layout in the video */}
+        {/* Input Form */}
         <form onSubmit={handleSearchSubmit} className="space-y-3.5">
           {/* TAB: STAYS */}
           {activeTab === "stays" && (
             <>
               <div>
-                <label className="block text-[11px] text-slate-400 mb-1">
-                  City:
+                <label className="block text-[11px] font-medium text-slate-700 mb-1">
+                  City / Destination:
                 </label>
                 <select
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 transition-colors"
                 >
                   {citiesList.map((c) => (
                     <option key={c} value={c}>
@@ -182,25 +195,25 @@ export default function TravelBookingSidebar({
 
               <div className="grid grid-cols-2 gap-2.5">
                 <div>
-                  <label className="block text-[11px] text-slate-400 mb-1">
+                  <label className="block text-[11px] font-medium text-slate-700 mb-1">
                     Check-in:
                   </label>
                   <input
                     type="date"
                     value={checkInDate}
                     onChange={(e) => setCheckInDate(e.target.value)}
-                    className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] text-slate-400 mb-1">
+                  <label className="block text-[11px] font-medium text-slate-700 mb-1">
                     Nights:
                   </label>
                   <select
                     value={nights}
                     onChange={(e) => setNights(e.target.value)}
-                    className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 transition-colors"
                   >
                     <option value="1 night">1 night</option>
                     <option value="2 nights">2 nights</option>
@@ -212,24 +225,24 @@ export default function TravelBookingSidebar({
               </div>
 
               <div>
-                <label className="block text-[11px] text-slate-400 mb-1">
-                  With:
+                <label className="block text-[11px] font-medium text-slate-700 mb-1">
+                  Booking Partner:
                 </label>
                 <select
                   value={partner}
                   onChange={(e) => setPartner(e.target.value)}
-                  className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 transition-colors"
                 >
-                  <option value="Agoda">Agoda</option>
                   <option value="Booking.com">Booking.com</option>
+                  <option value="Agoda">Agoda</option>
                 </select>
               </div>
 
               <button
                 type="submit"
-                className="w-full mt-2 py-3 px-4 rounded-xl bg-[#363299] hover:bg-[#433cc7] text-white font-semibold text-xs sm:text-sm shadow-lg transition-colors flex items-center justify-center gap-1.5"
+                className="w-full mt-2 py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs sm:text-sm shadow-sm transition-colors flex items-center justify-center gap-1.5 min-h-[44px]"
               >
-                <span>Search Hotels &rsaquo;</span>
+                <span>Search Hotels on {partner} &rsaquo;</span>
               </button>
             </>
           )}
@@ -238,13 +251,13 @@ export default function TravelBookingSidebar({
           {(activeTab === "trains" || activeTab === "buses") && (
             <>
               <div>
-                <label className="block text-[11px] text-slate-400 mb-1">
+                <label className="block text-[11px] font-medium text-slate-700 mb-1">
                   From:
                 </label>
                 <select
                   value={originCity}
                   onChange={(e) => setOriginCity(e.target.value)}
-                  className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 transition-colors"
                 >
                   {citiesList.map((c) => (
                     <option key={c} value={c}>
@@ -255,13 +268,13 @@ export default function TravelBookingSidebar({
               </div>
 
               <div>
-                <label className="block text-[11px] text-slate-400 mb-1">
+                <label className="block text-[11px] font-medium text-slate-700 mb-1">
                   To:
                 </label>
                 <select
                   value={destCity}
                   onChange={(e) => setDestCity(e.target.value)}
-                  className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 transition-colors"
                 >
                   {citiesList.map((c) => (
                     <option key={c} value={c}>
@@ -272,20 +285,20 @@ export default function TravelBookingSidebar({
               </div>
 
               <div>
-                <label className="block text-[11px] text-slate-400 mb-1">
+                <label className="block text-[11px] font-medium text-slate-700 mb-1">
                   Departure Date:
                 </label>
                 <input
                   type="date"
                   value={checkInDate}
                   onChange={(e) => setCheckInDate(e.target.value)}
-                  className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 transition-colors"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full mt-2 py-3 px-4 rounded-xl bg-[#363299] hover:bg-[#433cc7] text-white font-semibold text-xs sm:text-sm shadow-lg transition-colors flex items-center justify-center gap-1.5"
+                className="w-full mt-2 py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs sm:text-sm shadow-sm transition-colors flex items-center justify-center gap-1.5 min-h-[44px]"
               >
                 <span>Search {activeTab === "trains" ? "Trains" : "Buses"} on 12Go &rsaquo;</span>
               </button>
@@ -296,13 +309,13 @@ export default function TravelBookingSidebar({
           {activeTab === "tours" && (
             <>
               <div>
-                <label className="block text-[11px] text-slate-400 mb-1">
+                <label className="block text-[11px] font-medium text-slate-700 mb-1">
                   Destination:
                 </label>
                 <select
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="w-full bg-[#1A1F26] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 transition-colors"
                 >
                   {citiesList.map((c) => (
                     <option key={c} value={c}>
@@ -312,13 +325,13 @@ export default function TravelBookingSidebar({
                 </select>
               </div>
 
-              <div className="bg-[#1A1F26] p-3 rounded-xl border border-white/5 text-[11px] text-slate-300">
-                Browse day tours, island boat cruises, cooking workshops, and attraction tickets.
+              <div className="bg-teal-50/70 p-3 rounded-xl border border-teal-100 text-[11px] text-teal-900 leading-relaxed">
+                Browse day tours, island boat cruises, cooking workshops, and attraction tickets across Vietnam.
               </div>
 
               <button
                 type="submit"
-                className="w-full mt-2 py-3 px-4 rounded-xl bg-[#363299] hover:bg-[#433cc7] text-white font-semibold text-xs sm:text-sm shadow-lg transition-colors flex items-center justify-center gap-1.5"
+                className="w-full mt-2 py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs sm:text-sm shadow-sm transition-colors flex items-center justify-center gap-1.5 min-h-[44px]"
               >
                 <span>Search Tours on Klook &rsaquo;</span>
               </button>
@@ -328,18 +341,18 @@ export default function TravelBookingSidebar({
           {/* TAB: ESIM */}
           {activeTab === "esim" && (
             <>
-              <div className="bg-[#1A1F26] p-3 rounded-xl border border-white/5 text-[11px] text-slate-300 space-y-1.5">
-                <span className="font-semibold text-indigo-300 block text-xs">
+              <div className="bg-teal-50/70 p-3.5 rounded-xl border border-teal-100 text-[11px] text-teal-900 space-y-1.5">
+                <span className="font-semibold text-teal-800 block text-xs">
                   Airalo Vietnam eSIM
                 </span>
-                <p className="text-[10px] text-slate-400">
-                  Instant 4G connection via Viettel/Vinaphone. Ready the second you touch down in Vietnam.
+                <p className="text-[11px] text-slate-600 leading-relaxed">
+                  Instant 4G/LTE data connection via Viettel/Vinaphone. Ready the second you touch down in Vietnam without queuing for physical SIM cards.
                 </p>
               </div>
 
               <button
                 type="submit"
-                className="w-full mt-2 py-3 px-4 rounded-xl bg-[#363299] hover:bg-[#433cc7] text-white font-semibold text-xs sm:text-sm shadow-lg transition-colors flex items-center justify-center gap-1.5"
+                className="w-full mt-2 py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs sm:text-sm shadow-sm transition-colors flex items-center justify-center gap-1.5 min-h-[44px]"
               >
                 <span>Get Airalo eSIM &rsaquo;</span>
               </button>
@@ -347,7 +360,7 @@ export default function TravelBookingSidebar({
           )}
         </form>
 
-        <p className="mt-3.5 text-[9px] text-slate-400 text-center leading-normal">
+        <p className="mt-4 pt-3 border-t border-slate-100 text-[10px] text-slate-400 text-center leading-normal">
           * Transparent note: When you book via these links, we may earn an affiliate commission at no extra cost to you.
         </p>
       </div>
