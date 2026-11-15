@@ -59,14 +59,32 @@ export default function MapLeaflet({
         zoomControl: true,
       });
 
-      // Add OpenStreetMap Tile Layer
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 18,
-      }).addTo(map);
+      // Add High-Speed CDN Map Tile Layer (CartoDB Voyager - Travel Edition)
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: "abcd",
+          maxZoom: 19,
+          keepBuffer: 8,
+          updateWhenIdle: false,
+          updateWhenZooming: true,
+        }
+      ).addTo(map);
 
       mapInstanceRef.current = map;
       markersLayerRef.current = L.layerGroup().addTo(map);
+
+      // Force instant resize calculation so tiles render immediately
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 150);
+
+      const handleResize = () => {
+        map.invalidateSize();
+      };
+      window.addEventListener("resize", handleResize);
     }
 
     const map = mapInstanceRef.current;
@@ -147,6 +165,11 @@ export default function MapLeaflet({
       const group = L.featureGroup(markersLayer.getLayers());
       map.fitBounds(group.getBounds().pad(0.1));
     }
+
+    // Ensure map tiles recalculate and load instantly without grey gaps
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 100);
   }, [activePlaces, initialCenter, initialZoom, showFilters, geoPlaces.length]);
 
   return (
