@@ -85,6 +85,44 @@ Mở tệp `config/site.ts`:
 
 ---
 
+### 4. Thiết Lập Trang "Traveller Photos" & Quản Lý Ảnh Cộng Đồng (NV-12 & NV-13)
+
+Trang web sở hữu mục **Traveller Photos** trên menu chính dẫn đến trang `/traveller-photos` và nút gửi ảnh tại từng địa điểm. Hệ thống sử dụng Google Form để khách gửi ảnh, chủ web duyệt tay 100% trước khi đăng.
+
+#### A. Thiết lập Google Form (Làm 1 lần, ~10 phút):
+Tạo 1 Google Form bằng tiếng Anh gồm đúng 5 mục:
+1. **Tiêu đề Form:** `Share your Vietnam travel photo`
+2. **Ô 1 — `Your name (shown as photo credit)`:** Short answer, bắt buộc.
+3. **Ô 2 — `Email (optional)`:** Short answer, không bắt buộc.
+4. **Ô 3 — `Which place is this photo of?`:** Short answer, bắt buộc.
+5. **Ô 4 — `Upload your photo`:** File upload, chỉ nhận file ảnh, tối đa 10 MB, bắt buộc.
+6. **Ô 5 — Ô cam kết:** Checkbox bắt buộc, giữ nguyên văn:
+   `This photo is my own work, and I give this website permission to publish it with credit to my name.`
+7. **Thông điệp cảm ơn sau khi gửi:**
+   `Thank you! Every photo is reviewed by hand — if yours is selected, it will appear on the place page with your name credited.`
+
+#### B. Kích hoạt nút trên website:
+Mở `config/site.ts`:
+- Dán link Google Form vào `PHOTO_FORM_URL = "https://forms.gle/..."`.
+- Dán mã ô tên địa điểm (lấy qua nút *Get pre-filled link* của Google Form) vào `PHOTO_FORM_PLACE_FIELD = "entry.xxxxxx"`.
+*(Nếu `PHOTO_FORM_URL` là `"#"` thì web sẽ tự động hiện dòng chữ thông báo trang nhã `Photo submissions open soon.`)*
+
+#### C. Quy trình duyệt ảnh của chủ web:
+1. Xem ảnh gửi về trong Google Drive của Form.
+2. Nếu duyệt: Tải ảnh về lưu vào `public/photos/community/{slug}/` (ví dụ: `public/photos/community/hoan-kiem-lake/autumn-morning.jpg`).
+3. Mở `data/places.json`, thêm vào địa điểm đó:
+   ```json
+   "extra_photos": [
+     {
+       "src": "/photos/community/hoan-kiem-lake/autumn-morning.jpg",
+       "credit_name": "Sarah Jenkins"
+     }
+   ]
+   ```
+4. Build và deploy lại: Ảnh sẽ xuất hiện đồng thời tại trang chi tiết địa điểm đó và thư viện tổng `/traveller-photos` với dòng credit: `Photo: Sarah Jenkins — traveller contribution`.
+
+---
+
 ## ⚖️ Luật Cứng & Pháp Lý (Hard Rules)
 1. **Giao diện & nội dung 100% tiếng Anh:** Tên tiếng Việt chỉ hiển thị ở dòng phụ `Local name:` tại trang chi tiết.
 2. **Ghi công bản quyền ảnh Wikimedia Commons:** Mọi ảnh đều hiển thị dòng credit tác giả + loại giấy phép CC và đường dẫn nguồn.

@@ -24,6 +24,18 @@ export interface Place {
   city: string;
   city_slug: string;
   published: boolean;
+
+  // NV-12 & NV-13: Community photos submitted by visitors
+  extra_photos?: { src: string; credit_name: string }[];
+}
+
+export interface CommunityPhotoItem {
+  src: string;
+  credit_name: string;
+  place_slug: string;
+  place_name_en: string;
+  place_city: string;
+  place_region: string;
 }
 
 export interface CityInfo {
@@ -138,6 +150,26 @@ export function getNearbyPlaces(place: Place, count = 4): Place[] {
   }
 
   return result.slice(0, count);
+}
+
+export function getAllCommunityPhotos(): CommunityPhotoItem[] {
+  const published = getPublishedPlaces();
+  const list: CommunityPhotoItem[] = [];
+  published.forEach((p) => {
+    if (p.extra_photos && Array.isArray(p.extra_photos)) {
+      p.extra_photos.forEach((photo) => {
+        list.push({
+          src: photo.src,
+          credit_name: photo.credit_name,
+          place_slug: p.slug,
+          place_name_en: p.name_en,
+          place_city: p.city,
+          place_region: p.region,
+        });
+      });
+    }
+  });
+  return list;
 }
 
 // Log build info as specified in NV-01 step 7

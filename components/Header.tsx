@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { SITE_NAME } from "@/config/site";
-import { Search, Menu, X, ChevronDown, Compass, MapPin, BookOpen, Info } from "lucide-react";
+import { Search, Menu, X, ChevronDown, Compass, MapPin, BookOpen, Info, Camera } from "lucide-react";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -99,6 +99,14 @@ export default function Header() {
             </Link>
 
             <Link
+              href="/traveller-photos"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-travel-text hover:text-teal-500 hover:bg-teal-50 transition-colors min-h-[44px]"
+            >
+              <Camera className="w-4 h-4 text-teal-500" />
+              Traveller Photos
+            </Link>
+
+            <Link
               href="/about"
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-travel-text hover:text-teal-500 hover:bg-teal-50 transition-colors min-h-[44px]"
             >
@@ -181,6 +189,14 @@ export default function Header() {
           >
             <MapPin className="w-5 h-5 text-teal-500" />
             Interactive Map
+          </Link>
+          <Link
+            href="/traveller-photos"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-2 px-3 py-3 rounded-xl text-base font-medium text-travel-text hover:bg-teal-50 min-h-[44px]"
+          >
+            <Camera className="w-5 h-5 text-teal-500" />
+            Traveller Photos
           </Link>
           <Link
             href="/about"

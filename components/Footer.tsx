@@ -132,6 +132,15 @@ export default function Footer() {
                   About & Contact
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/traveller-photos"
+                  className="hover:text-teal-600 transition-colors font-medium text-teal-600 inline-flex items-center gap-1"
+                >
+                  <span>Contribute a photo</span>
+                  <span aria-hidden="true">&rarr;</span>
+                </Link>
+              </li>
               <li className="pt-3 text-xs leading-relaxed text-travel-subtext">
                 Photos: Wikimedia Commons contributors, licensed as credited on each page.
               </li>

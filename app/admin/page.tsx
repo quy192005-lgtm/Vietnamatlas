@@ -52,6 +52,7 @@ interface Place {
   lng: number | null;
   maps_url: string;
   published: boolean;
+  extra_photos?: { src: string; credit_name: string }[];
 }
 
 interface Guide {
