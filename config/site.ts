@@ -4,8 +4,9 @@ export const SITE_URL = ""; // TODO: fill with custom domain once deployed
 export const ADS_ENABLED = false; // Set to true after Google AdSense approval
 
 // NV-12 & NV-13: Community Photo Submission via Google Form
-export const PHOTO_FORM_URL: string = "#"; // TODO: dán link Google Form thật
-export const PHOTO_FORM_PLACE_FIELD: string = ""; // TODO: mã entry của ô "Place name" trong form, để trống nếu chưa biết
+export const PHOTO_FORM_URL: string =
+  "https://docs.google.com/forms/d/e/1FAIpQLSedSSyHAN82tmE3R0w49ZtyeIkb1IJX3KE8wucWfYa2tqq0gQ/viewform";
+export const PHOTO_FORM_PLACE_FIELD: string = ""; // Điền mã entry.xxxxx nếu muốn tự điền sẵn tên địa điểm
 
 /**
  * Builds the Google Form URL for photo contribution.
