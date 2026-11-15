@@ -7,6 +7,7 @@ import { CityDetails } from "@/data/cities";
 import PlaceCard from "@/components/PlaceCard";
 import Breadcrumb from "@/components/Breadcrumb";
 import AdSlot from "@/components/AdSlot";
+import TravelBookingSidebar from "@/components/TravelBookingSidebar";
 import { Filter, Info } from "lucide-react";
 
 // Dynamically import MapLeaflet with ssr: false
@@ -65,128 +66,139 @@ export default function CityView({
         ]}
       />
 
-      {/* Header section */}
-      <div className="bg-white rounded-3xl border border-travel-border p-6 sm:p-10 shadow-card">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-teal-500" />
-          <span className="text-xs font-semibold uppercase tracking-wider text-teal-600">
-            {region.toUpperCase()} VIETNAM • {places.length} PLACES PUBLISHED
-          </span>
-        </div>
+      {/* Main 2-column grid layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left main area */}
+        <div className="lg:col-span-8 xl:col-span-8 space-y-10">
+          {/* Header section */}
+          <div className="bg-white rounded-3xl border border-travel-border p-6 sm:p-10 shadow-card">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-teal-500" />
+              <span className="text-xs font-semibold uppercase tracking-wider text-teal-600">
+                {region.toUpperCase()} VIETNAM • {places.length} PLACES PUBLISHED
+              </span>
+            </div>
 
-        <h1 className="font-serif text-3xl sm:text-5xl font-bold text-travel-text tracking-tight mb-3">
-          {cityName}
-        </h1>
+            <h1 className="font-serif text-3xl sm:text-5xl font-bold text-travel-text tracking-tight mb-3">
+              {cityName}
+            </h1>
 
-        {cityDetails && (
-          <div className="space-y-4 max-w-3xl">
-            <p className="text-base text-travel-subtext leading-relaxed">
-              {cityDetails.description}
-            </p>
-            {cityDetails.travelTips && (
-              <div className="flex items-start gap-2.5 bg-travel-muted p-4 rounded-xl border border-travel-border text-xs text-travel-text">
-                <Info className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-teal-700">Local travel tip:</strong>{" "}
-                  {cityDetails.travelTips}
-                </div>
+            {cityDetails && (
+              <div className="space-y-4 max-w-3xl">
+                <p className="text-base text-travel-subtext leading-relaxed">
+                  {cityDetails.description}
+                </p>
+                {cityDetails.travelTips && (
+                  <div className="flex items-start gap-2.5 bg-travel-muted p-4 rounded-xl border border-travel-border text-xs text-travel-text">
+                    <Info className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-teal-700">Local travel tip:</strong>{" "}
+                      {cityDetails.travelTips}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
-        )}
-      </div>
 
-      {/* Filter bar */}
-      <div>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-travel-border">
+          {/* Places and filter */}
           <div>
-            <h2 className="font-serif text-2xl font-bold text-travel-text">
-              Published Places in {cityName}
-            </h2>
-            <p className="text-xs sm:text-sm text-travel-subtext mt-1">
-              Showing {filteredPlaces.length} of {places.length} landmarks
-            </p>
-          </div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-travel-border">
+              <div>
+                <h2 className="font-serif text-2xl font-bold text-travel-text">
+                  Published Places in {cityName}
+                </h2>
+                <p className="text-xs sm:text-sm text-travel-subtext mt-1">
+                  Showing {filteredPlaces.length} of {places.length} landmarks
+                </p>
+              </div>
 
-          <div className="flex items-center gap-1.5 text-xs text-travel-subtext">
-            <Filter className="w-4 h-4 text-teal-500" />
-            <span>Category filter:</span>
-          </div>
-        </div>
-
-        {/* Category chips */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors min-h-[44px] flex items-center ${
-                selectedCategory === cat
-                  ? "bg-teal-500 text-white shadow-sm"
-                  : "bg-travel-muted text-travel-text hover:bg-teal-50 hover:text-teal-600 border border-travel-border"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Places Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {filteredPlaces.map((place, index) => (
-            <div key={place.slug} className="contents">
-              <PlaceCard place={place} />
-              {/* NV-10: AdSlot after the 6th card */}
-              {index === 5 && (
-                <div className="col-span-full">
-                  <AdSlot format="horizontal" />
-                </div>
-              )}
+              <div className="flex items-center gap-1.5 text-xs text-travel-subtext">
+                <Filter className="w-4 h-4 text-teal-500" />
+                <span>Category filter:</span>
+              </div>
             </div>
-          ))}
+
+            {/* Category chips */}
+            <div className="flex flex-wrap gap-2 mb-8">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors min-h-[44px] flex items-center ${
+                    selectedCategory === cat
+                      ? "bg-teal-500 text-white shadow-sm"
+                      : "bg-travel-muted text-travel-text hover:bg-teal-50 hover:text-teal-600 border border-travel-border"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* Places Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {filteredPlaces.map((place, index) => (
+                <div key={place.slug} className="contents">
+                  <PlaceCard place={place} />
+                  {/* AdSlot after the 4th card */}
+                  {index === 3 && (
+                    <div className="col-span-full">
+                      <AdSlot format="horizontal" />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {filteredPlaces.length === 0 && (
+              <div className="p-12 text-center bg-travel-muted rounded-2xl border border-travel-border">
+                <p className="text-travel-subtext text-sm">
+                  No places in this category currently listed for {cityName}.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategory("All")}
+                  className="mt-3 px-4 py-2 bg-teal-500 text-white text-xs font-semibold rounded-xl min-h-[44px]"
+                >
+                  Reset Filter
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Mini Map at the bottom */}
+          {geoPlaces.length > 0 && (
+            <section className="bg-white rounded-3xl border border-travel-border p-6 sm:p-8 shadow-card">
+              <div className="mb-4">
+                <span className="text-xs font-semibold uppercase tracking-wider text-teal-600 mb-1 block">
+                  Geographic Map
+                </span>
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-travel-text">
+                  Map of {cityName} Landmarks
+                </h3>
+                <p className="text-xs text-travel-subtext mt-1">
+                  Grounded on OpenStreetMap. Click any pin to view preview details.
+                </p>
+              </div>
+
+              <MapLeaflet
+                places={geoPlaces}
+                initialCenter={cityCenter}
+                initialZoom={12}
+                height="340px"
+                showFilters={false}
+              />
+            </section>
+          )}
         </div>
 
-        {filteredPlaces.length === 0 && (
-          <div className="p-12 text-center bg-travel-muted rounded-2xl border border-travel-border">
-            <p className="text-travel-subtext text-sm">
-              No places in this category currently listed for {cityName}.
-            </p>
-            <button
-              type="button"
-              onClick={() => setSelectedCategory("All")}
-              className="mt-3 px-4 py-2 bg-teal-500 text-white text-xs font-semibold rounded-xl min-h-[44px]"
-            >
-              Reset Filter
-            </button>
-          </div>
-        )}
+        {/* Right Sticky Sidebar */}
+        <div className="lg:col-span-4 xl:col-span-4">
+          <TravelBookingSidebar currentCity={cityName} className="sticky top-24" />
+        </div>
       </div>
-
-      {/* Mini Map at the bottom (NV-04 step 3 + NV-08 step 5) */}
-      {geoPlaces.length > 0 && (
-        <section className="bg-white rounded-3xl border border-travel-border p-6 sm:p-8 shadow-card">
-          <div className="mb-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-teal-600 mb-1 block">
-              Geographic Map
-            </span>
-            <h3 className="font-serif text-xl sm:text-2xl font-bold text-travel-text">
-              Map of {cityName} Landmarks
-            </h3>
-            <p className="text-xs text-travel-subtext mt-1">
-              Grounded on OpenStreetMap. Click any pin to view preview details.
-            </p>
-          </div>
-
-          <MapLeaflet
-            places={geoPlaces}
-            initialCenter={cityCenter}
-            initialZoom={12}
-            height="360px"
-            showFilters={false}
-          />
-        </section>
-      )}
     </div>
   );
 }
