@@ -84,7 +84,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col bg-[#FAF7F2] text-travel-text font-sans antialiased selection:bg-teal-100 selection:text-teal-900 relative">
         {/* Traditional Dong Son Bronze Drum Embossed Background Watermark */}
         <div
-          className="fixed inset-0 pointer-events-none z-0 opacity-[0.12] bg-repeat bg-center"
+          className="fixed inset-0 pointer-events-none z-0 opacity-[0.15] bg-repeat bg-center"
           style={{
             backgroundImage: "url('/dong-son-texture.jpg')",
             backgroundSize: "900px auto",
