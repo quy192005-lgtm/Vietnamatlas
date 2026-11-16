@@ -13,9 +13,13 @@ export const metadata: Metadata = {
     "Browse travel destinations across North, Central, and South Vietnam. Discover cities, imperial towns, and coastal retreats.",
 };
 
-export default function DestinationsPage() {
-  const cities = getCities();
-  const publishedPlaces = getPublishedPlaces();
+export const revalidate = 60;
+
+export default async function DestinationsPage() {
+  const [cities, publishedPlaces] = await Promise.all([
+    getCities(),
+    getPublishedPlaces(),
+  ]);
 
   const regions: ("north" | "central" | "south")[] = ["north", "central", "south"];
 

@@ -27,6 +27,7 @@ import {
   Key,
   ShieldCheck,
   Mail,
+  Database,
 } from "lucide-react";
 
 const LocationPickerMap = dynamic(() => import("@/components/LocationPickerMap"), {
@@ -121,6 +122,7 @@ export default function AdminPage() {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [adminEmail, setAdminEmail] = useState<string | null>(null);
+  const [dbMode, setDbMode] = useState<"supabase" | "local">("local");
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -330,6 +332,7 @@ export default function AdminPage() {
       const data = await res.json();
       setIsAuthenticated(Boolean(data.authenticated));
       setAdminEmail(data.email || null);
+      if (data.database) setDbMode(data.database);
     } catch {
       setIsAuthenticated(false);
       setAdminEmail(null);
@@ -945,6 +948,25 @@ export default function AdminPage() {
               <RefreshCw className={`w-4 h-4 ${loading || citiesLoading || guidesLoading || communityLoading ? "animate-spin text-teal-400" : ""}`} />
               <span className="hidden sm:inline">Refresh</span>
             </button>
+
+            {/* Database Sync Status Badge */}
+            <div
+              className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs border font-medium transition-colors ${
+                dbMode === "supabase"
+                  ? "bg-emerald-950/60 border-emerald-500/40 text-emerald-300"
+                  : "bg-slate-800 border-slate-700 text-slate-300"
+              }`}
+              title={
+                dbMode === "supabase"
+                  ? "Connected to Supabase PostgreSQL database. Live synchronization is active."
+                  : "Running on local JSON data. Connect Supabase in .env.local for persistent online sync."
+              }
+            >
+              <Database className={`w-3.5 h-3.5 ${dbMode === "supabase" ? "text-emerald-400" : "text-amber-400"}`} />
+              <span className="text-[11px]">
+                {dbMode === "supabase" ? "Supabase Synced" : "Local JSON"}
+              </span>
+            </div>
 
             {adminEmail && (
               <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-300">

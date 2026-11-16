@@ -11,15 +11,17 @@ interface CityPageProps {
   };
 }
 
-export function generateStaticParams() {
-  const cities = getCities();
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const cities = await getCities();
   return cities.map((c) => ({
     city_slug: c.city_slug,
   }));
 }
 
-export function generateMetadata({ params }: CityPageProps): Metadata {
-  const places = getPlacesByCity(params.city_slug);
+export async function generateMetadata({ params }: CityPageProps): Promise<Metadata> {
+  const places = await getPlacesByCity(params.city_slug);
   if (places.length === 0) return { title: "City Not Found" };
 
   const cityName = places[0].city;
@@ -38,8 +40,8 @@ export function generateMetadata({ params }: CityPageProps): Metadata {
   };
 }
 
-export default function CityPage({ params }: CityPageProps) {
-  const places = getPlacesByCity(params.city_slug);
+export default async function CityPage({ params }: CityPageProps) {
+  const places = await getPlacesByCity(params.city_slug);
   if (places.length === 0) {
     notFound();
   }

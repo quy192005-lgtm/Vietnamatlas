@@ -11,8 +11,10 @@ export const metadata: Metadata = {
     "Essential, honest travel advice for Vietnam: booking train tickets, choosing eSIMs, official e-visas, and airport transfers without scams.",
 };
 
-export default function GuidesIndexPage() {
-  const guides = getAllGuides();
+export const revalidate = 60;
+
+export default async function GuidesIndexPage() {
+  const guides = await getAllGuides();
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">

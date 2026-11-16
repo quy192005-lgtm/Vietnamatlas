@@ -1,29 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-
-const PLACES_FILE_PATH = path.join(process.cwd(), "data", "places.json");
-
-function readPlaces(): any[] {
-  try {
-    const data = fs.readFileSync(PLACES_FILE_PATH, "utf8");
-    return JSON.parse(data);
-  } catch (err) {
-    console.error("Failed to read places.json:", err);
-    return [];
-  }
-}
-
-function writePlaces(places: any[]): boolean {
-  try {
-    fs.writeFileSync(PLACES_FILE_PATH, JSON.stringify(places, null, 2), "utf8");
-    return true;
-  } catch (err) {
-    console.error("Failed to write places.json:", err);
-    return false;
-  }
-}
+import {
+  dbGetAllPlaces,
+  dbGetPlaceBySlug,
+  dbSavePlace,
+  dbDeletePlace,
+} from "@/lib/db";
 
 function generateSlug(text: string): string {
   return text
@@ -44,7 +26,7 @@ export async function GET(request: NextRequest) {
   const page = parseInt(searchParams.get("page") || "1", 10);
   const limit = parseInt(searchParams.get("limit") || "20", 10);
 
-  const allPlaces = readPlaces();
+  const allPlaces = await dbGetAllPlaces();
 
   // Calculate overall stats
   const totalCount = allPlaces.length;
@@ -104,7 +86,7 @@ export async function POST(request: NextRequest) {
   }
   try {
     const body = await request.json();
-    const allPlaces = readPlaces();
+    const allPlaces = await dbGetAllPlaces();
 
     if (!body.name_en && !body.name) {
       return NextResponse.json(
@@ -149,10 +131,12 @@ export async function POST(request: NextRequest) {
       extra_photos: Array.isArray(body.extra_photos) ? body.extra_photos : [],
     };
 
-    allPlaces.unshift(newPlace);
-    writePlaces(allPlaces);
+    const result = await dbSavePlace(newPlace);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error || "Failed to save place" }, { status: 500 });
+    }
 
-    return NextResponse.json({ success: true, place: newPlace });
+    return NextResponse.json({ success: true, place: result.place });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
@@ -174,10 +158,8 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const allPlaces = readPlaces();
-    const index = allPlaces.findIndex((p) => p.slug === slug);
-
-    if (index === -1) {
+    const current = await dbGetPlaceBySlug(slug);
+    if (!current) {
       return NextResponse.json(
         { error: `Place with slug "${slug}" not found` },
         { status: 404 }
@@ -185,14 +167,12 @@ export async function PUT(request: NextRequest) {
     }
 
     // Update fields
-    const current = allPlaces[index];
     const newLat = body.lat !== undefined ? (body.lat ? parseFloat(body.lat) : null) : current.lat;
     const newLng = body.lng !== undefined ? (body.lng ? parseFloat(body.lng) : null) : current.lng;
 
     const updated = {
       ...current,
       ...body,
-      // Ensure slug stays consistent unless explicitly provided
       slug: current.slug,
       photo_status: (body.photo_url || current.photo_url) ? "ok" : "missing",
       lat: newLat,
@@ -205,10 +185,12 @@ export async function PUT(request: NextRequest) {
       published: body.published !== undefined ? Boolean(body.published) : current.published,
     };
 
-    allPlaces[index] = updated;
-    writePlaces(allPlaces);
+    const result = await dbSavePlace(updated);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error || "Failed to update place" }, { status: 500 });
+    }
 
-    return NextResponse.json({ success: true, place: updated });
+    return NextResponse.json({ success: true, place: result.place });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
@@ -227,20 +209,22 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "Slug is required" }, { status: 400 });
     }
 
-    const allPlaces = readPlaces();
-    const index = allPlaces.findIndex((p) => p.slug === slug);
-
-    if (index === -1) {
+    const current = await dbGetPlaceBySlug(slug);
+    if (!current) {
       return NextResponse.json({ error: "Place not found" }, { status: 404 });
     }
 
-    allPlaces[index].published = Boolean(published);
-    writePlaces(allPlaces);
+    current.published = Boolean(published);
+    const result = await dbSavePlace(current);
+
+    if (!result.success) {
+      return NextResponse.json({ error: result.error || "Failed to update status" }, { status: 500 });
+    }
 
     return NextResponse.json({
       success: true,
       slug,
-      published: allPlaces[index].published,
+      published: current.published,
     });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
@@ -260,15 +244,10 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Slug is required" }, { status: 400 });
     }
 
-    const allPlaces = readPlaces();
-    const initialLength = allPlaces.length;
-    const filtered = allPlaces.filter((p) => p.slug !== slug);
-
-    if (filtered.length === initialLength) {
-      return NextResponse.json({ error: "Place not found" }, { status: 404 });
+    const result = await dbDeletePlace(slug);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error || "Failed to delete place" }, { status: 500 });
     }
-
-    writePlaces(filtered);
 
     return NextResponse.json({ success: true, deletedSlug: slug });
   } catch (err: any) {

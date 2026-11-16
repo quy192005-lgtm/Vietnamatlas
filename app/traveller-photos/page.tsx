@@ -19,8 +19,10 @@ export const metadata: Metadata = {
     "Real photos from people who have actually been there. Browse authentic community photos of Vietnam destinations shared by fellow travellers.",
 };
 
-export default function TravellerPhotosPage() {
-  const communityPhotos = getAllCommunityPhotos();
+export const revalidate = 60;
+
+export default async function TravellerPhotosPage() {
+  const communityPhotos = await getAllCommunityPhotos();
   const hasFormUrl = Boolean(PHOTO_FORM_URL && PHOTO_FORM_URL.trim() !== "#");
 
   return (

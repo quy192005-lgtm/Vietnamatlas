@@ -1,29 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-
-const GUIDES_FILE_PATH = path.join(process.cwd(), "data", "guides.json");
-
-function readGuides(): any[] {
-  try {
-    const data = fs.readFileSync(GUIDES_FILE_PATH, "utf8");
-    return JSON.parse(data);
-  } catch (err) {
-    console.error("Failed to read guides.json:", err);
-    return [];
-  }
-}
-
-function writeGuides(guides: any[]): boolean {
-  try {
-    fs.writeFileSync(GUIDES_FILE_PATH, JSON.stringify(guides, null, 2), "utf8");
-    return true;
-  } catch (err) {
-    console.error("Failed to write guides.json:", err);
-    return false;
-  }
-}
+import {
+  dbGetAllGuides,
+  dbGetGuideBySlug,
+  dbSaveGuide,
+  dbDeleteGuide,
+} from "@/lib/db";
 
 function generateSlug(text: string): string {
   return text
@@ -37,7 +19,7 @@ function generateSlug(text: string): string {
 
 // 1. GET: List all guides
 export async function GET() {
-  const guides = readGuides();
+  const guides = await dbGetAllGuides();
   return NextResponse.json({ guides, total: guides.length });
 }
 
@@ -48,7 +30,7 @@ export async function POST(request: NextRequest) {
   }
   try {
     const body = await request.json();
-    const guides = readGuides();
+    const guides = await dbGetAllGuides();
 
     if (!body.title) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
@@ -89,10 +71,12 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    guides.unshift(newGuide);
-    writeGuides(guides);
+    const result = await dbSaveGuide(newGuide);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error || "Failed to create guide" }, { status: 500 });
+    }
 
-    return NextResponse.json({ success: true, guide: newGuide });
+    return NextResponse.json({ success: true, guide: result.guide });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
@@ -111,24 +95,23 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Slug is required" }, { status: 400 });
     }
 
-    const guides = readGuides();
-    const index = guides.findIndex((g) => g.slug === slug);
-
-    if (index === -1) {
+    const current = await dbGetGuideBySlug(slug);
+    if (!current) {
       return NextResponse.json({ error: "Guide not found" }, { status: 404 });
     }
 
-    const current = guides[index];
     const updated = {
       ...current,
       ...body,
       slug: current.slug,
     };
 
-    guides[index] = updated;
-    writeGuides(guides);
+    const result = await dbSaveGuide(updated);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error || "Failed to update guide" }, { status: 500 });
+    }
 
-    return NextResponse.json({ success: true, guide: updated });
+    return NextResponse.json({ success: true, guide: result.guide });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
@@ -147,14 +130,10 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Slug is required" }, { status: 400 });
     }
 
-    const guides = readGuides();
-    const filtered = guides.filter((g) => g.slug !== slug);
-
-    if (filtered.length === guides.length) {
-      return NextResponse.json({ error: "Guide not found" }, { status: 404 });
+    const result = await dbDeleteGuide(slug);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error || "Failed to delete guide" }, { status: 500 });
     }
-
-    writeGuides(filtered);
 
     return NextResponse.json({ success: true, deletedSlug: slug });
   } catch (err: any) {

@@ -1,34 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-
-const PLACES_FILE_PATH = path.join(process.cwd(), "data", "places.json");
-
-function readPlaces(): any[] {
-  try {
-    const data = fs.readFileSync(PLACES_FILE_PATH, "utf8");
-    return JSON.parse(data);
-  } catch (err) {
-    console.error("Failed to read places.json:", err);
-    return [];
-  }
-}
-
-function writePlaces(places: any[]): boolean {
-  try {
-    fs.writeFileSync(PLACES_FILE_PATH, JSON.stringify(places, null, 2), "utf8");
-    return true;
-  } catch (err) {
-    console.error("Failed to write places.json:", err);
-    return false;
-  }
-}
+import { dbGetAllPlaces, dbGetPlaceBySlug, dbSavePlace } from "@/lib/db";
 
 // 1. GET: List all community photos flattened with place info
 export async function GET() {
   try {
-    const places = readPlaces();
+    const places = await dbGetAllPlaces();
     const photos: any[] = [];
 
     places.forEach((p) => {
@@ -75,9 +52,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const places = readPlaces();
-    const target = places.find((p) => p.slug === place_slug);
-
+    const target = await dbGetPlaceBySlug(place_slug);
     if (!target) {
       return NextResponse.json(
         { error: `Place with slug "${place_slug}" not found` },
@@ -95,7 +70,11 @@ export async function POST(request: NextRequest) {
     };
 
     target.extra_photos.push(newPhoto);
-    writePlaces(places);
+    const result = await dbSavePlace(target);
+
+    if (!result.success) {
+      return NextResponse.json({ error: result.error || "Failed to save photo" }, { status: 500 });
+    }
 
     return NextResponse.json({
       success: true,
@@ -123,9 +102,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const places = readPlaces();
-    const target = places.find((p) => p.slug === place_slug);
-
+    const target = await dbGetPlaceBySlug(place_slug);
     if (!target || !Array.isArray(target.extra_photos) || !target.extra_photos[index]) {
       return NextResponse.json(
         { error: "Target photo not found" },
@@ -138,7 +115,10 @@ export async function PUT(request: NextRequest) {
       credit_name: (credit_name || target.extra_photos[index].credit_name || "Community Member").trim(),
     };
 
-    writePlaces(places);
+    const result = await dbSavePlace(target);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error || "Failed to update photo" }, { status: 500 });
+    }
 
     return NextResponse.json({
       success: true,
@@ -168,8 +148,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const index = parseInt(indexStr, 10);
-    const places = readPlaces();
-    const target = places.find((p) => p.slug === place_slug);
+    const target = await dbGetPlaceBySlug(place_slug);
 
     if (!target || !Array.isArray(target.extra_photos) || index < 0 || index >= target.extra_photos.length) {
       return NextResponse.json(
@@ -179,7 +158,11 @@ export async function DELETE(request: NextRequest) {
     }
 
     const removed = target.extra_photos.splice(index, 1);
-    writePlaces(places);
+    const result = await dbSavePlace(target);
+
+    if (!result.success) {
+      return NextResponse.json({ error: result.error || "Failed to delete photo" }, { status: 500 });
+    }
 
     return NextResponse.json({
       success: true,

@@ -1,4 +1,5 @@
 import guidesData from "./guides.json";
+import { dbGetAllGuides, dbGetGuideBySlug } from "@/lib/db";
 
 export interface GuideStep {
   step: number;
@@ -38,10 +39,16 @@ export interface GuideArticle {
 
 export const GUIDES: GuideArticle[] = guidesData as GuideArticle[];
 
-export function getAllGuides(): GuideArticle[] {
-  return GUIDES;
+export async function getAllGuides(): Promise<GuideArticle[]> {
+  const guides = await dbGetAllGuides();
+  return guides as GuideArticle[];
 }
 
-export function getGuideBySlug(slug: string): GuideArticle | undefined {
-  return GUIDES.find((g) => g.slug === slug);
+export async function getGuideBySlug(slug: string): Promise<GuideArticle | undefined> {
+  const guide = await dbGetGuideBySlug(slug);
+  return (guide as GuideArticle) || undefined;
+}
+
+export function getAllGuidesSync(): GuideArticle[] {
+  return GUIDES;
 }

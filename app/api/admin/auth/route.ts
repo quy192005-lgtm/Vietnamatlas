@@ -6,13 +6,15 @@ import {
   isAdminAuthenticated,
   verifyCredentials,
 } from "@/lib/admin-auth";
+import { isSupabaseConfigured } from "@/lib/supabase";
 
 // 1. GET: Check current authentication status and user email
 export async function GET(request: NextRequest) {
   const authenticated = isAdminAuthenticated(request);
   const token = request.cookies.get(ADMIN_COOKIE_NAME)?.value;
   const email = authenticated ? getSessionEmail(token) : null;
-  return NextResponse.json({ authenticated, email });
+  const database = isSupabaseConfigured() ? "supabase" : "local";
+  return NextResponse.json({ authenticated, email, database });
 }
 
 // 2. POST: Authenticate with email & password and set session cookie

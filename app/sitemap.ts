@@ -3,12 +3,14 @@ import { SITE_URL } from "@/config/site";
 import { getPublishedPlaces, getCities } from "@/data/places";
 import { getAllGuides } from "@/data/guides";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL || "https://vietnamatlas-three.vercel.app";
 
-  const publishedPlaces = getPublishedPlaces();
-  const publishedCities = getCities();
-  const guides = getAllGuides();
+  const [publishedPlaces, publishedCities, guides] = await Promise.all([
+    getPublishedPlaces(),
+    getCities(),
+    getAllGuides(),
+  ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {

@@ -1,46 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-
-const CITIES_FILE_PATH = path.join(process.cwd(), "data", "cities.json");
-const PLACES_FILE_PATH = path.join(process.cwd(), "data", "places.json");
-
-function readCities(): any[] {
-  try {
-    const data = fs.readFileSync(CITIES_FILE_PATH, "utf8");
-    return JSON.parse(data);
-  } catch (err) {
-    console.error("Failed to read cities.json:", err);
-    return [];
-  }
-}
-
-function writeCities(cities: any[]): boolean {
-  try {
-    fs.writeFileSync(CITIES_FILE_PATH, JSON.stringify(cities, null, 2), "utf8");
-    return true;
-  } catch (err) {
-    console.error("Failed to write cities.json:", err);
-    return false;
-  }
-}
-
-function readPlaces(): any[] {
-  try {
-    const data = fs.readFileSync(PLACES_FILE_PATH, "utf8");
-    return JSON.parse(data);
-  } catch (err) {
-    console.error("Failed to read places.json:", err);
-    return [];
-  }
-}
+import { dbGetCities, dbSaveCity, dbGetAllPlaces } from "@/lib/db";
 
 // 1. GET: List all cities with place counts and available place photos
 export async function GET() {
   try {
-    const cities = readCities();
-    const places = readPlaces();
+    const cities = await dbGetCities();
+    const places = await dbGetAllPlaces();
     const published = places.filter((p) => p.published);
 
     // Group places by city_slug
@@ -103,29 +69,32 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const cities = readCities();
-    const index = cities.findIndex((c) => c.city_slug === city_slug);
+    const cities = await dbGetCities();
+    const target = cities.find((c) => c.city_slug === city_slug);
 
-    if (index === -1) {
+    if (!target) {
       return NextResponse.json(
         { error: `City with slug "${city_slug}" not found` },
         { status: 404 }
       );
     }
 
-    cities[index] = {
-      ...cities[index],
-      photo_url: photo_url !== undefined ? photo_url.trim() : cities[index].photo_url,
-      photo_credit: photo_credit !== undefined ? photo_credit.trim() : cities[index].photo_credit,
-      photo_license: photo_license !== undefined ? photo_license.trim() : cities[index].photo_license,
+    const updatedCity = {
+      ...target,
+      photo_url: photo_url !== undefined ? photo_url.trim() : target.photo_url,
+      photo_credit: photo_credit !== undefined ? photo_credit.trim() : target.photo_credit,
+      photo_license: photo_license !== undefined ? photo_license.trim() : target.photo_license,
     };
 
-    writeCities(cities);
+    const result = await dbSaveCity(updatedCity);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error || "Failed to update city" }, { status: 500 });
+    }
 
     return NextResponse.json({
       success: true,
-      message: `Updated cover photo for ${cities[index].city}`,
-      city: cities[index],
+      message: `Updated cover photo for ${updatedCity.city}`,
+      city: result.city,
     });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });

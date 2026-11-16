@@ -1,8 +1,8 @@
 import placesData from "./places.json";
 import citiesData from "./cities.json";
+import { dbGetAllPlaces, dbGetPublishedPlaces, dbGetPlaceBySlug, dbGetCities } from "@/lib/db";
 
 export interface Place {
-  // 12 raw fields
   name: string;
   category: string;
   area: string;
@@ -16,7 +16,6 @@ export interface Place {
   lng: number | null;
   maps_url: string;
 
-  // 7 derived fields
   slug: string;
   name_en: string;
   desc_en: string;
@@ -26,7 +25,6 @@ export interface Place {
   city_slug: string;
   published: boolean;
 
-  // NV-12 & NV-13: Community photos submitted by visitors
   extra_photos?: { src: string; credit_name: string }[];
 }
 
@@ -50,34 +48,29 @@ export interface CityInfo {
   photo_page: string;
 }
 
-const allPlaces: Place[] = placesData as Place[];
+// Fallback in-memory places from JSON
+const fallbackPlaces: Place[] = placesData as Place[];
 
-export function getAllPlaces(): Place[] {
-  return allPlaces;
+export async function getAllPlaces(): Promise<Place[]> {
+  const data = await dbGetAllPlaces();
+  return data as Place[];
 }
 
-export function getPublishedPlaces(): Place[] {
-  return allPlaces.filter((p) => p.published);
+export async function getPublishedPlaces(): Promise<Place[]> {
+  const data = await dbGetPublishedPlaces();
+  return data as Place[];
 }
 
-export function getPlaceBySlug(slug: string): Place | undefined {
-  return allPlaces.find((p) => p.slug === slug && p.published);
+export async function getPlaceBySlug(slug: string): Promise<Place | undefined> {
+  const place = await dbGetPlaceBySlug(slug);
+  if (!place || !place.published) return undefined;
+  return place as Place;
 }
 
-export function getPlacesByRegion(region: string): Place[] {
-  return allPlaces
-    .filter((p) => p.published && p.region === region)
-    .sort((a, b) => {
-      // Points with photo first, then alphabetical by name_en
-      if (a.photo_status === "ok" && b.photo_status !== "ok") return -1;
-      if (a.photo_status !== "ok" && b.photo_status === "ok") return 1;
-      return a.name_en.localeCompare(b.name_en);
-    });
-}
-
-export function getPlacesByCity(city_slug: string): Place[] {
-  return allPlaces
-    .filter((p) => p.published && p.city_slug === city_slug)
+export async function getPlacesByRegion(region: string): Promise<Place[]> {
+  const published = await getPublishedPlaces();
+  return published
+    .filter((p) => p.region === region)
     .sort((a, b) => {
       if (a.photo_status === "ok" && b.photo_status !== "ok") return -1;
       if (a.photo_status !== "ok" && b.photo_status === "ok") return 1;
@@ -85,8 +78,23 @@ export function getPlacesByCity(city_slug: string): Place[] {
     });
 }
 
-export function getCities(): CityInfo[] {
-  const published = getPublishedPlaces();
+export async function getPlacesByCity(city_slug: string): Promise<Place[]> {
+  const published = await getPublishedPlaces();
+  return published
+    .filter((p) => p.city_slug === city_slug)
+    .sort((a, b) => {
+      if (a.photo_status === "ok" && b.photo_status !== "ok") return -1;
+      if (a.photo_status !== "ok" && b.photo_status === "ok") return 1;
+      return a.name_en.localeCompare(b.name_en);
+    });
+}
+
+export async function getCities(): Promise<CityInfo[]> {
+  const [published, customCities] = await Promise.all([
+    getPublishedPlaces(),
+    dbGetCities(),
+  ]);
+
   const map = new Map<string, { city: string; city_slug: string; region: "north" | "central" | "south"; places: Place[] }>();
 
   published.forEach((p) => {
@@ -102,8 +110,8 @@ export function getCities(): CityInfo[] {
   });
 
   const customCityMap = new Map<string, any>();
-  if (Array.isArray(citiesData)) {
-    citiesData.forEach((c: any) => {
+  if (Array.isArray(customCities)) {
+    customCities.forEach((c: any) => {
       customCityMap.set(c.city_slug, c);
     });
   }
@@ -128,8 +136,8 @@ export function getCities(): CityInfo[] {
   return list.sort((a, b) => b.count - a.count);
 }
 
-export function getNearbyPlaces(place: Place, count = 4): Place[] {
-  const published = getPublishedPlaces().filter((p) => p.slug !== place.slug);
+export async function getNearbyPlaces(place: Place, count = 4): Promise<Place[]> {
+  const published = (await getPublishedPlaces()).filter((p) => p.slug !== place.slug);
   
   // 1. Same city
   const sameCity = published.filter((p) => p.city_slug === place.city_slug);
@@ -161,8 +169,8 @@ export function getNearbyPlaces(place: Place, count = 4): Place[] {
   return result.slice(0, count);
 }
 
-export function getAllCommunityPhotos(): CommunityPhotoItem[] {
-  const published = getPublishedPlaces();
+export async function getAllCommunityPhotos(): Promise<CommunityPhotoItem[]> {
+  const published = await getPublishedPlaces();
   const list: CommunityPhotoItem[] = [];
   published.forEach((p) => {
     if (p.extra_photos && Array.isArray(p.extra_photos)) {
@@ -181,16 +189,11 @@ export function getAllCommunityPhotos(): CommunityPhotoItem[] {
   return list;
 }
 
-// Log build info as specified in NV-01 step 7
-if (process.env.NODE_ENV !== "test") {
-  const published = getPublishedPlaces();
-  const byRegion = {
-    north: published.filter((p) => p.region === "north").length,
-    central: published.filter((p) => p.region === "central").length,
-    south: published.filter((p) => p.region === "south").length,
-  };
-  console.log(`[VIETNAM ATLAS BUILD] Total places: ${allPlaces.length}`);
-  console.log(`[VIETNAM ATLAS BUILD] Published places: ${published.length}`);
-  console.log(`[VIETNAM ATLAS BUILD] Cities count: ${getCities().length}`);
-  console.log(`[VIETNAM ATLAS BUILD] Region distribution: North=${byRegion.north}, Central=${byRegion.central}, South=${byRegion.south}`);
+// Synchronous helpers for backward compatibility
+export function getPublishedPlacesSync(): Place[] {
+  return fallbackPlaces.filter((p) => p.published);
+}
+
+export function getAllPlacesSync(): Place[] {
+  return fallbackPlaces;
 }

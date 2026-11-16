@@ -8,9 +8,13 @@ export const metadata: Metadata = {
   description: "Search Vietnam travel directory by English or local Vietnamese name, region, city, or category.",
 };
 
-export default function SearchPage() {
-  const places = getPublishedPlaces();
-  const cities = getCities();
+export const revalidate = 60;
+
+export default async function SearchPage() {
+  const [places, cities] = await Promise.all([
+    getPublishedPlaces(),
+    getCities(),
+  ]);
 
   return (
     <Suspense

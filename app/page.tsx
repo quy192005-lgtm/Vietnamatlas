@@ -22,16 +22,24 @@ import {
   ExternalLink,
 } from "lucide-react";
 
-export default function HomePage() {
-  const publishedPlaces = getPublishedPlaces();
-  const topCities = getCities().slice(0, 8);
+export const revalidate = 60;
+
+export default async function HomePage() {
+  const [publishedPlaces, cities, guides, northPlaces, centralPlaces, southPlaces] = await Promise.all([
+    getPublishedPlaces(),
+    getCities(),
+    getAllGuides(),
+    getPlacesByRegion("north"),
+    getPlacesByRegion("central"),
+    getPlacesByRegion("south"),
+  ]);
+  const topCities = cities.slice(0, 8);
   const featuredPlaces = publishedPlaces.slice(0, 12);
-  const guides = getAllGuides();
 
   // Region stats
-  const northCount = getPlacesByRegion("north").length;
-  const centralCount = getPlacesByRegion("central").length;
-  const southCount = getPlacesByRegion("south").length;
+  const northCount = northPlaces.length;
+  const centralCount = centralPlaces.length;
+  const southCount = southPlaces.length;
 
   return (
     <div className="flex flex-col gap-10 sm:gap-14 pb-16">

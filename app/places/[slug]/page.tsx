@@ -26,15 +26,17 @@ interface PlacePageProps {
   };
 }
 
-export function generateStaticParams() {
-  const published = getPublishedPlaces();
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const published = await getPublishedPlaces();
   return published.map((p) => ({
     slug: p.slug,
   }));
 }
 
-export function generateMetadata({ params }: PlacePageProps): Metadata {
-  const place = getPlaceBySlug(params.slug);
+export async function generateMetadata({ params }: PlacePageProps): Promise<Metadata> {
+  const place = await getPlaceBySlug(params.slug);
   if (!place) return { title: "Place Not Found" };
 
   const metaDesc =
@@ -54,13 +56,13 @@ export function generateMetadata({ params }: PlacePageProps): Metadata {
   };
 }
 
-export default function PlaceDetailPage({ params }: PlacePageProps) {
-  const place = getPlaceBySlug(params.slug);
+export default async function PlaceDetailPage({ params }: PlacePageProps) {
+  const place = await getPlaceBySlug(params.slug);
   if (!place) {
     notFound();
   }
 
-  const nearbyPlaces = getNearbyPlaces(place, 4);
+  const nearbyPlaces = await getNearbyPlaces(place, 4);
   const isPhotoMissing = place.photo_status !== "ok" || !place.photo_url;
   const regionLabel = `${place.region.charAt(0).toUpperCase() + place.region.slice(1)} Vietnam`;
 

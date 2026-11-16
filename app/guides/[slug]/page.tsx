@@ -23,15 +23,17 @@ interface GuidePageProps {
   };
 }
 
-export function generateStaticParams() {
-  const guides = getAllGuides();
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const guides = await getAllGuides();
   return guides.map((g) => ({
     slug: g.slug,
   }));
 }
 
-export function generateMetadata({ params }: GuidePageProps): Metadata {
-  const guide = getGuideBySlug(params.slug);
+export async function generateMetadata({ params }: GuidePageProps): Promise<Metadata> {
+  const guide = await getGuideBySlug(params.slug);
   if (!guide) return { title: "Guide Not Found" };
 
   return {
@@ -46,13 +48,16 @@ export function generateMetadata({ params }: GuidePageProps): Metadata {
   };
 }
 
-export default function GuideDetailPage({ params }: GuidePageProps) {
-  const guide = getGuideBySlug(params.slug);
+export default async function GuideDetailPage({ params }: GuidePageProps) {
+  const [guide, allGuides] = await Promise.all([
+    getGuideBySlug(params.slug),
+    getAllGuides(),
+  ]);
   if (!guide) {
     notFound();
   }
 
-  const otherGuides = getAllGuides().filter((g) => g.slug !== guide.slug);
+  const otherGuides = allGuides.filter((g) => g.slug !== guide.slug);
 
   // Determine CTA URL
   let ctaUrl = "#";

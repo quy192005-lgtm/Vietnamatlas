@@ -35,15 +35,20 @@ export function generateMetadata({ params }: RegionPageProps): Metadata {
   };
 }
 
-export default function RegionPage({ params }: RegionPageProps) {
+export const revalidate = 60;
+
+export default async function RegionPage({ params }: RegionPageProps) {
   const regKey = params.region as "north" | "central" | "south";
   const region = REGIONS[regKey];
   if (!region) {
     notFound();
   }
 
-  const places = getPlacesByRegion(regKey);
-  const cities = getCities().filter((c) => c.region === regKey);
+  const [places, allCities] = await Promise.all([
+    getPlacesByRegion(regKey),
+    getCities(),
+  ]);
+  const cities = allCities.filter((c) => c.region === regKey);
 
   return <RegionView region={region} cities={cities} places={places} />;
 }

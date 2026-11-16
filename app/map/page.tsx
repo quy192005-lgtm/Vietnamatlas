@@ -25,8 +25,10 @@ const MapLeaflet = dynamic(() => import("@/components/MapLeaflet"), {
   ),
 });
 
-export default function MapPage() {
-  const publishedPlaces = getPublishedPlaces();
+export const revalidate = 60;
+
+export default async function MapPage() {
+  const publishedPlaces = await getPublishedPlaces();
   const geoPlacesCount = publishedPlaces.filter((p) => p.lat !== null && p.lng !== null).length;
 
   return (
