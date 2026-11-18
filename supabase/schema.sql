@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS public.places (
   maps_url TEXT DEFAULT '',
   published BOOLEAN DEFAULT false,
   extra_photos JSONB DEFAULT '[]'::jsonb,
+  gallery_photos JSONB DEFAULT '[]'::jsonb,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
 );

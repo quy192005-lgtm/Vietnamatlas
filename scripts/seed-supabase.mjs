@@ -138,16 +138,32 @@ async function seedDatabase() {
       maps_url: p.maps_url || "",
       published: Boolean(p.published),
       extra_photos: Array.isArray(p.extra_photos) ? p.extra_photos : [],
+      gallery_photos: Array.isArray(p.gallery_photos) ? p.gallery_photos : [],
     }));
 
     const BATCH_SIZE = 100;
     let seededCount = 0;
+    let hasGalleryColumn = true;
 
     for (let i = 0; i < formattedPlaces.length; i += BATCH_SIZE) {
-      const batch = formattedPlaces.slice(i, i + BATCH_SIZE);
-      const { error: placeErr } = await supabase
+      let batch = formattedPlaces.slice(i, i + BATCH_SIZE);
+      if (!hasGalleryColumn) {
+        batch = batch.map(({ gallery_photos, ...rest }) => rest);
+      }
+
+      let { error: placeErr } = await supabase
         .from("places")
         .upsert(batch, { onConflict: "slug" });
+
+      if (placeErr && placeErr.message.includes("gallery_photos")) {
+        hasGalleryColumn = false;
+        console.warn("\x1b[33m⚠ Supabase table 'places' lacks 'gallery_photos' column. Retrying batch without gallery_photos...\x1b[0m");
+        const fallbackBatch = batch.map(({ gallery_photos, ...rest }) => rest);
+        const { error: retryErr } = await supabase
+          .from("places")
+          .upsert(fallbackBatch, { onConflict: "slug" });
+        placeErr = retryErr;
+      }
 
       if (placeErr) {
         console.error(`\x1b[31mError seeding batch ${i / BATCH_SIZE + 1}:\x1b[0m`, placeErr.message);
@@ -158,6 +174,11 @@ async function seedDatabase() {
     }
 
     console.log(`\n\x1b[32m✔ Successfully seeded ${seededCount} places to Supabase.\x1b[0m`);
+    if (!hasGalleryColumn) {
+      console.log("\x1b[33m💡 TIP: To enable gallery photos in Supabase, execute this in Supabase SQL Editor:\x1b[0m");
+      console.log("\x1b[36mALTER TABLE public.places ADD COLUMN IF NOT EXISTS gallery_photos JSONB DEFAULT '[]'::jsonb;\x1b[0m");
+      console.log("\x1b[33mThen re-run: npm run db:seed\x1b[0m");
+    }
   }
 
   console.log("\n\x1b[36m============================================================\x1b[0m");

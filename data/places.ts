@@ -26,6 +26,12 @@ export interface Place {
   published: boolean;
 
   extra_photos?: { src: string; credit_name: string }[];
+  gallery_photos?: {
+    src: string;
+    credit_name: string;
+    license: string;
+    source_url: string;
+  }[];
 }
 
 export interface CommunityPhotoItem {

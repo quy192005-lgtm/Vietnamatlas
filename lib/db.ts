@@ -177,6 +177,7 @@ export async function dbSavePlace(place: any): Promise<{ success: boolean; place
           maps_url: place.maps_url || "",
           published: Boolean(place.published),
           extra_photos: Array.isArray(place.extra_photos) ? place.extra_photos : [],
+          gallery_photos: Array.isArray(place.gallery_photos) ? place.gallery_photos : [],
         };
 
         const { data, error } = await client
