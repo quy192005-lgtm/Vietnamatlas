@@ -123,12 +123,12 @@ export default function Header() {
             </Link>
           </nav>
 
-          {/* Right Action: Search Button */}
+          {/* Right Action: Search Button & Mobile Menu Toggle */}
           <div className="flex items-center gap-2">
             <Link
               href="/search"
               aria-label="Search places"
-              className="flex items-center justify-center w-11 h-11 rounded-full text-travel-text hover:text-teal-500 hover:bg-teal-50 border border-transparent hover:border-travel-border transition-colors min-w-[44px] min-h-[44px]"
+              className="flex items-center justify-center w-12 h-12 rounded-full text-travel-text hover:text-teal-500 hover:bg-teal-50 border border-transparent hover:border-travel-border transition-colors min-w-[48px] min-h-[48px]"
             >
               <Search className="w-5 h-5" />
             </Link>
@@ -137,47 +137,48 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden flex items-center justify-center w-11 h-11 rounded-lg text-travel-text hover:bg-teal-50 min-w-[44px] min-h-[44px]"
-              aria-label="Toggle navigation menu"
+              className="md:hidden flex items-center justify-center w-12 h-12 rounded-xl text-travel-text hover:bg-teal-50 min-w-[48px] min-h-[48px] border border-transparent active:border-teal-300"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open navigation menu"}
+              aria-expanded={mobileMenuOpen}
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-6 h-6 text-teal-600" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile drawer panel */}
+      {/* Mobile drawer panel (NV-17A: >= 48px height, >= 16px font, clear touch targets) */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-travel-border bg-white px-4 pt-3 pb-6 space-y-2 animate-fadeIn">
+        <div className="md:hidden border-t border-travel-border bg-white px-4 pt-3 pb-8 space-y-2 animate-fadeIn shadow-lg">
           <Link
             href="/destinations"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center justify-between px-3 py-3 rounded-xl text-base font-medium text-travel-text hover:bg-teal-50 min-h-[44px]"
+            className="flex items-center justify-between px-3.5 py-3 rounded-xl text-base font-semibold text-travel-text hover:bg-teal-50 min-h-[48px]"
           >
-            <span className="flex items-center gap-2">
-              <Compass className="w-5 h-5 text-teal-500" />
+            <span className="flex items-center gap-2.5">
+              <Compass className="w-5 h-5 text-teal-600" />
               All Destinations
             </span>
           </Link>
-          <div className="pl-6 space-y-1">
+          <div className="pl-6 space-y-1 border-l-2 border-teal-100 ml-4 my-1">
             <Link
               href="/regions/north"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 text-sm text-travel-subtext hover:text-teal-600 min-h-[44px] flex items-center"
+              className="px-3.5 py-2.5 text-base text-travel-text hover:text-teal-600 min-h-[48px] flex items-center rounded-lg hover:bg-teal-50/50"
             >
               • North Vietnam
             </Link>
             <Link
               href="/regions/central"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 text-sm text-travel-subtext hover:text-teal-600 min-h-[44px] flex items-center"
+              className="px-3.5 py-2.5 text-base text-travel-text hover:text-teal-600 min-h-[48px] flex items-center rounded-lg hover:bg-teal-50/50"
             >
               • Central Vietnam
             </Link>
             <Link
               href="/regions/south"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 text-sm text-travel-subtext hover:text-teal-600 min-h-[44px] flex items-center"
+              className="px-3.5 py-2.5 text-base text-travel-text hover:text-teal-600 min-h-[48px] flex items-center rounded-lg hover:bg-teal-50/50"
             >
               • South Vietnam
             </Link>
@@ -185,40 +186,40 @@ export default function Header() {
           <Link
             href="/guides"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 px-3 py-3 rounded-xl text-base font-medium text-travel-text hover:bg-teal-50 min-h-[44px]"
+            className="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-base font-semibold text-travel-text hover:bg-teal-50 min-h-[48px]"
           >
-            <BookOpen className="w-5 h-5 text-teal-500" />
+            <BookOpen className="w-5 h-5 text-teal-600" />
             Practical Guides
           </Link>
           <Link
             href="/map"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 px-3 py-3 rounded-xl text-base font-medium text-travel-text hover:bg-teal-50 min-h-[44px]"
+            className="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-base font-semibold text-travel-text hover:bg-teal-50 min-h-[48px]"
           >
-            <MapPin className="w-5 h-5 text-teal-500" />
+            <MapPin className="w-5 h-5 text-teal-600" />
             Interactive Map
           </Link>
           <Link
             href="/traveller-photos"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 px-3 py-3 rounded-xl text-base font-medium text-travel-text hover:bg-teal-50 min-h-[44px]"
+            className="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-base font-semibold text-travel-text hover:bg-teal-50 min-h-[48px]"
           >
-            <Camera className="w-5 h-5 text-teal-500" />
+            <Camera className="w-5 h-5 text-teal-600" />
             Traveller Photos
           </Link>
           <Link
             href="/about"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-2 px-3 py-3 rounded-xl text-base font-medium text-travel-text hover:bg-teal-50 min-h-[44px]"
+            className="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-base font-semibold text-travel-text hover:bg-teal-50 min-h-[48px]"
           >
-            <Info className="w-5 h-5 text-teal-500" />
+            <Info className="w-5 h-5 text-teal-600" />
             About This Site
           </Link>
-          <div className="pt-2">
+          <div className="pt-3">
             <Link
               href="/search"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 w-full py-3 bg-teal-500 text-white rounded-xl font-medium min-h-[44px]"
+              className="flex items-center justify-center gap-2 w-full py-3.5 bg-teal-500 hover:bg-teal-600 text-white rounded-xl font-semibold text-base min-h-[48px] shadow-sm transition-colors"
             >
               <Search className="w-4 h-4" />
               Search Places

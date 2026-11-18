@@ -76,7 +76,7 @@ export default async function HomePage() {
               type="text"
               name="q"
               placeholder="Search places by English or local name (e.g. Hoan Kiem, Dragon Bridge)..."
-              className="w-full py-2.5 text-sm sm:text-base text-travel-text placeholder-travel-subtext/70 bg-transparent focus:outline-none"
+              className="w-full py-2.5 text-base text-travel-text placeholder-travel-subtext/70 bg-transparent focus:outline-none"
             />
             <button
               type="submit"

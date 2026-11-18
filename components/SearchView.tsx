@@ -103,7 +103,7 @@ export default function SearchView({ places, cities }: SearchViewProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Type a place name (e.g., Hoan Kiem, Dragon Bridge, Hoi An, Ben Thanh)..."
-            className="w-full pl-12 pr-10 py-3.5 bg-travel-muted border border-travel-border rounded-2xl text-sm sm:text-base text-travel-text placeholder-travel-subtext focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all min-h-[44px]"
+            className="w-full pl-12 pr-10 py-3.5 bg-travel-muted border border-travel-border rounded-2xl text-base text-travel-text placeholder-travel-subtext focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all min-h-[44px]"
           />
           {query && (
             <button
@@ -147,7 +147,7 @@ export default function SearchView({ places, cities }: SearchViewProps) {
             <select
               value={selectedCity}
               onChange={(e) => setSelectedCity(e.target.value)}
-              className="w-full px-3 py-2.5 bg-travel-muted border border-travel-border rounded-xl text-xs sm:text-sm text-travel-text focus:outline-none focus:border-teal-500 min-h-[44px]"
+              className="w-full px-3.5 py-3 bg-travel-muted border border-travel-border rounded-xl text-base sm:text-sm text-travel-text focus:outline-none focus:border-teal-500 min-h-[44px]"
             >
               <option value="all">All Cities</option>
               {availableCities.map((c) => (
@@ -166,7 +166,7 @@ export default function SearchView({ places, cities }: SearchViewProps) {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full px-3 py-2.5 bg-travel-muted border border-travel-border rounded-xl text-xs sm:text-sm text-travel-text focus:outline-none focus:border-teal-500 min-h-[44px]"
+              className="w-full px-3.5 py-3 bg-travel-muted border border-travel-border rounded-xl text-base sm:text-sm text-travel-text focus:outline-none focus:border-teal-500 min-h-[44px]"
             >
               <option value="all">All Categories</option>
               {categories

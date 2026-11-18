@@ -119,14 +119,14 @@ export default function CityView({
               </div>
             </div>
 
-            {/* Category chips */}
-            <div className="flex flex-wrap gap-2 mb-6">
+            {/* Category chips (NV-17A: >= 44px touch targets) */}
+            <div className="flex flex-wrap gap-2.5 mb-6">
               {categories.map((cat) => (
                 <button
                   key={cat}
                   type="button"
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors min-h-[38px] flex items-center ${
+                  className={`px-4 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors min-h-[44px] flex items-center ${
                     selectedCategory === cat
                       ? "bg-teal-500 text-white shadow-sm"
                       : "bg-travel-muted text-travel-text hover:bg-teal-50 hover:text-teal-600 border border-travel-border"
