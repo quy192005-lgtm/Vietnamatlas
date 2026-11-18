@@ -88,7 +88,18 @@ export async function dbGetAllPlaces(): Promise<any[]> {
           .limit(2000);
 
         if (!error && Array.isArray(data) && data.length > 0) {
-          return data;
+          // Seamless fallback for gallery_photos if Supabase column hasn't been migrated yet
+          const localPlaces = readLocalJson(PLACES_FILE);
+          const localMap = new Map(localPlaces.map((p: any) => [p.slug, p]));
+          return data.map((d: any) => {
+            if (!d.gallery_photos || d.gallery_photos.length === 0) {
+              const local = localMap.get(d.slug);
+              if (local?.gallery_photos) {
+                d.gallery_photos = local.gallery_photos;
+              }
+            }
+            return d;
+          });
         }
         if (error) {
           console.warn("[DB] Supabase places error, falling back to JSON:", error.message);
@@ -115,7 +126,18 @@ export async function dbGetPublishedPlaces(): Promise<any[]> {
           .limit(2000);
 
         if (!error && Array.isArray(data) && data.length > 0) {
-          return data;
+          // Seamless fallback for gallery_photos if Supabase column hasn't been migrated yet
+          const localPlaces = readLocalJson(PLACES_FILE);
+          const localMap = new Map(localPlaces.map((p: any) => [p.slug, p]));
+          return data.map((d: any) => {
+            if (!d.gallery_photos || d.gallery_photos.length === 0) {
+              const local = localMap.get(d.slug);
+              if (local?.gallery_photos) {
+                d.gallery_photos = local.gallery_photos;
+              }
+            }
+            return d;
+          });
         }
       }
     } catch (err) {
@@ -138,7 +160,15 @@ export async function dbGetPlaceBySlug(slug: string): Promise<any | null> {
           .eq("slug", slug)
           .maybeSingle();
 
-        if (!error && data) return data;
+        if (!error && data) {
+          if (!data.gallery_photos || data.gallery_photos.length === 0) {
+            const local = readLocalJson(PLACES_FILE).find((p: any) => p.slug === slug);
+            if (local?.gallery_photos) {
+              data.gallery_photos = local.gallery_photos;
+            }
+          }
+          return data;
+        }
       }
     } catch (err) {
       console.warn(`[DB] Supabase getPlaceBySlug (${slug}) failed:`, err);
@@ -272,7 +302,18 @@ export async function dbGetCities(): Promise<any[]> {
           .order("city", { ascending: true });
 
         if (!error && Array.isArray(data) && data.length > 0) {
-          return data;
+          // Seamless fallback for gallery_photos if Supabase column hasn't been migrated yet
+          const localPlaces = readLocalJson(PLACES_FILE);
+          const localMap = new Map(localPlaces.map((p: any) => [p.slug, p]));
+          return data.map((d: any) => {
+            if (!d.gallery_photos || d.gallery_photos.length === 0) {
+              const local = localMap.get(d.slug);
+              if (local?.gallery_photos) {
+                d.gallery_photos = local.gallery_photos;
+              }
+            }
+            return d;
+          });
         }
       }
     } catch (err) {

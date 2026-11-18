@@ -9,6 +9,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import PlaceCard from "@/components/PlaceCard";
 import AdSlot from "@/components/AdSlot";
 import SharePhotoCard from "@/components/SharePhotoCard";
+import PlaceGallery from "@/components/PlaceGallery";
 import {
   MapPin,
   ExternalLink,
@@ -164,6 +165,12 @@ export default async function PlaceDetailPage({ params }: PlacePageProps) {
           {place.desc_en}
         </p>
       </div>
+
+      {/* NV-16B: SUPPLEMENTARY WIKIMEDIA PHOTO GALLERY */}
+      <PlaceGallery
+        placeName={place.name_en}
+        photos={place.gallery_photos}
+      />
 
       {/* NV-12 & NV-13: PHOTOS FROM TRAVELLERS (COMMUNITY GALLERY) */}
       {place.extra_photos && place.extra_photos.length > 0 && (
